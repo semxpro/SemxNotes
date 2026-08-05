@@ -356,42 +356,18 @@
         }
 
         /* ─── Note colors ─── */
-        .note-color-white {
-            background: #ffffff;
-        }
-        .note-color-red {
-            background: #f28b82;
-        }
-        .note-color-orange {
-            background: #fbbc04;
-        }
-        .note-color-yellow {
-            background: #fff475;
-        }
-        .note-color-green {
-            background: #ccff90;
-        }
-        .note-color-teal {
-            background: #a7ffeb;
-        }
-        .note-color-blue {
-            background: #aecbfa;
-        }
-        .note-color-darkblue {
-            background: #9aa0e6;
-        }
-        .note-color-purple {
-            background: #d7aefb;
-        }
-        .note-color-pink {
-            background: #fdcfe8;
-        }
-        .note-color-brown {
-            background: #e6c9a8;
-        }
-        .note-color-gray {
-            background: #e8eaed;
-        }
+        .note-color-white { background: #ffffff; }
+        .note-color-red { background: #f28b82; }
+        .note-color-orange { background: #fbbc04; }
+        .note-color-yellow { background: #fff475; }
+        .note-color-green { background: #ccff90; }
+        .note-color-teal { background: #a7ffeb; }
+        .note-color-blue { background: #aecbfa; }
+        .note-color-darkblue { background: #9aa0e6; }
+        .note-color-purple { background: #d7aefb; }
+        .note-color-pink { background: #fdcfe8; }
+        .note-color-brown { background: #e6c9a8; }
+        .note-color-gray { background: #e8eaed; }
 
         /* ───────────── Empty State ───────────── */
         .empty-state {
@@ -583,25 +559,33 @@
             background: #1557b0;
         }
 
-        /* ───────────── Scrollbar ───────────── */
-        ::-webkit-scrollbar {
-            width: 8px;
+        /* ───────────── Toast ───────────── */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #323232;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-family: inherit;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            z-index: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
         }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #c6c8cc;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #a8aaae;
+        .toast.show {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         /* ───────────── Misc ───────────── */
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -692,15 +676,20 @@
         </div>
     </div>
 
+    <!-- ═══════════ TOAST ═══════════ -->
+    <div class="toast" id="toast"></div>
+
     <!-- ═══════════ FIREBASE + APP ═══════════ -->
     <script type="module">
         // ─── Imports ──────────────────────────────────────────────
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-analytics.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
-        // ─── Config ──────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════
+        //  YOUR FIREBASE CONFIGURATION (as provided)
+        // ══════════════════════════════════════════════════════════════
         const firebaseConfig = {
             apiKey: "AIzaSyD6va5-6I5phGnS_GN44W3ZavRHtv2Ogoc",
             authDomain: "semxnotes.firebaseapp.com",
@@ -711,8 +700,9 @@
             measurementId: "G-GWMB5E5D0X"
         };
 
+        // ─── Initialize Firebase ──────────────────────────────────
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
+        const analytics = getAnalytics(app); // optional, can remove if not needed
         const db = getFirestore(app);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
@@ -739,13 +729,16 @@
         const modalSave = document.getElementById('modalSave');
 
         const fab = document.getElementById('fab');
+        const toast = document.getElementById('toast');
 
         // ─── State ────────────────────────────────────────────────
         let currentUser = null;
         let notes = [];
         let editingNoteId = null;
         let selectedColor = '#ffffff';
+        let unsubscribeNotes = null;
 
+        // ─── Colors ────────────────────────────────────────────────
         const COLORS = [
             { name: 'white', hex: '#ffffff', cls: 'note-color-white' },
             { name: 'red', hex: '#f28b82', cls: 'note-color-red' },
@@ -760,6 +753,18 @@
             { name: 'brown', hex: '#e6c9a8', cls: 'note-color-brown' },
             { name: 'gray', hex: '#e8eaed', cls: 'note-color-gray' },
         ];
+
+        // ─── Toast helper ─────────────────────────────────────────
+        let toastTimeout;
+
+        function showToast(message, duration = 4000) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
 
         // ─── Render color swatches ────────────────────────────────
         function renderColorSwatches() {
@@ -800,6 +805,7 @@
                 dropdownName.textContent = user.displayName || 'User';
                 dropdownEmail.textContent = user.email || '';
                 listenToNotes(user.uid);
+                showToast(`Welcome ${user.displayName || 'User'}!`, 2000);
             } else {
                 currentUser = null;
                 loginScreen.classList.remove('hidden');
@@ -807,10 +813,13 @@
                 notes = [];
                 notesGrid.innerHTML = '';
                 emptyState.style.display = 'block';
-                if (window.unsubscribeNotes) {
-                    window.unsubscribeNotes();
-                    window.unsubscribeNotes = null;
+                if (unsubscribeNotes) {
+                    unsubscribeNotes();
+                    unsubscribeNotes = null;
                 }
+                // clear dropdown
+                dropdownName.textContent = 'User';
+                dropdownEmail.textContent = 'user@email.com';
             }
         });
 
@@ -843,18 +852,20 @@
 
         // ─── Firestore: Listen to notes ───────────────────────────
         function listenToNotes(uid) {
-            if (window.unsubscribeNotes) {
-                window.unsubscribeNotes();
-                window.unsubscribeNotes = null;
+            if (unsubscribeNotes) {
+                unsubscribeNotes();
+                unsubscribeNotes = null;
             }
 
+            // IMPORTANT: This query requires a composite index in Firestore.
+            // If you get an error, Firestore will provide a link to create it.
             const q = query(
                 collection(db, 'notes'),
                 where('userId', '==', uid),
                 orderBy('createdAt', 'desc')
             );
 
-            window.unsubscribeNotes = onSnapshot(q, (snapshot) => {
+            unsubscribeNotes = onSnapshot(q, (snapshot) => {
                 notes = [];
                 snapshot.forEach((docSnap) => {
                     const data = docSnap.data();
@@ -867,6 +878,15 @@
                 renderNotes();
             }, (error) => {
                 console.error('Firestore listen error:', error);
+                // Show a user-friendly error, especially if missing index
+                if (error.code === 'failed-precondition' && error.message.includes('index')) {
+                    showToast('⚠️ Missing Firestore index. Click the link in the console to create it.', 8000);
+                    console.error('To create the required index, visit:', error.message.match(/https:\/\/console\.firebase\.google\.com[^\s]*/)?.[0] || 'Firebase Console');
+                } else {
+                    showToast(`Error loading notes: ${error.message}`, 5000);
+                }
+                notesGrid.innerHTML = '';
+                emptyState.style.display = 'block';
             });
         }
 
@@ -879,7 +899,6 @@
             }
             emptyState.style.display = 'none';
 
-            // Build HTML
             let html = '';
             notes.forEach((note) => {
                 const colorCls = note.colorCls || 'note-color-white';
@@ -917,7 +936,10 @@
 
         // ─── CRUD ──────────────────────────────────────────────────
         async function createNote(title, content, colorCls) {
-            if (!currentUser) return;
+            if (!currentUser) {
+                showToast('You must be logged in.', 2000);
+                return;
+            }
             try {
                 await addDoc(collection(db, 'notes'), {
                     userId: currentUser.uid,
@@ -926,9 +948,10 @@
                     colorCls: colorCls || 'note-color-white',
                     createdAt: new Date(),
                 });
+                showToast('Note created!', 1500);
             } catch (err) {
                 console.error('Create note error:', err);
-                alert('Failed to create note. Please try again.');
+                showToast(`Failed to create note: ${err.message}`, 4000);
             }
         }
 
@@ -939,9 +962,10 @@
                     content: content.trim(),
                     colorCls: colorCls || 'note-color-white',
                 });
+                showToast('Note updated!', 1500);
             } catch (err) {
                 console.error('Update note error:', err);
-                alert('Failed to update note. Please try again.');
+                showToast(`Failed to update note: ${err.message}`, 4000);
             }
         }
 
@@ -949,9 +973,10 @@
             if (!confirm('Delete this note?')) return;
             try {
                 await deleteDoc(doc(db, 'notes', id));
+                showToast('Note deleted.', 1500);
             } catch (err) {
                 console.error('Delete note error:', err);
-                alert('Failed to delete note. Please try again.');
+                showToast(`Failed to delete note: ${err.message}`, 4000);
             }
         }
 
@@ -993,7 +1018,7 @@
             const title = noteTitleInput.value.trim();
             const content = noteContentInput.value.trim();
             if (!title && !content) {
-                alert('Please add a title or some content.');
+                showToast('Please add a title or some content.', 2000);
                 return;
             }
             const colorCls = getColorClsFromHex(selectedColor) || 'note-color-white';
@@ -1050,6 +1075,8 @@
         window.loginWithGoogle = window.loginWithGoogle;
 
         console.log('📝 SEMX Notes ready!');
+        console.log('ℹ️  Make sure Firestore security rules allow reads/writes for authenticated users.');
+        console.log('ℹ️  If you see an index error, follow the link to create a composite index.');
     </script>
 </body>
 </html>
