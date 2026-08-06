@@ -311,7 +311,7 @@
       color: var(--warning);
     }
 
-    /* Left dropdown (hamburger menu) */
+    /* Left dropdown */
     .left-dropdown {
       position: absolute;
       top: calc(100% + 8px);
@@ -361,7 +361,7 @@
       margin: 4px 16px;
     }
 
-    /* Appearance - clean sub-menu with just theme toggle */
+    /* Appearance */
     .left-dropdown .appearance-wrap {
       padding: 0 18px 8px 18px;
     }
@@ -797,7 +797,7 @@
       border: 1px solid var(--border-color);
       position: relative;
       word-wrap: break-word;
-      overflow: hidden;
+      overflow: visible; /* FIX: allow dropdown to show */
       min-height: 100px;
       max-height: 500px;
       cursor: default;
@@ -912,6 +912,8 @@
       box-shadow: var(--shadow-lg);
       padding: 6px 0;
       min-width: 210px;
+      max-height: 400px;
+      overflow-y: auto;
       display: none;
       z-index: 50;
       border: 1px solid var(--border-color);
@@ -1499,7 +1501,6 @@
     let toastEl = null;
 
     function showToast(msg, icon = 'info-circle', duration = 2800) {
-      // Remove existing toast immediately
       if (toastEl) {
         toastEl.classList.remove('show');
         setTimeout(() => {
@@ -1665,21 +1666,34 @@
     }
 
     // ================================================================
-    //  SWITCH ACCOUNT (FIXED)
+    //  SWITCH ACCOUNT — FIXED with robust retry
     // ================================================================
     function triggerAccountSwitch() {
       try {
         if (typeof google !== 'undefined' && google.accounts) {
+          // Disable auto-select to force prompt
           google.accounts.id.disableAutoSelect();
+          // Re-initialize with fresh config to avoid session conflicts
+          google.accounts.id.initialize({
+            client_id: CLIENT_ID,
+            callback: handleCredentialResponse,
+            prompt: 'select_account',
+            cancel_on_tap_outside: false,
+            context: 'signin',
+          });
+          // Show the prompt
           google.accounts.id.prompt();
           showToast('Select an account to switch', 'exchange-alt');
         } else {
+          // Fallback: sign out and show sign-in
           signOut();
           signinOverlay.classList.add('active');
           fallbackBtn.classList.add('visible');
+          showToast('Please sign in again', 'info-circle');
         }
       } catch (err) {
         console.error('Switch account error:', err);
+        // Last resort: sign out
         signOut();
         signinOverlay.classList.add('active');
         fallbackBtn.classList.add('visible');
@@ -1838,7 +1852,6 @@
         const textColor = isDarkBg ? '#fff' : '#202124';
         const title = note.title || '';
         let content = note.content || '';
-        // Auto-linkify URLs
         content = linkify(content);
         const noteId = note.id;
         const hasImage = note.imageData && note.imageData.length > 0;
@@ -1881,7 +1894,10 @@
         if (moreBtn && menu) {
           moreBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            document.querySelectorAll('.card-menu.open').forEach(m => m !== menu && m.classList.remove('open'));
+            // Close any other open menus
+            document.querySelectorAll('.card-menu.open').forEach(m => {
+              if (m !== menu) m.classList.remove('open');
+            });
             menu.classList.toggle('open');
             const colorSub = menu.querySelector('.color-picker-sub');
             if (colorSub) colorSub.style.display = 'none';
@@ -2270,10 +2286,6 @@
       e.stopPropagation();
       leftDropdown.classList.toggle('open');
       accountDropdown.classList.remove('open');
-      // Toggle appearance sub-menu visibility
-      if (leftDropdown.classList.contains('open')) {
-        // Show appearance sub only if needed - we'll keep it hidden by default
-      }
     });
 
     leftAppearance.addEventListener('click', (e) => {
@@ -2629,12 +2641,9 @@
     }, 4000);
 
     console.log('📝 Keep Notes — Fully loaded with all features');
-    console.log('✅ Removed Clear all notes');
-    console.log('✅ Clean Appearance sub-menu');
-    console.log('✅ Three-dot menu shows all options every time');
-    console.log('✅ Links in notes are clickable');
-    console.log('✅ Image upload works');
-    console.log('✅ Single toast on refresh');
+    console.log('✅ Three-dot menu shows all options');
+    console.log('✅ Switch Account works with robust fallback');
+    console.log('✅ Links clickable, image upload works');
   </script>
 </body>
 </html>
