@@ -33,6 +33,35 @@
       background: transparent;
     }
 
+    /* LOADING SPINNER */
+    #loadingSpinner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      backdrop-filter: blur(2px);
+    }
+    #loadingSpinner.show {
+      display: flex;
+    }
+    #loadingSpinner .spinner {
+      width: 48px;
+      height: 48px;
+      border: 5px solid #e0e0e0;
+      border-top: 5px solid #1a73e8;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
     /* HEADER */
     .header {
       background: #fff;
@@ -456,36 +485,6 @@
     .note-card .note-content:empty {
       display: none;
     }
-    .note-card .note-footer {
-      display: flex;
-      justify-content: flex-end;
-      gap: 4px;
-      margin-top: 12px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(0, 0, 0, 0.05);
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-    .note-card:hover .note-footer {
-      opacity: 1;
-    }
-    .note-card .note-footer .footer-btn {
-      background: none;
-      border: none;
-      color: #5f6368;
-      padding: 6px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background 0.15s;
-    }
-    .note-card .note-footer .footer-btn:hover {
-      background: rgba(0, 0, 0, 0.06);
-    }
-    .note-card .note-footer .footer-btn.danger:hover {
-      color: #d93025;
-      background: #fce8e6;
-    }
 
     /* 3-DOT MENU */
     .note-card .note-actions {
@@ -494,6 +493,7 @@
       right: 8px;
       opacity: 0;
       transition: opacity 0.2s;
+      z-index: 10;
     }
     .note-card:hover .note-actions {
       opacity: 1;
@@ -519,7 +519,7 @@
       border-radius: 8px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
       padding: 8px 0;
-      min-width: 160px;
+      min-width: 180px;
       display: none;
       z-index: 50;
     }
@@ -556,6 +556,32 @@
     }
     .note-card .note-actions .dropdown-menu .menu-item.danger:hover {
       background: #fce8e6;
+    }
+
+    /* Color picker sub-menu inside dropdown */
+    .note-card .note-actions .dropdown-menu .color-picker-sub {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 8px 16px 12px;
+      border-top: 1px solid #e8eaed;
+      margin-top: 4px;
+    }
+    .note-card .note-actions .dropdown-menu .color-picker-sub .color-opt {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: border 0.2s, transform 0.15s;
+      flex-shrink: 0;
+    }
+    .note-card .note-actions .dropdown-menu .color-picker-sub .color-opt:hover {
+      transform: scale(1.1);
+    }
+    .note-card .note-actions .dropdown-menu .color-picker-sub .color-opt.active {
+      border-color: #202124;
+      box-shadow: 0 0 0 2px #fff, 0 0 0 4px #202124;
     }
 
     /* FAB */
@@ -837,6 +863,11 @@
 </head>
 <body>
 
+  <!-- LOADING SPINNER -->
+  <div id="loadingSpinner" role="status" aria-label="Loading">
+    <div class="spinner"></div>
+  </div>
+
   <!-- TOAST -->
   <div id="toast" class="toast"></div>
 
@@ -858,24 +889,24 @@
   <!-- HEADER -->
   <header class="header" id="appHeader">
     <div class="header-left">
-      <span class="menu-icon"><i class="fas fa-bars"></i></span>
+      <span class="menu-icon" aria-label="Menu"><i class="fas fa-bars"></i></span>
       <div class="logo">
         <i class="fas fa-sticky-note"></i>
         <span>Notes</span>
       </div>
     </div>
     <div class="header-center">
-      <span class="search-icon"><i class="fas fa-search"></i></span>
-      <input type="text" class="search-box" id="searchInput" placeholder="Search notes..." />
+      <span class="search-icon" aria-hidden="true"><i class="fas fa-search"></i></span>
+      <input type="text" class="search-box" id="searchInput" placeholder="Search notes..." aria-label="Search notes" />
     </div>
     <div class="header-right">
-      <button class="icon-btn" id="refreshBtn" title="Refresh"><i class="fas fa-sync-alt"></i></button>
+      <button class="icon-btn" id="refreshBtn" aria-label="Refresh notes"><i class="fas fa-sync-alt"></i></button>
       <div class="avatar-wrapper" id="avatarWrapper">
-        <div class="avatar" id="avatarBtn">
+        <div class="avatar" id="avatarBtn" aria-label="Account menu" role="button" tabindex="0">
           <span id="avatarLetter">G</span>
           <span class="badge-count" id="accountBadge">1</span>
         </div>
-        <div class="account-dropdown" id="accountDropdown"></div>
+        <div class="account-dropdown" id="accountDropdown" role="menu"></div>
       </div>
     </div>
   </header>
@@ -886,25 +917,25 @@
   </main>
 
   <!-- FAB -->
-  <button class="fab" id="fabBtn" title="New note"><i class="fas fa-plus"></i></button>
+  <button class="fab" id="fabBtn" aria-label="Create new note"><i class="fas fa-plus"></i></button>
 
   <!-- EDITOR MODAL -->
-  <div class="modal-overlay" id="editorModal">
+  <div class="modal-overlay" id="editorModal" role="dialog" aria-modal="true" aria-label="Note editor">
     <div class="modal-editor">
       <div class="modal-header">
         <span style="font-weight:500;font-size:16px;color:#5f6368;" id="editorModalTitle">New note</span>
-        <button class="close-btn" id="editorCloseBtn"><i class="fas fa-times"></i></button>
+        <button class="close-btn" id="editorCloseBtn" aria-label="Close editor"><i class="fas fa-times"></i></button>
       </div>
       <div class="modal-body">
-        <input type="text" class="editor-title" id="noteTitleInput" placeholder="Title" />
-        <textarea class="editor-content" id="noteContentInput" placeholder="Write your note..." rows="4"></textarea>
-        <div class="color-picker" id="colorPicker"></div>
+        <input type="text" class="editor-title" id="noteTitleInput" placeholder="Title" aria-label="Note title" />
+        <textarea class="editor-content" id="noteContentInput" placeholder="Write your note..." rows="4" aria-label="Note content"></textarea>
+        <div class="color-picker" id="colorPicker" role="group" aria-label="Color picker"></div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-danger" id="editorDeleteBtn"><i class="fas fa-trash"></i> Delete</button>
+        <button class="btn btn-danger" id="editorDeleteBtn" aria-label="Delete note"><i class="fas fa-trash"></i> Delete</button>
         <div style="flex:1;"></div>
-        <button class="btn btn-secondary" id="editorCancelBtn">Cancel</button>
-        <button class="btn btn-primary" id="editorSaveBtn">Save</button>
+        <button class="btn btn-secondary" id="editorCancelBtn" aria-label="Cancel">Cancel</button>
+        <button class="btn btn-primary" id="editorSaveBtn" aria-label="Save note">Save</button>
       </div>
     </div>
   </div>
@@ -948,6 +979,7 @@
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => document.querySelectorAll(sel);
 
+    const loadingSpinner = $('#loadingSpinner');
     const signinOverlay = $('#signinOverlay');
     const gsiBtnContainer = $('#gsiSignInButton');
     const fallbackBtn = $('#fallbackSignInBtn');
@@ -984,40 +1016,66 @@
     }
 
     // ================================================================
-    //  STORAGE HELPERS (per account)
+    //  LOADING SPINNER
+    // ================================================================
+    function showLoading(show) {
+      loadingSpinner.classList.toggle('show', show);
+    }
+
+    // ================================================================
+    //  STORAGE HELPERS (async for cloud prep)
     // ================================================================
     function getStorageKey(userId) {
       return STORAGE_KEY_PREFIX + userId;
     }
 
-    function loadNotesForUser(userId) {
+    // Async wrappers for localStorage
+    async function loadNotesForUser(userId) {
       try {
         const raw = localStorage.getItem(getStorageKey(userId));
         if (raw) {
           allNotes = JSON.parse(raw);
-          return;
+        } else {
+          allNotes = [];
         }
-      } catch (_) {}
-      allNotes = [];
+      } catch (err) {
+        console.error('Error loading notes for user:', err);
+        allNotes = [];
+      }
     }
 
-    function saveNotesForUser(userId) {
+    async function saveNotesForUser(userId) {
       try {
         localStorage.setItem(getStorageKey(userId), JSON.stringify(allNotes));
-      } catch (_) {}
+      } catch (err) {
+        console.error('Error saving notes for user:', err);
+      }
     }
 
     function saveUserToStorage(user) {
-      try { localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user)); } catch (_) {}
+      try {
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+      } catch (err) {
+        console.error('Error saving user to storage:', err);
+      }
     }
 
     function loadUserFromStorage() {
-      try { const raw = localStorage.getItem(USER_STORAGE_KEY); if (raw) return JSON.parse(raw); } catch (_) {}
+      try {
+        const raw = localStorage.getItem(USER_STORAGE_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch (err) {
+        console.error('Error loading user from storage:', err);
+      }
       return null;
     }
 
     function clearUserStorage() {
-      localStorage.removeItem(USER_STORAGE_KEY);
+      try {
+        localStorage.removeItem(USER_STORAGE_KEY);
+      } catch (err) {
+        console.error('Error clearing user storage:', err);
+      }
     }
 
     // ================================================================
@@ -1060,12 +1118,13 @@
           fallbackBtn.classList.add('visible');
         }
 
+        // Auto prompt
         setTimeout(() => {
           try { google.accounts.id.prompt(); } catch (_) {}
         }, 800);
 
-      } catch (e) {
-        console.warn('GIS init error, using fallback:', e);
+      } catch (err) {
+        console.error('GIS init error:', err);
         fallbackBtn.classList.add('visible');
       }
     }
@@ -1117,7 +1176,8 @@
                   picture: payload.picture || '',
                 };
                 handleUserSignIn(user);
-              } catch (e) {
+              } catch (err) {
+                console.error('OAuth token parse error:', err);
                 showToast('Sign-in failed. Please try again.');
               }
             }
@@ -1148,46 +1208,82 @@
           picture: payload.picture || '',
         };
         handleUserSignIn(user);
-      } catch (e) {
-        console.error('Credential parse error:', e);
+      } catch (err) {
+        console.error('Credential parse error:', err);
         showToast('Sign-in failed. Please try again.');
       }
     }
 
-    function handleUserSignIn(user) {
-      // Load notes for this specific user before switching
-      const previousUser = currentUser;
-      currentUser = user;
-      saveUserToStorage(user);
-
-      // Load this user's notes
-      loadNotesForUser(user.id);
-
-      signinOverlay.classList.remove('open');
-      renderApp();
-      showToast('Welcome, ' + user.name + '!');
-      // Re-prompt for account switching
-      setTimeout(() => {
-        try { google.accounts.id.prompt(); } catch (_) {}
-      }, 500);
+    async function handleUserSignIn(user) {
+      showLoading(true);
+      try {
+        // Save user
+        currentUser = user;
+        saveUserToStorage(user);
+        // Load this user's notes
+        await loadNotesForUser(user.id);
+        signinOverlay.classList.remove('open');
+        renderApp();
+        showToast('Welcome, ' + user.name + '!');
+      } catch (err) {
+        console.error('Error during sign-in:', err);
+        showToast('Error signing in. Please try again.');
+      } finally {
+        showLoading(false);
+      }
     }
 
     // ================================================================
     //  SIGN OUT
     // ================================================================
-    function signOut() {
-      const userId = currentUser ? currentUser.id : null;
-      currentUser = null;
-      clearUserStorage();
-      try { google.accounts.id.disableAutoSelect(); } catch (_) {}
-      allNotes = [];
-      signinOverlay.classList.add('open');
-      renderApp();
-      showToast('Signed out');
-      fallbackBtn.classList.remove('visible');
-      setTimeout(() => {
-        try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
-      }, 500);
+    async function signOut() {
+      showLoading(true);
+      try {
+        const userId = currentUser ? currentUser.id : null;
+        currentUser = null;
+        clearUserStorage();
+        try { google.accounts.id.disableAutoSelect(); } catch (_) {}
+        allNotes = [];
+        signinOverlay.classList.add('open');
+        renderApp();
+        showToast('Signed out');
+        fallbackBtn.classList.remove('visible');
+        setTimeout(() => {
+          try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
+        }, 500);
+      } catch (err) {
+        console.error('Error during sign out:', err);
+        showToast('Error signing out.');
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    // ================================================================
+    //  SWITCH ACCOUNT
+    // ================================================================
+    function triggerAccountSwitch() {
+      try {
+        // Disable auto-select to force prompt
+        try { google.accounts.id.disableAutoSelect(); } catch (_) {}
+        // Re-initialize with select_account prompt
+        if (typeof google !== 'undefined' && google.accounts) {
+          google.accounts.id.initialize({
+            client_id: CLIENT_ID,
+            callback: handleCredentialResponse,
+            prompt: 'select_account',
+            cancel_on_tap_outside: false,
+            context: 'signin',
+          });
+          google.accounts.id.prompt();
+        } else {
+          // Fallback to OAuth popup
+          startOAuthPopup();
+        }
+      } catch (err) {
+        console.error('Error triggering account switch:', err);
+        showToast('Unable to switch account. Please sign out and sign in again.');
+      }
     }
 
     // ================================================================
@@ -1211,7 +1307,12 @@
           (n.content && n.content.toLowerCase().includes(q))
         );
       }
-      filtered.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+      // Sort: pinned first, then by updatedAt
+      filtered.sort((a, b) => {
+        if (a.pinned && !b.pinned) return -1;
+        if (!a.pinned && b.pinned) return 1;
+        return (b.updatedAt || 0) - (a.updatedAt || 0);
+      });
 
       if (filtered.length === 0) {
         notesGrid.className = 'notes-grid empty';
@@ -1235,21 +1336,17 @@
         html += `
           <div class="note-card" data-id="${noteId}" style="background:${bg}; color:${textColor};">
             <div class="note-actions">
-              <button class="more-btn" data-id="${noteId}"><i class="fas fa-ellipsis-v"></i></button>
-              <div class="dropdown-menu" data-id="${noteId}">
-                <button class="menu-item" data-action="edit"><i class="fas fa-pen"></i> Edit</button>
-                <button class="menu-item" data-action="copy"><i class="fas fa-copy"></i> Copy</button>
-                <button class="menu-item" data-action="share"><i class="fas fa-share-alt"></i> Share</button>
-                <button class="menu-item danger" data-action="delete"><i class="fas fa-trash"></i> Delete</button>
+              <button class="more-btn" data-id="${noteId}" aria-label="More options"><i class="fas fa-ellipsis-v"></i></button>
+              <div class="dropdown-menu" data-id="${noteId}" role="menu">
+                <button class="menu-item" data-action="pin" role="menuitem"><i class="fas fa-thumbtack"></i> ${note.pinned ? 'Unpin' : 'Pin'}</button>
+                <button class="menu-item" data-action="color" role="menuitem"><i class="fas fa-palette"></i> Change Color</button>
+                <div class="color-picker-sub" style="display:none;"></div>
+                <button class="menu-item" data-action="download" role="menuitem"><i class="fas fa-download"></i> Download</button>
+                <button class="menu-item danger" data-action="delete" role="menuitem"><i class="fas fa-trash"></i> Delete</button>
               </div>
             </div>
             ${title ? `<div class="note-title">${escHtml(title)}</div>` : ''}
             <div class="note-content">${escHtml(content)}</div>
-            <div class="note-footer">
-              <button class="footer-btn" data-action="copy" title="Copy"><i class="fas fa-copy"></i></button>
-              <button class="footer-btn" data-action="share" title="Share"><i class="fas fa-share-alt"></i></button>
-              <button class="footer-btn danger" data-action="delete" title="Delete"><i class="fas fa-trash"></i></button>
-            </div>
           </div>
         `;
       });
@@ -1268,6 +1365,9 @@
             // Close all other dropdowns
             document.querySelectorAll('.dropdown-menu.open').forEach(d => d !== dropdown && d.classList.remove('open'));
             dropdown.classList.toggle('open');
+            // If opening, hide color sub if present
+            const colorSub = dropdown.querySelector('.color-picker-sub');
+            if (colorSub) colorSub.style.display = 'none';
           });
         }
 
@@ -1278,30 +1378,47 @@
             const action = item.dataset.action;
             const note = allNotes.find(n => n.id === id);
             if (!note) return;
-            if (action === 'edit') openEditor(id);
-            else if (action === 'copy') copyNote(note);
-            else if (action === 'share') shareNote(note);
-            else if (action === 'delete') deleteNote(id);
-            dropdown.classList.remove('open');
-          });
-        });
 
-        // Footer buttons (fallback)
-        card.querySelectorAll('.footer-btn').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const action = btn.dataset.action;
-            const note = allNotes.find(n => n.id === id);
-            if (!note) return;
-            if (action === 'copy') copyNote(note);
-            else if (action === 'share') shareNote(note);
-            else if (action === 'delete') deleteNote(id);
+            if (action === 'pin') {
+              togglePin(note);
+            } else if (action === 'color') {
+              // Toggle color picker sub-menu
+              const colorSub = dropdown.querySelector('.color-picker-sub');
+              if (colorSub) {
+                const isVisible = colorSub.style.display !== 'none';
+                colorSub.style.display = isVisible ? 'none' : 'flex';
+                // populate colors if not already
+                if (!isVisible && colorSub.children.length === 0) {
+                  COLORS.forEach(c => {
+                    const opt = document.createElement('div');
+                    opt.className = 'color-opt' + (c.value === note.color ? ' active' : '');
+                    opt.style.background = c.value;
+                    if (c.value === '#ffffff') opt.style.border = '2px solid #dadce0';
+                    opt.dataset.color = c.value;
+                    opt.title = c.name;
+                    opt.addEventListener('click', (ev) => {
+                      ev.stopPropagation();
+                      changeNoteColor(note, c.value);
+                      colorSub.style.display = 'none';
+                      dropdown.classList.remove('open');
+                    });
+                    colorSub.appendChild(opt);
+                  });
+                }
+              }
+            } else if (action === 'download') {
+              downloadNote(note);
+              dropdown.classList.remove('open');
+            } else if (action === 'delete') {
+              deleteNote(note.id);
+              dropdown.classList.remove('open');
+            }
           });
         });
 
         // Click on card body -> edit
         card.addEventListener('click', (e) => {
-          if (e.target.closest('.note-actions') || e.target.closest('.footer-btn')) return;
+          if (e.target.closest('.note-actions')) return;
           openEditor(id);
         });
       });
@@ -1327,12 +1444,43 @@
     }
 
     // ================================================================
+    //  NOTE ACTIONS (Pin, Color, Download, Delete)
+    // ================================================================
+    async function togglePin(note) {
+      note.pinned = !note.pinned;
+      note.updatedAt = Date.now();
+      await saveNotesForUser(currentUser.id);
+      renderNotes();
+    }
+
+    async function changeNoteColor(note, color) {
+      note.color = color;
+      note.updatedAt = Date.now();
+      await saveNotesForUser(currentUser.id);
+      renderNotes();
+    }
+
+    function downloadNote(note) {
+      const content = (note.title ? note.title + '\n' : '') + (note.content || '');
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = (note.title || 'note') + '.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Downloaded');
+    }
+
+    // ================================================================
     //  RENDER: ACCOUNT DROPDOWN
     // ================================================================
     function renderAccountDropdown() {
       if (!currentUser) {
         accountDropdown.innerHTML = `
-          <button class="dropdown-item" id="dropdownSignIn">
+          <button class="dropdown-item" id="dropdownSignIn" role="menuitem">
             <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
             <span class="label">Sign in</span>
           </button>
@@ -1361,44 +1509,22 @@
           <span class="item-check"><i class="fas fa-check-circle"></i></span>
         </div>
         <div class="divider"></div>
-        <button class="dropdown-item" id="dropdownSwitchAccount">
+        <button class="dropdown-item" id="dropdownSwitchAccount" role="menuitem">
           <span class="icon"><i class="fas fa-exchange-alt"></i></span>
           <span class="label">Switch account</span>
         </button>
-        <button class="dropdown-item" id="dropdownAddAccount">
-          <span class="icon"><i class="fas fa-user-plus"></i></span>
-          <span class="label">Add another account</span>
-        </button>
         <div class="divider"></div>
-        <button class="dropdown-item danger" id="dropdownSignOut">
+        <button class="dropdown-item danger" id="dropdownSignOut" role="menuitem">
           <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
           <span class="label">Sign out</span>
         </button>
       `;
       accountDropdown.innerHTML = itemsHtml;
 
-      // Switch account → show GIS prompt
+      // Switch account
       accountDropdown.querySelector('#dropdownSwitchAccount')?.addEventListener('click', () => {
         accountDropdown.classList.remove('open');
-        try {
-          google.accounts.id.prompt();
-        } catch (_) {
-          showToast('Please sign in again to switch accounts.');
-          signinOverlay.classList.add('open');
-          fallbackBtn.classList.add('visible');
-        }
-      });
-
-      // Add account → same as switch
-      accountDropdown.querySelector('#dropdownAddAccount')?.addEventListener('click', () => {
-        accountDropdown.classList.remove('open');
-        try {
-          google.accounts.id.prompt();
-        } catch (_) {
-          showToast('Please sign in to add another account.');
-          signinOverlay.classList.add('open');
-          fallbackBtn.classList.add('visible');
-        }
+        triggerAccountSwitch();
       });
 
       // Sign out
@@ -1411,7 +1537,7 @@
     }
 
     // ================================================================
-    //  RENDER: COLOR PICKER
+    //  RENDER: COLOR PICKER (editor)
     // ================================================================
     function renderColorPicker(selected) {
       colorPicker.innerHTML = '';
@@ -1432,75 +1558,42 @@
     }
 
     // ================================================================
-    //  NOTE CRUD
+    //  NOTE CRUD (async)
     // ================================================================
-    function createNote(title, content, color) {
+    async function createNote(title, content, color) {
       const note = {
         id: Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 4),
         title: title.trim() || '',
         content: content.trim() || '',
         color: color || DEFAULT_COLOR,
+        pinned: false,
         updatedAt: Date.now(),
         createdAt: Date.now(),
       };
       allNotes.unshift(note);
-      saveNotesForUser(currentUser.id);
+      await saveNotesForUser(currentUser.id);
       renderNotes();
       return note;
     }
 
-    function updateNote(id, title, content, color) {
+    async function updateNote(id, title, content, color) {
       const note = allNotes.find(n => n.id === id);
       if (!note) return;
       note.title = (title || '').trim();
       note.content = (content || '').trim();
       note.color = color || DEFAULT_COLOR;
       note.updatedAt = Date.now();
-      saveNotesForUser(currentUser.id);
+      await saveNotesForUser(currentUser.id);
       renderNotes();
     }
 
-    function deleteNote(id) {
+    async function deleteNote(id) {
       if (!confirm('Delete this note?')) return;
       allNotes = allNotes.filter(n => n.id !== id);
-      saveNotesForUser(currentUser.id);
+      await saveNotesForUser(currentUser.id);
       renderNotes();
       showToast('Note deleted');
       if (editingNoteId === id) closeEditor();
-    }
-
-    function copyNote(note) {
-      const text = (note.title ? note.title + '\n' : '') + (note.content || '');
-      navigator.clipboard.writeText(text).then(() => showToast('Copied!'))
-        .catch(() => {
-          const ta = document.createElement('textarea');
-          ta.value = text;
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand('copy');
-          ta.remove();
-          showToast('Copied!');
-        });
-    }
-
-    function shareNote(note) {
-      // Generate a shareable link (using current origin + note id)
-      const url = window.location.origin + window.location.pathname + '?note=' + note.id;
-      const text = (note.title ? note.title + '\n' : '') + (note.content || '') + '\n\n' + url;
-
-      if (navigator.share) {
-        navigator.share({
-          title: note.title || 'Note',
-          text: text,
-          url: url
-        }).catch(() => {});
-      } else {
-        navigator.clipboard.writeText(text).then(() => {
-          showToast('Link copied to clipboard!');
-        }).catch(() => {
-          showToast('Share: ' + url);
-        });
-      }
     }
 
     // ================================================================
@@ -1533,21 +1626,29 @@
       editingNoteId = null;
     }
 
-    function saveEditor() {
+    async function saveEditor() {
       const title = noteTitleInput.value;
       const content = noteContentInput.value;
       if (!title.trim() && !content.trim()) {
         showToast('Please enter a title or content');
         return;
       }
-      if (editingNoteId) {
-        updateNote(editingNoteId, title, content, selectedColor);
-        showToast('Note updated');
-      } else {
-        createNote(title, content, selectedColor);
-        showToast('Note created');
+      showLoading(true);
+      try {
+        if (editingNoteId) {
+          await updateNote(editingNoteId, title, content, selectedColor);
+          showToast('Note updated');
+        } else {
+          await createNote(title, content, selectedColor);
+          showToast('Note created');
+        }
+        closeEditor();
+      } catch (err) {
+        console.error('Error saving note:', err);
+        showToast('Error saving note');
+      } finally {
+        showLoading(false);
       }
-      closeEditor();
     }
 
     // ================================================================
@@ -1579,10 +1680,6 @@
         avatarLetter.innerHTML = `<img src="${currentUser.picture}" alt="" />`;
       } else {
         avatarLetter.textContent = initial;
-      }
-      // Load notes if not already loaded for this user
-      if (allNotes.length === 0) {
-        loadNotesForUser(currentUser.id);
       }
       renderNotes();
       renderAccountDropdown();
@@ -1650,13 +1747,21 @@
     // ================================================================
     //  REFRESH
     // ================================================================
-    refreshBtn.addEventListener('click', () => {
-      if (currentUser) {
-        loadNotesForUser(currentUser.id);
+    refreshBtn.addEventListener('click', async () => {
+      if (!currentUser) {
+        showToast('Sign in first');
+        return;
+      }
+      showLoading(true);
+      try {
+        await loadNotesForUser(currentUser.id);
         renderNotes();
         showToast('Refreshed');
-      } else {
-        showToast('Sign in first');
+      } catch (err) {
+        console.error('Refresh error:', err);
+        showToast('Error refreshing');
+      } finally {
+        showLoading(false);
       }
     });
 
@@ -1676,20 +1781,28 @@
     // ================================================================
     //  INIT
     // ================================================================
-    function init() {
-      const storedUser = loadUserFromStorage();
-      if (storedUser) {
-        currentUser = storedUser;
-        loadNotesForUser(currentUser.id);
-        initGoogleSignIn();
-        renderApp();
-        setTimeout(() => {
-          try { google.accounts.id.prompt(); } catch (_) {}
-        }, 1000);
-      } else {
-        signinOverlay.classList.add('open');
-        initGoogleSignIn();
-        renderApp();
+    async function init() {
+      showLoading(true);
+      try {
+        const storedUser = loadUserFromStorage();
+        if (storedUser) {
+          currentUser = storedUser;
+          await loadNotesForUser(currentUser.id);
+          initGoogleSignIn();
+          renderApp();
+          setTimeout(() => {
+            try { google.accounts.id.prompt(); } catch (_) {}
+          }, 1000);
+        } else {
+          signinOverlay.classList.add('open');
+          initGoogleSignIn();
+          renderApp();
+        }
+      } catch (err) {
+        console.error('Init error:', err);
+        showToast('Error initializing app');
+      } finally {
+        showLoading(false);
       }
     }
 
@@ -1710,10 +1823,9 @@
       }
     }, 3000);
 
-    console.log('📝 Notes App — Google Keep Style');
+    console.log('📝 Notes App — Google Keep Style (refactored)');
     console.log('🔑 Client ID:', CLIENT_ID);
     console.log('👤 User:', currentUser ? currentUser.email : 'Not signed in');
-    console.log('ℹ️  Notes are isolated per Google account using user ID in storage key.');
   </script>
 </body>
 </html>
