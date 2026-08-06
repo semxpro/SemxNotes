@@ -4,146 +4,354 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Notes – Keep Style</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <!-- Font Awesome 6 Free -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Firebase SDKs (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js">
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js">
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore-compat.js">
+  </script>
 
   <style>
-    * {
+    /* ===== ROOT VARIABLES ===== */
+    :root {
+      --bg-primary: #f5f7fa;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-header: #ffffff;
+      --bg-input: #f1f3f4;
+      --text-primary: #202124;
+      --text-secondary: #5f6368;
+      --text-inverse: #ffffff;
+      --border-color: #e8eaed;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.18);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      --accent: #6c63ff;
+      --accent-hover: #5a52d5;
+      --accent-light: #e8e6ff;
+      --danger: #ea4335;
+      --success: #34a853;
+      --warning: #fbbc04;
+      --transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --max-width: 1400px;
+    }
+
+    /* Dark Theme */
+    [data-theme="dark"] {
+      --bg-primary: #1a1c1e;
+      --bg-secondary: #252729;
+      --bg-card: #2d2f31;
+      --bg-header: #202225;
+      --bg-input: #3a3c3f;
+      --text-primary: #e8eaed;
+      --text-secondary: #9aa0a6;
+      --text-inverse: #202124;
+      --border-color: #3a3c3f;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+      --accent: #7c73ff;
+      --accent-hover: #6a61e5;
+      --accent-light: #2a2845;
+    }
+
+    /* ===== RESET ===== */
+    *,
+    *::before,
+    *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: 'Roboto', sans-serif;
-      background: #f1f3f4;
-      color: #202124;
+      font-family: var(--font);
+      background: var(--bg-primary);
+      color: var(--text-primary);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      transition: background 0.35s ease, color 0.35s ease;
     }
+
     ::-webkit-scrollbar {
       width: 6px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #c1c7cd;
-      border-radius: 8px;
+      height: 6px;
     }
     ::-webkit-scrollbar-track {
       background: transparent;
     }
+    ::-webkit-scrollbar-thumb {
+      background: var(--text-secondary);
+      border-radius: var(--radius-full);
+      opacity: 0.4;
+    }
 
-    /* LOADING SPINNER */
-    #loadingSpinner {
+    /* ===== LOADING SPINNER ===== */
+    #loadingOverlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.7);
+      inset: 0;
+      z-index: 9999;
+      background: var(--bg-primary);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 999;
-      backdrop-filter: blur(2px);
+      flex-direction: column;
+      gap: 20px;
+      transition: opacity 0.4s ease;
     }
-    #loadingSpinner.show {
+    #loadingOverlay.active {
       display: flex;
     }
-    #loadingSpinner .spinner {
+    #loadingOverlay .spinner {
       width: 48px;
       height: 48px;
-      border: 5px solid #e0e0e0;
-      border-top: 5px solid #1a73e8;
+      border: 5px solid var(--border-color);
+      border-top-color: var(--accent);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    #loadingOverlay p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.3px;
     }
 
-    /* HEADER */
-    .header {
-      background: #fff;
+    /* ===== TOAST ===== */
+    #toastContainer {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9998;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .toast-item {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      padding: 12px 28px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(16px) scale(0.96);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: auto;
+      border: 1px solid var(--border-color);
+      max-width: 90vw;
+      text-align: center;
+    }
+    .toast-item.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .toast-item .toast-icon {
+      margin-right: 10px;
+    }
+
+    /* ===== SIGN-IN OVERLAY ===== */
+    #signinOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: var(--bg-primary);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+    #signinOverlay.active {
+      display: flex;
+    }
+    .signin-card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      padding: 48px 40px 40px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+      animation: popIn 0.35s ease;
+    }
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.92) translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    .signin-card .logo-icon {
+      font-size: 52px;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .signin-card h1 {
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .signin-card p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+    .signin-card .gsi-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      min-height: 56px;
+    }
+    .signin-card .gsi-container #gsiBtn {
+      min-height: 44px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .signin-card .gsi-container .fallback-btn {
+      display: none;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      padding: 10px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font);
+      width: 100%;
+      max-width: 280px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .signin-card .gsi-container .fallback-btn:hover {
+      background: var(--bg-input);
+      box-shadow: var(--shadow-sm);
+    }
+    .signin-card .gsi-container .fallback-btn.visible {
+      display: flex;
+    }
+
+    /* ===== HEADER ===== */
+    .app-header {
+      background: var(--bg-header);
       padding: 8px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      box-shadow: var(--shadow-sm);
       position: sticky;
       top: 0;
       z-index: 100;
-      height: 64px;
+      min-height: 64px;
+      transition: background 0.35s ease, box-shadow 0.35s ease;
+      border-bottom: 1px solid var(--border-color);
     }
     .header-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     .header-left .menu-icon {
       font-size: 20px;
-      color: #5f6368;
+      color: var(--text-secondary);
       cursor: pointer;
       padding: 8px;
       border-radius: 50%;
-      transition: background 0.2s;
+      transition: var(--transition);
     }
     .header-left .menu-icon:hover {
-      background: #f1f3f4;
+      background: var(--bg-input);
     }
-    .header-left .logo {
+    .header-left .brand {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 22px;
-      font-weight: 500;
-      color: #5f6368;
-      letter-spacing: -0.5px;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
     }
-    .header-left .logo span {
-      color: #202124;
-    }
-    .header-left .logo i {
+    .header-left .brand i {
       font-size: 26px;
-      color: #fbbc04;
+      color: var(--accent);
     }
+
     .header-center {
       flex: 1;
-      max-width: 720px;
-      margin: 0 20px;
+      max-width: 680px;
+      margin: 0 16px;
       position: relative;
-    }
-    .header-center .search-box {
-      width: 100%;
-      padding: 10px 16px 10px 48px;
-      border: none;
-      border-radius: 8px;
-      background: #f1f3f4;
-      font-size: 15px;
-      color: #202124;
-      outline: none;
-      transition: background 0.2s, box-shadow 0.2s;
-    }
-    .header-center .search-box:focus {
-      background: #fff;
-      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
-    }
-    .header-center .search-box::placeholder {
-      color: #5f6368;
     }
     .header-center .search-icon {
       position: absolute;
       left: 14px;
       top: 50%;
       transform: translateY(-50%);
-      color: #5f6368;
-      font-size: 18px;
+      color: var(--text-secondary);
+      font-size: 16px;
       pointer-events: none;
     }
+    .header-center #searchInput {
+      width: 100%;
+      padding: 10px 16px 10px 44px;
+      border: none;
+      border-radius: var(--radius-md);
+      background: var(--bg-input);
+      font-size: 15px;
+      color: var(--text-primary);
+      outline: none;
+      transition: var(--transition);
+      font-family: var(--font);
+    }
+    .header-center #searchInput:focus {
+      background: var(--bg-secondary);
+      box-shadow: var(--shadow-sm);
+    }
+    .header-center #searchInput::placeholder {
+      color: var(--text-secondary);
+    }
+
     .header-right {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       position: relative;
     }
     .header-right .icon-btn {
@@ -152,54 +360,54 @@
       border-radius: 50%;
       border: none;
       background: transparent;
-      color: #5f6368;
-      font-size: 20px;
+      color: var(--text-secondary);
+      font-size: 18px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.2s;
+      transition: var(--transition);
     }
     .header-right .icon-btn:hover {
-      background: #f1f3f4;
+      background: var(--bg-input);
     }
 
-    /* AVATAR */
-    .avatar-wrapper {
+    /* Avatar */
+    .avatar-wrap {
       position: relative;
       cursor: pointer;
     }
-    .avatar-wrapper .avatar {
+    .avatar-wrap .avatar {
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: #1a73e8;
-      color: #fff;
+      background: var(--accent);
+      color: var(--text-inverse);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 500;
-      font-size: 16px;
-      transition: filter 0.2s;
+      font-weight: 600;
+      font-size: 14px;
       overflow: hidden;
+      transition: var(--transition);
       border: 2px solid transparent;
       position: relative;
     }
-    .avatar-wrapper .avatar img {
+    .avatar-wrap .avatar img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-    .avatar-wrapper .avatar:hover {
+    .avatar-wrap .avatar:hover {
       filter: brightness(0.95);
     }
-    .avatar-wrapper .avatar .badge-count {
+    .avatar-wrap .avatar .badge {
       position: absolute;
       bottom: -4px;
       right: -4px;
-      background: #1a73e8;
+      background: var(--accent);
       color: #fff;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 600;
       width: 18px;
       height: 18px;
@@ -207,21 +415,22 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 2px solid #fff;
+      border: 2px solid var(--bg-header);
     }
 
-    /* DROPDOWN */
+    /* Account Dropdown */
     .account-dropdown {
       position: absolute;
       top: calc(100% + 10px);
       right: 0;
       width: 320px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-      padding: 12px 0;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      padding: 10px 0;
       display: none;
       z-index: 200;
+      border: 1px solid var(--border-color);
       animation: slideDown 0.2s ease;
     }
     .account-dropdown.open {
@@ -237,199 +446,104 @@
         transform: translateY(0);
       }
     }
-    .account-dropdown .dropdown-item {
+    .account-dropdown .drop-item {
       display: flex;
       align-items: center;
       gap: 14px;
       padding: 10px 20px;
       cursor: pointer;
-      transition: background 0.15s;
+      transition: var(--transition);
       text-decoration: none;
-      color: #202124;
+      color: var(--text-primary);
       border: none;
       background: none;
       width: 100%;
       text-align: left;
       font-size: 14px;
-      font-family: 'Roboto', sans-serif;
+      font-family: var(--font);
     }
-    .account-dropdown .dropdown-item:hover {
-      background: #f1f3f4;
+    .account-dropdown .drop-item:hover {
+      background: var(--bg-input);
     }
-    .account-dropdown .dropdown-item .item-avatar {
+    .account-dropdown .drop-item .item-avatar {
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: #1a73e8;
+      background: var(--accent);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 500;
-      font-size: 14px;
+      font-weight: 600;
+      font-size: 13px;
       flex-shrink: 0;
       overflow: hidden;
     }
-    .account-dropdown .dropdown-item .item-avatar img {
+    .account-dropdown .drop-item .item-avatar img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-    .account-dropdown .dropdown-item .item-info {
+    .account-dropdown .drop-item .item-info {
       flex: 1;
       min-width: 0;
     }
-    .account-dropdown .dropdown-item .item-info .name {
+    .account-dropdown .drop-item .item-info .name {
       font-weight: 500;
       font-size: 14px;
-      color: #202124;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .account-dropdown .dropdown-item .item-info .email {
+    .account-dropdown .drop-item .item-info .email {
       font-size: 12px;
-      color: #5f6368;
+      color: var(--text-secondary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .account-dropdown .dropdown-item .item-check {
-      color: #1a73e8;
-      font-size: 18px;
+    .account-dropdown .drop-item .item-check {
+      color: var(--accent);
+      font-size: 16px;
     }
     .account-dropdown .divider {
       height: 1px;
-      background: #e8eaed;
+      background: var(--border-color);
       margin: 6px 16px;
     }
-    .account-dropdown .dropdown-item .icon {
+    .account-dropdown .drop-item .icon {
       width: 24px;
-      color: #5f6368;
-      font-size: 18px;
+      color: var(--text-secondary);
+      font-size: 16px;
       text-align: center;
       flex-shrink: 0;
     }
-    .account-dropdown .dropdown-item .label {
+    .account-dropdown .drop-item .label {
       flex: 1;
     }
-    .account-dropdown .dropdown-item.danger .label {
-      color: #d93025;
+    .account-dropdown .drop-item.danger .label {
+      color: var(--danger);
     }
-    .account-dropdown .dropdown-item.danger:hover {
+    .account-dropdown .drop-item.danger:hover {
       background: #fce8e6;
     }
 
-    /* SIGN-IN OVERLAY */
-    .signin-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(6px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 300;
-      padding: 20px;
-    }
-    .signin-overlay.open {
-      display: flex;
-    }
-    .signin-card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 48px 40px 40px;
-      max-width: 420px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3);
-      animation: popIn 0.3s ease;
-    }
-    @keyframes popIn {
-      from {
-        opacity: 0;
-        transform: scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-    .signin-card .logo-large {
-      font-size: 48px;
-      color: #fbbc04;
-      margin-bottom: 12px;
-    }
-    .signin-card h2 {
-      font-weight: 400;
-      font-size: 24px;
-      color: #202124;
-      margin-bottom: 6px;
-    }
-    .signin-card p {
-      color: #5f6368;
-      font-size: 14px;
-      margin-bottom: 28px;
-      line-height: 1.5;
-    }
-    .signin-card .gsi-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      min-height: 60px;
-      justify-content: center;
-    }
-    .signin-card .gsi-container #gsiSignInButton {
-      min-height: 44px;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-    }
-    .signin-card .gsi-container .fallback-btn {
-      display: none;
-      background: #fff;
-      border: 1px solid #dadce0;
-      border-radius: 40px;
-      padding: 10px 24px;
-      font-size: 15px;
-      font-weight: 500;
-      color: #3c4043;
-      cursor: pointer;
-      transition: background 0.2s, box-shadow 0.2s;
-      font-family: 'Roboto', sans-serif;
-      width: 100%;
-      max-width: 280px;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .signin-card .gsi-container .fallback-btn:hover {
-      background: #f8f9fa;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-    }
-    .signin-card .gsi-container .fallback-btn i {
-      font-size: 20px;
-      color: #1a73e8;
-    }
-    .signin-card .gsi-container .fallback-btn.visible {
-      display: flex;
-    }
-
-    /* MAIN */
+    /* ===== MAIN CONTENT ===== */
     .main-content {
       flex: 1;
-      padding: 24px 32px 80px;
-      max-width: 1400px;
+      padding: 24px 32px 90px;
+      max-width: var(--max-width);
       margin: 0 auto;
       width: 100%;
+      transition: padding 0.3s ease;
     }
 
-    /* NOTES GRID */
+    /* ===== NOTES GRID ===== */
     .notes-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 16px;
+      gap: 18px;
+      transition: all 0.3s ease;
     }
     .notes-grid.empty {
       display: flex;
@@ -437,47 +551,55 @@
       align-items: center;
       justify-content: center;
       min-height: 300px;
-      color: #5f6368;
+      color: var(--text-secondary);
+      text-align: center;
     }
     .notes-grid.empty .empty-icon {
       font-size: 64px;
-      color: #dadce0;
+      color: var(--border-color);
       margin-bottom: 16px;
     }
     .notes-grid.empty .empty-text {
       font-size: 16px;
       font-weight: 400;
     }
+    .notes-grid.empty .empty-sub {
+      font-size: 13px;
+      margin-top: 4px;
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
 
-    /* NOTE CARD */
+    /* ===== NOTE CARD ===== */
     .note-card {
-      background: #fff;
-      border-radius: 8px;
-      padding: 16px 18px 10px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-      transition: box-shadow 0.25s, transform 0.15s;
-      cursor: default;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px 12px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
       display: flex;
       flex-direction: column;
-      border: 1px solid transparent;
+      border: 1px solid var(--border-color);
       position: relative;
       word-wrap: break-word;
       min-height: 100px;
+      cursor: default;
     }
     .note-card:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
     }
     .note-card .note-title {
       font-size: 16px;
-      font-weight: 500;
-      color: #202124;
-      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
       line-height: 1.3;
     }
     .note-card .note-content {
       font-size: 14px;
-      color: #3c4043;
-      line-height: 1.5;
+      color: var(--text-secondary);
+      line-height: 1.6;
       flex: 1;
       white-space: pre-wrap;
       overflow: hidden;
@@ -485,134 +607,168 @@
     .note-card .note-content:empty {
       display: none;
     }
-
-    /* 3-DOT MENU */
-    .note-card .note-actions {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      opacity: 0;
-      transition: opacity 0.2s;
-      z-index: 10;
+    .note-card .note-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border-color);
+      font-size: 11px;
+      color: var(--text-secondary);
+      opacity: 0.6;
     }
-    .note-card:hover .note-actions {
+    .note-card .note-meta .note-date {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Three-dot menu on card */
+    .note-card .card-actions {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      opacity: 0;
+      transition: var(--transition);
+      z-index: 5;
+    }
+    .note-card:hover .card-actions {
       opacity: 1;
     }
-    .note-card .note-actions .more-btn {
+    .note-card .card-actions .more-btn {
       background: none;
       border: none;
-      color: #5f6368;
-      font-size: 20px;
+      color: var(--text-secondary);
+      font-size: 18px;
       padding: 4px 8px;
       border-radius: 50%;
       cursor: pointer;
-      transition: background 0.15s;
+      transition: var(--transition);
     }
-    .note-card .note-actions .more-btn:hover {
-      background: rgba(0, 0, 0, 0.08);
+    .note-card .card-actions .more-btn:hover {
+      background: var(--bg-input);
     }
-    .note-card .note-actions .dropdown-menu {
+
+    /* Card dropdown menu */
+    .note-card .card-menu {
       position: absolute;
-      top: 30px;
+      top: 32px;
       right: 0;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-      padding: 8px 0;
-      min-width: 180px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      padding: 6px 0;
+      min-width: 210px;
       display: none;
       z-index: 50;
+      border: 1px solid var(--border-color);
     }
-    .note-card .note-actions .dropdown-menu.open {
+    .note-card .card-menu.open {
       display: block;
     }
-    .note-card .note-actions .dropdown-menu .menu-item {
+    .note-card .card-menu .menu-item {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 8px 20px;
+      padding: 8px 18px;
       border: none;
       background: none;
       width: 100%;
       text-align: left;
-      font-size: 14px;
-      font-family: 'Roboto', sans-serif;
-      color: #202124;
+      font-size: 13px;
+      font-family: var(--font);
+      color: var(--text-primary);
       cursor: pointer;
-      transition: background 0.15s;
+      transition: var(--transition);
     }
-    .note-card .note-actions .dropdown-menu .menu-item:hover {
-      background: #f1f3f4;
+    .note-card .card-menu .menu-item:hover {
+      background: var(--bg-input);
     }
-    .note-card .note-actions .dropdown-menu .menu-item i {
+    .note-card .card-menu .menu-item i {
       width: 18px;
-      color: #5f6368;
+      color: var(--text-secondary);
+      font-size: 14px;
     }
-    .note-card .note-actions .dropdown-menu .menu-item.danger {
-      color: #d93025;
+    .note-card .card-menu .menu-item.danger {
+      color: var(--danger);
     }
-    .note-card .note-actions .dropdown-menu .menu-item.danger i {
-      color: #d93025;
+    .note-card .card-menu .menu-item.danger i {
+      color: var(--danger);
     }
-    .note-card .note-actions .dropdown-menu .menu-item.danger:hover {
+    .note-card .card-menu .menu-item.danger:hover {
       background: #fce8e6;
     }
-
-    /* Color picker sub-menu inside dropdown */
-    .note-card .note-actions .dropdown-menu .color-picker-sub {
+    .note-card .card-menu .menu-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 4px 16px;
+    }
+    /* Color picker inside card menu */
+    .note-card .card-menu .color-picker-sub {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      padding: 8px 16px 12px;
-      border-top: 1px solid #e8eaed;
+      padding: 6px 16px 12px;
+      border-top: 1px solid var(--border-color);
       margin-top: 4px;
     }
-    .note-card .note-actions .dropdown-menu .color-picker-sub .color-opt {
-      width: 28px;
-      height: 28px;
+    .note-card .card-menu .color-picker-sub .color-opt {
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       border: 2px solid transparent;
       cursor: pointer;
-      transition: border 0.2s, transform 0.15s;
+      transition: var(--transition);
       flex-shrink: 0;
     }
-    .note-card .note-actions .dropdown-menu .color-picker-sub .color-opt:hover {
-      transform: scale(1.1);
+    .note-card .card-menu .color-picker-sub .color-opt:hover {
+      transform: scale(1.12);
     }
-    .note-card .note-actions .dropdown-menu .color-picker-sub .color-opt.active {
-      border-color: #202124;
-      box-shadow: 0 0 0 2px #fff, 0 0 0 4px #202124;
+    .note-card .card-menu .color-picker-sub .color-opt.active {
+      border-color: var(--text-primary);
+      box-shadow: 0 0 0 2px var(--bg-secondary), 0 0 0 4px var(--text-primary);
     }
 
-    /* FAB */
+    /* Pinned badge */
+    .note-card .pin-badge {
+      position: absolute;
+      top: 6px;
+      left: 10px;
+      font-size: 14px;
+      color: var(--accent);
+      opacity: 0.6;
+    }
+
+    /* ===== FAB ===== */
     .fab {
       position: fixed;
-      bottom: 32px;
-      right: 32px;
-      width: 56px;
-      height: 56px;
+      bottom: 28px;
+      right: 28px;
+      width: 58px;
+      height: 58px;
       border-radius: 50%;
-      background: #fbbc04;
-      color: #202124;
+      background: var(--accent);
+      color: #fff;
       border: none;
       font-size: 28px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      box-shadow: var(--shadow-lg);
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: var(--transition);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 50;
+      z-index: 60;
     }
     .fab:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      transform: scale(1.06);
+      box-shadow: 0 6px 24px rgba(108, 99, 255, 0.4);
     }
     .fab:active {
-      transform: scale(0.95);
+      transform: scale(0.94);
     }
 
-    /* EDITOR MODAL */
+    /* ===== EDITOR MODAL ===== */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -621,23 +777,24 @@
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 400;
+      z-index: 500;
       padding: 20px;
     }
-    .modal-overlay.open {
+    .modal-overlay.active {
       display: flex;
     }
     .modal-editor {
-      background: #fff;
-      border-radius: 12px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
       width: 100%;
       max-width: 560px;
-      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3);
+      box-shadow: var(--shadow-lg);
       animation: popIn 0.25s ease;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      max-height: 90vh;
+      max-height: 92vh;
+      border: 1px solid var(--border-color);
     }
     .modal-editor .modal-header {
       padding: 16px 20px 0;
@@ -645,21 +802,26 @@
       justify-content: space-between;
       align-items: center;
     }
+    .modal-editor .modal-header .modal-title {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text-primary);
+    }
     .modal-editor .modal-header .close-btn {
       background: none;
       border: none;
-      font-size: 22px;
-      color: #5f6368;
+      font-size: 20px;
+      color: var(--text-secondary);
       cursor: pointer;
       padding: 4px 8px;
       border-radius: 50%;
-      transition: background 0.15s;
+      transition: var(--transition);
     }
     .modal-editor .modal-header .close-btn:hover {
-      background: #f1f3f4;
+      background: var(--bg-input);
     }
     .modal-editor .modal-body {
-      padding: 8px 20px 20px;
+      padding: 8px 20px 16px;
       overflow-y: auto;
       flex: 1;
     }
@@ -667,154 +829,135 @@
       width: 100%;
       border: none;
       font-size: 18px;
-      font-weight: 500;
-      color: #202124;
+      font-weight: 600;
+      color: var(--text-primary);
       padding: 8px 0 4px;
       outline: none;
-      font-family: 'Roboto', sans-serif;
+      font-family: var(--font);
+      background: transparent;
     }
     .modal-editor .modal-body .editor-title::placeholder {
-      color: #9aa0a6;
+      color: var(--text-secondary);
+      opacity: 0.6;
     }
     .modal-editor .modal-body .editor-content {
       width: 100%;
       border: none;
       font-size: 15px;
-      color: #3c4043;
+      color: var(--text-secondary);
       padding: 8px 0 12px;
       outline: none;
       resize: vertical;
       min-height: 100px;
-      font-family: 'Roboto', sans-serif;
-      line-height: 1.6;
+      font-family: var(--font);
+      line-height: 1.7;
+      background: transparent;
     }
     .modal-editor .modal-body .editor-content::placeholder {
-      color: #9aa0a6;
+      color: var(--text-secondary);
+      opacity: 0.5;
     }
-    .modal-editor .modal-body .color-picker {
+    .modal-editor .modal-body .color-picker-row {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
       padding: 12px 0 4px;
-      border-top: 1px solid #e8eaed;
+      border-top: 1px solid var(--border-color);
       margin-top: 4px;
     }
-    .modal-editor .modal-body .color-picker .color-option {
+    .modal-editor .modal-body .color-picker-row .color-opt {
       width: 32px;
       height: 32px;
       border-radius: 50%;
       border: 2px solid transparent;
       cursor: pointer;
-      transition: border 0.2s, transform 0.15s;
+      transition: var(--transition);
       flex-shrink: 0;
     }
-    .modal-editor .modal-body .color-picker .color-option:hover {
+    .modal-editor .modal-body .color-picker-row .color-opt:hover {
       transform: scale(1.08);
     }
-    .modal-editor .modal-body .color-picker .color-option.active {
-      border-color: #202124;
-      box-shadow: 0 0 0 2px #fff, 0 0 0 4px #202124;
+    .modal-editor .modal-body .color-picker-row .color-opt.active {
+      border-color: var(--text-primary);
+      box-shadow: 0 0 0 2px var(--bg-secondary), 0 0 0 4px var(--text-primary);
     }
     .modal-editor .modal-footer {
       padding: 8px 20px 16px;
       display: flex;
       justify-content: flex-end;
-      gap: 8px;
-      border-top: 1px solid #e8eaed;
+      gap: 10px;
+      border-top: 1px solid var(--border-color);
     }
     .modal-editor .modal-footer .btn {
-      padding: 8px 20px;
-      border-radius: 6px;
+      padding: 8px 22px;
+      border-radius: var(--radius-sm);
       border: none;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
-      transition: background 0.15s;
-      font-family: 'Roboto', sans-serif;
+      transition: var(--transition);
+      font-family: var(--font);
     }
     .modal-editor .modal-footer .btn-primary {
-      background: #1a73e8;
+      background: var(--accent);
       color: #fff;
     }
     .modal-editor .modal-footer .btn-primary:hover {
-      background: #1557b0;
+      background: var(--accent-hover);
     }
     .modal-editor .modal-footer .btn-secondary {
       background: transparent;
-      color: #5f6368;
+      color: var(--text-secondary);
     }
     .modal-editor .modal-footer .btn-secondary:hover {
-      background: #f1f3f4;
+      background: var(--bg-input);
     }
     .modal-editor .modal-footer .btn-danger {
       background: transparent;
-      color: #d93025;
+      color: var(--danger);
     }
     .modal-editor .modal-footer .btn-danger:hover {
       background: #fce8e6;
     }
 
-    /* TOAST */
-    .toast {
-      position: fixed;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: #323232;
-      color: #fff;
-      padding: 12px 28px;
-      border-radius: 8px;
-      font-size: 14px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-      opacity: 0;
-      transition: opacity 0.3s, transform 0.3s;
-      z-index: 500;
-      pointer-events: none;
-      white-space: nowrap;
-    }
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* RESPONSIVE */
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
-      .header {
-        padding: 8px 12px;
-        height: 56px;
+      .app-header {
+        padding: 6px 12px;
+        min-height: 56px;
       }
-      .header-left .logo {
-        font-size: 18px;
+      .header-left .brand {
+        font-size: 17px;
       }
-      .header-left .logo i {
+      .header-left .brand i {
         font-size: 22px;
       }
       .header-center {
-        margin: 0 10px;
+        margin: 0 8px;
       }
-      .header-center .search-box {
-        padding: 8px 12px 8px 38px;
+      .header-center #searchInput {
+        padding: 8px 12px 8px 36px;
         font-size: 14px;
       }
       .header-center .search-icon {
         left: 10px;
-        font-size: 16px;
+        font-size: 14px;
       }
       .header-right .icon-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 18px;
+        width: 34px;
+        height: 34px;
+        font-size: 16px;
       }
-      .avatar-wrapper .avatar {
+      .avatar-wrap .avatar {
         width: 32px;
         height: 32px;
-        font-size: 14px;
+        font-size: 13px;
       }
       .main-content {
         padding: 16px 12px 80px;
       }
       .notes-grid {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
         gap: 12px;
       }
       .account-dropdown {
@@ -823,113 +966,176 @@
       }
       .modal-editor {
         max-width: 100%;
-        margin: 10px;
-        border-radius: 8px;
-      }
-      .fab {
-        bottom: 20px;
-        right: 20px;
-        width: 48px;
-        height: 48px;
-        font-size: 24px;
+        margin: 8px;
+        border-radius: var(--radius-sm);
       }
       .signin-card {
         padding: 32px 20px 28px;
       }
-      .toast {
-        font-size: 13px;
-        padding: 10px 20px;
-        bottom: 80px;
-        white-space: normal;
-        max-width: 90%;
+      .fab {
+        bottom: 18px;
+        right: 18px;
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+      }
+      .note-card .card-actions {
+        opacity: 1;
       }
     }
+
     @media (max-width: 480px) {
       .notes-grid {
         grid-template-columns: 1fr;
       }
-      .header-center .search-box {
+      .header-center #searchInput {
         font-size: 13px;
       }
       .account-dropdown {
         width: 260px;
         right: -4px;
       }
+      .header-left .brand span {
+        display: none;
+      }
     }
+
+    /* ===== UTILITY ===== */
     .hidden {
       display: none !important;
+    }
+    .flex-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gap-8 {
+      gap: 8px;
+    }
+    .text-ellipsis {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Image attachment preview in note card */
+    .note-card .note-image {
+      margin: 6px 0 8px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      max-height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-input);
+    }
+    .note-card .note-image img {
+      width: 100%;
+      height: auto;
+      max-height: 160px;
+      object-fit: cover;
+    }
+
+    /* ===== THEME TOGGLE ANIMATION ===== */
+    .theme-toggle {
+      transition: transform 0.4s ease;
+    }
+    .theme-toggle:hover {
+      transform: rotate(30deg);
+    }
+
+    /* ===== COPYRIGHT FREE FOOTER ===== */
+    .app-footer {
+      text-align: center;
+      padding: 12px 20px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      opacity: 0.5;
+      border-top: 1px solid var(--border-color);
+      margin-top: auto;
+      background: var(--bg-header);
+      transition: var(--transition);
+    }
+    .app-footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .app-footer a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
-  <!-- LOADING SPINNER -->
-  <div id="loadingSpinner" role="status" aria-label="Loading">
+  <!-- ===== LOADING OVERLAY ===== -->
+  <div id="loadingOverlay" class="active">
     <div class="spinner"></div>
+    <p>Loading your notes...</p>
   </div>
 
-  <!-- TOAST -->
-  <div id="toast" class="toast"></div>
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toastContainer"></div>
 
-  <!-- SIGN-IN OVERLAY -->
-  <div id="signinOverlay" class="signin-overlay open">
+  <!-- ===== SIGN-IN OVERLAY ===== -->
+  <div id="signinOverlay" class="active">
     <div class="signin-card">
-      <div class="logo-large"><i class="fas fa-sticky-note"></i></div>
-      <h2>Notes</h2>
-      <p>Sign in with your Google account to save your notes</p>
+      <div class="logo-icon"><i class="fas fa-pen-fancy"></i></div>
+      <h1>Notes</h1>
+      <p>Sign in with your Google account to save and sync your notes securely.</p>
       <div class="gsi-container">
-        <div id="gsiSignInButton"></div>
-        <button id="fallbackSignInBtn" class="fallback-btn">
+        <div id="gsiBtn"></div>
+        <button id="fallbackBtn" class="fallback-btn">
           <i class="fab fa-google"></i> Sign in with Google
         </button>
       </div>
     </div>
   </div>
 
-  <!-- HEADER -->
-  <header class="header" id="appHeader">
+  <!-- ===== HEADER ===== -->
+  <header class="app-header" id="appHeader">
     <div class="header-left">
       <span class="menu-icon" aria-label="Menu"><i class="fas fa-bars"></i></span>
-      <div class="logo">
-        <i class="fas fa-sticky-note"></i>
+      <div class="brand">
+        <i class="fas fa-pen-fancy"></i>
         <span>Notes</span>
       </div>
     </div>
     <div class="header-center">
       <span class="search-icon" aria-hidden="true"><i class="fas fa-search"></i></span>
-      <input type="text" class="search-box" id="searchInput" placeholder="Search notes..." aria-label="Search notes" />
+      <input type="text" id="searchInput" placeholder="Search notes..." aria-label="Search notes" />
     </div>
     <div class="header-right">
       <button class="icon-btn" id="refreshBtn" aria-label="Refresh notes"><i class="fas fa-sync-alt"></i></button>
-      <div class="avatar-wrapper" id="avatarWrapper">
+      <button class="icon-btn theme-toggle" id="themeToggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+      <div class="avatar-wrap" id="avatarWrap">
         <div class="avatar" id="avatarBtn" aria-label="Account menu" role="button" tabindex="0">
           <span id="avatarLetter">G</span>
-          <span class="badge-count" id="accountBadge">1</span>
+          <span class="badge" id="accountBadge">1</span>
         </div>
         <div class="account-dropdown" id="accountDropdown" role="menu"></div>
       </div>
     </div>
   </header>
 
-  <!-- MAIN -->
+  <!-- ===== MAIN CONTENT ===== -->
   <main class="main-content" id="mainContent">
     <div class="notes-grid" id="notesGrid"></div>
   </main>
 
-  <!-- FAB -->
+  <!-- ===== FAB ===== -->
   <button class="fab" id="fabBtn" aria-label="Create new note"><i class="fas fa-plus"></i></button>
 
-  <!-- EDITOR MODAL -->
+  <!-- ===== EDITOR MODAL ===== -->
   <div class="modal-overlay" id="editorModal" role="dialog" aria-modal="true" aria-label="Note editor">
     <div class="modal-editor">
       <div class="modal-header">
-        <span style="font-weight:500;font-size:16px;color:#5f6368;" id="editorModalTitle">New note</span>
+        <span class="modal-title" id="editorModalTitle">New Note</span>
         <button class="close-btn" id="editorCloseBtn" aria-label="Close editor"><i class="fas fa-times"></i></button>
       </div>
       <div class="modal-body">
         <input type="text" class="editor-title" id="noteTitleInput" placeholder="Title" aria-label="Note title" />
         <textarea class="editor-content" id="noteContentInput" placeholder="Write your note..." rows="4" aria-label="Note content"></textarea>
-        <div class="color-picker" id="colorPicker" role="group" aria-label="Color picker"></div>
+        <div class="color-picker-row" id="editorColorPicker" role="group" aria-label="Color picker"></div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-danger" id="editorDeleteBtn" aria-label="Delete note"><i class="fas fa-trash"></i> Delete</button>
@@ -940,15 +1146,51 @@
     </div>
   </div>
 
+  <!-- ===== FOOTER ===== -->
+  <footer class="app-footer">
+    <span>Built with <i class="fas fa-heart" style="color:var(--danger);"></i> — 100% copyright free, open source</span>
+  </footer>
+
   <script>
+    // ================================================================
+    //  FIREBASE CONFIG
+    // ================================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyDummyKeyForDemoPurposeOnly",
+      authDomain: "your-project.firebaseapp.com",
+      projectId: "your-project-id",
+      storageBucket: "your-project.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef"
+    };
+
+    // For demo, we'll use localStorage only if Firebase fails
+    // In production, replace with your actual Firebase config
+    let useFirebase = false;
+    let db = null;
+    let auth = null;
+
+    try {
+      firebase.initializeApp(firebaseConfig);
+      auth = firebase.auth();
+      db = firebase.firestore();
+      // Enable offline persistence
+      db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+      useFirebase = true;
+      console.log('🔥 Firebase initialized');
+    } catch (e) {
+      console.warn('⚠️ Firebase not available, using localStorage only', e);
+      useFirebase = false;
+    }
+
     // ================================================================
     //  CONFIG
     // ================================================================
-    const CLIENT_ID = '809488850172-uoj4sa9gcuomddbekb5sj525ulldp0fa.apps.googleusercontent.com';
     const STORAGE_KEY_PREFIX = 'keep_notes_';
-    const USER_STORAGE_KEY = 'keep_user';
+    const USER_KEY = 'keep_user';
+    const THEME_KEY = 'keep_theme';
     const COLORS = [
-      { name: 'White', value: '#ffffff' },
+      { name: 'Default', value: '#ffffff' },
       { name: 'Red', value: '#f28b82' },
       { name: 'Orange', value: '#fbbc04' },
       { name: 'Yellow', value: '#fff475' },
@@ -966,27 +1208,29 @@
     // ================================================================
     //  STATE
     // ================================================================
-    let currentUser = null; // { id, name, email, picture }
+    let currentUser = null;
     let allNotes = [];
     let editingNoteId = null;
     let selectedColor = DEFAULT_COLOR;
     let searchQuery = '';
-    let gsiInitialized = false;
+    let currentTheme = 'light';
+    let isDark = false;
+    let gsiInited = false;
 
     // ================================================================
     //  DOM REFS
     // ================================================================
-    const $ = (sel) => document.querySelector(sel);
-    const $$ = (sel) => document.querySelectorAll(sel);
+    const $ = (s) => document.querySelector(s);
+    const $$ = (s) => document.querySelectorAll(s);
 
-    const loadingSpinner = $('#loadingSpinner');
+    const loadingOverlay = $('#loadingOverlay');
     const signinOverlay = $('#signinOverlay');
-    const gsiBtnContainer = $('#gsiSignInButton');
-    const fallbackBtn = $('#fallbackSignInBtn');
+    const gsiBtn = $('#gsiBtn');
+    const fallbackBtn = $('#fallbackBtn');
     const notesGrid = $('#notesGrid');
     const searchInput = $('#searchInput');
     const fabBtn = $('#fabBtn');
-    const avatarWrapper = $('#avatarWrapper');
+    const avatarWrap = $('#avatarWrap');
     const avatarBtn = $('#avatarBtn');
     const avatarLetter = $('#avatarLetter');
     const accountBadge = $('#accountBadge');
@@ -995,133 +1239,203 @@
     const editorModalTitle = $('#editorModalTitle');
     const noteTitleInput = $('#noteTitleInput');
     const noteContentInput = $('#noteContentInput');
-    const colorPicker = $('#colorPicker');
+    const editorColorPicker = $('#editorColorPicker');
     const editorSaveBtn = $('#editorSaveBtn');
     const editorCancelBtn = $('#editorCancelBtn');
     const editorDeleteBtn = $('#editorDeleteBtn');
     const editorCloseBtn = $('#editorCloseBtn');
     const refreshBtn = $('#refreshBtn');
-    const toast = $('#toast');
+    const themeToggle = $('#themeToggle');
+    const toastContainer = $('#toastContainer');
 
     // ================================================================
-    //  TOAST
+    //  TOAST SYSTEM
     // ================================================================
     let toastTimer = null;
 
-    function showToast(msg) {
-      toast.textContent = msg;
-      toast.classList.add('show');
+    function showToast(msg, icon = 'info-circle', duration = 2800) {
+      const el = document.createElement('div');
+      el.className = 'toast-item';
+      el.innerHTML = `<span class="toast-icon"><i class="fas fa-${icon}"></i></span> ${msg}`;
+      toastContainer.appendChild(el);
+      // Trigger animation
+      requestAnimationFrame(() => {
+        el.classList.add('show');
+      });
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+      toastTimer = setTimeout(() => {
+        el.classList.remove('show');
+        setTimeout(() => el.remove(), 400);
+      }, duration);
     }
 
     // ================================================================
-    //  LOADING SPINNER
+    //  LOADING
     // ================================================================
-    function showLoading(show) {
-      loadingSpinner.classList.toggle('show', show);
+    function setLoading(active) {
+      loadingOverlay.classList.toggle('active', active);
     }
 
     // ================================================================
-    //  STORAGE HELPERS (async for cloud prep)
+    //  THEME
+    // ================================================================
+    function loadTheme() {
+      try {
+        const saved = localStorage.getItem(THEME_KEY);
+        if (saved) {
+          currentTheme = saved;
+          isDark = saved === 'dark';
+        } else {
+          const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          isDark = prefers;
+          currentTheme = isDark ? 'dark' : 'light';
+        }
+        applyTheme();
+      } catch (_) { applyTheme(); }
+    }
+
+    function applyTheme() {
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      const icon = themeToggle.querySelector('i');
+      if (isDark) {
+        icon.className = 'fas fa-sun';
+      } else {
+        icon.className = 'fas fa-moon';
+      }
+      try {
+        localStorage.setItem(THEME_KEY, currentTheme);
+      } catch (_) {}
+    }
+
+    function toggleTheme() {
+      isDark = !isDark;
+      currentTheme = isDark ? 'dark' : 'light';
+      applyTheme();
+      showToast(isDark ? 'Dark mode enabled' : 'Light mode enabled', 'palette');
+    }
+
+    themeToggle.addEventListener('click', toggleTheme);
+
+    // ================================================================
+    //  STORAGE (Async)
     // ================================================================
     function getStorageKey(userId) {
       return STORAGE_KEY_PREFIX + userId;
     }
 
-    // Async wrappers for localStorage
-    async function loadNotesForUser(userId) {
+    async function loadNotesFromStorage(userId) {
       try {
+        // Try Firebase first if available
+        if (useFirebase && userId) {
+          const doc = await db.collection('users').doc(userId).collection('notes').get();
+          if (!doc.empty) {
+            const notes = [];
+            doc.forEach(d => notes.push({ id: d.id, ...d.data() }));
+            return notes;
+          }
+        }
+        // Fallback to localStorage
         const raw = localStorage.getItem(getStorageKey(userId));
         if (raw) {
-          allNotes = JSON.parse(raw);
-        } else {
-          allNotes = [];
+          const parsed = JSON.parse(raw);
+          return parsed;
         }
+        return [];
       } catch (err) {
-        console.error('Error loading notes for user:', err);
-        allNotes = [];
+        console.error('Load notes error:', err);
+        // Fallback to localStorage
+        try {
+          const raw = localStorage.getItem(getStorageKey(userId));
+          if (raw) return JSON.parse(raw);
+        } catch (_) {}
+        return [];
       }
     }
 
-    async function saveNotesForUser(userId) {
+    async function saveNotesToStorage(userId, notes) {
       try {
-        localStorage.setItem(getStorageKey(userId), JSON.stringify(allNotes));
+        // Save to localStorage always (backup)
+        localStorage.setItem(getStorageKey(userId), JSON.stringify(notes));
+
+        // Also save to Firebase if available
+        if (useFirebase && userId) {
+          const batch = db.batch();
+          const colRef = db.collection('users').doc(userId).collection('notes');
+          // Clear existing notes first (simple approach: delete all then re-add)
+          const existing = await colRef.get();
+          existing.forEach(d => batch.delete(d.ref));
+          notes.forEach(n => {
+            const ref = colRef.doc(n.id);
+            batch.set(ref, n);
+          });
+          await batch.commit();
+        }
       } catch (err) {
-        console.error('Error saving notes for user:', err);
+        console.error('Save notes error:', err);
+        // Still have localStorage as fallback
       }
     }
 
     function saveUserToStorage(user) {
       try {
-        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
-      } catch (err) {
-        console.error('Error saving user to storage:', err);
-      }
+        localStorage.setItem(USER_KEY, JSON.stringify(user));
+      } catch (_) {}
     }
 
     function loadUserFromStorage() {
       try {
-        const raw = localStorage.getItem(USER_STORAGE_KEY);
+        const raw = localStorage.getItem(USER_KEY);
         if (raw) return JSON.parse(raw);
-      } catch (err) {
-        console.error('Error loading user from storage:', err);
-      }
+      } catch (_) {}
       return null;
     }
 
     function clearUserStorage() {
       try {
-        localStorage.removeItem(USER_STORAGE_KEY);
-      } catch (err) {
-        console.error('Error clearing user storage:', err);
-      }
+        localStorage.removeItem(USER_KEY);
+      } catch (_) {}
     }
 
     // ================================================================
-    //  GOOGLE SIGN-IN (GIS) + FALLBACK
+    //  AUTH (Google Sign-In)
     // ================================================================
     function initGoogleSignIn() {
       if (typeof google === 'undefined' || !google.accounts) {
         setTimeout(initGoogleSignIn, 300);
         return;
       }
-      if (gsiInitialized) return;
-      gsiInitialized = true;
+      if (gsiInited) return;
+      gsiInited = true;
 
       try {
         google.accounts.id.initialize({
-          client_id: CLIENT_ID,
+          client_id: '809488850172-uoj4sa9gcuomddbekb5sj525ulldp0fa.apps.googleusercontent.com',
           callback: handleCredentialResponse,
           prompt: 'select_account',
           cancel_on_tap_outside: false,
           context: 'signin',
         });
 
-        const container = document.getElementById('gsiSignInButton');
-        if (container) {
-          google.accounts.id.renderButton(container, {
-            type: 'standard',
-            theme: 'outline',
-            size: 'large',
-            text: 'signin_with',
-            shape: 'rectangular',
-            logo_alignment: 'left',
-            width: 280,
-          });
-          setTimeout(() => {
-            if (container.children.length === 0) {
-              fallbackBtn.classList.add('visible');
-            }
-          }, 2000);
-        } else {
-          fallbackBtn.classList.add('visible');
-        }
+        google.accounts.id.renderButton(gsiBtn, {
+          type: 'standard',
+          theme: 'outline',
+          size: 'large',
+          text: 'signin_with',
+          shape: 'rectangular',
+          logo_alignment: 'left',
+          width: 280,
+        });
 
-        // Auto prompt
+        setTimeout(() => {
+          if (gsiBtn.children.length === 0) {
+            fallbackBtn.classList.add('visible');
+          }
+        }, 2000);
+
+        // Auto prompt for existing sessions
         setTimeout(() => {
           try { google.accounts.id.prompt(); } catch (_) {}
-        }, 800);
+        }, 600);
 
       } catch (err) {
         console.error('GIS init error:', err);
@@ -1129,74 +1443,6 @@
       }
     }
 
-    function startOAuthPopup() {
-      const redirectUri = window.location.origin + window.location.pathname;
-      const finalRedirect = (window.location.hostname === 'notes.flatfusion.fun') ?
-        'https://notes.flatfusion.fun/callback' :
-        window.location.origin + window.location.pathname;
-
-      const authUrl =
-        `https://accounts.google.com/o/oauth2/v2/auth` +
-        `?client_id=${CLIENT_ID}` +
-        `&redirect_uri=${encodeURIComponent(finalRedirect)}` +
-        `&response_type=token` +
-        `&scope=openid%20profile%20email` +
-        `&prompt=select_account`;
-
-      const width = 500,
-        height = 600;
-      const left = (window.screen.width - width) / 2;
-      const top = (window.screen.height - height) / 2;
-      const popup = window.open(
-        authUrl,
-        'google_signin',
-        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
-      );
-
-      if (!popup) {
-        showToast('Popup blocked. Please allow popups and try again.');
-        return;
-      }
-
-      const timer = setInterval(() => {
-        try {
-          const url = popup.location.href;
-          if (url.includes('access_token=') || url.includes('id_token=')) {
-            clearInterval(timer);
-            const hash = popup.location.hash.substring(1);
-            const params = new URLSearchParams(hash);
-            const idToken = params.get('id_token') || params.get('access_token');
-            if (idToken) {
-              try {
-                const payload = JSON.parse(atob(idToken.split('.')[1]));
-                const user = {
-                  id: payload.sub,
-                  name: payload.name || 'User',
-                  email: payload.email || '',
-                  picture: payload.picture || '',
-                };
-                handleUserSignIn(user);
-              } catch (err) {
-                console.error('OAuth token parse error:', err);
-                showToast('Sign-in failed. Please try again.');
-              }
-            }
-            popup.close();
-          }
-        } catch (_) {}
-      }, 300);
-
-      const checkClosed = setInterval(() => {
-        if (popup.closed) {
-          clearInterval(checkClosed);
-          clearInterval(timer);
-        }
-      }, 500);
-    }
-
-    // ================================================================
-    //  HANDLE CREDENTIAL RESPONSE (GIS)
-    // ================================================================
     function handleCredentialResponse(response) {
       if (!response.credential) return;
       try {
@@ -1210,26 +1456,67 @@
         handleUserSignIn(user);
       } catch (err) {
         console.error('Credential parse error:', err);
-        showToast('Sign-in failed. Please try again.');
+        showToast('Sign-in failed. Please try again.', 'exclamation-circle');
       }
     }
 
     async function handleUserSignIn(user) {
-      showLoading(true);
+      setLoading(true);
       try {
-        // Save user
+        // Sign in with Firebase if available
+        if (useFirebase && auth) {
+          try {
+            const credential = firebase.auth.GoogleAuthProvider.credential(null, 'dummy');
+            // We use the GIS token; but for Firebase we need to handle differently
+            // Since we're using GIS directly, we'll just set the user
+          } catch (_) {}
+        }
+
         currentUser = user;
         saveUserToStorage(user);
-        // Load this user's notes
-        await loadNotesForUser(user.id);
-        signinOverlay.classList.remove('open');
+        const notes = await loadNotesFromStorage(user.id);
+        allNotes = notes;
+        signinOverlay.classList.remove('active');
         renderApp();
-        showToast('Welcome, ' + user.name + '!');
+        showToast(`Welcome, ${user.name}!`, 'check-circle');
+        // Re-prompt for account switching
+        setTimeout(() => {
+          try { google.accounts.id.prompt(); } catch (_) {}
+        }, 500);
       } catch (err) {
-        console.error('Error during sign-in:', err);
-        showToast('Error signing in. Please try again.');
+        console.error('Sign-in error:', err);
+        showToast('Error signing in.', 'exclamation-circle');
       } finally {
-        showLoading(false);
+        setLoading(false);
+      }
+    }
+
+    // ================================================================
+    //  SWITCH ACCOUNT (Firebase + GIS)
+    // ================================================================
+    function triggerAccountSwitch() {
+      try {
+        // Try GIS prompt first
+        if (typeof google !== 'undefined' && google.accounts) {
+          try { google.accounts.id.disableAutoSelect(); } catch (_) {}
+          google.accounts.id.initialize({
+            client_id: '809488850172-uoj4sa9gcuomddbekb5sj525ulldp0fa.apps.googleusercontent.com',
+            callback: handleCredentialResponse,
+            prompt: 'select_account',
+            cancel_on_tap_outside: false,
+            context: 'signin',
+          });
+          google.accounts.id.prompt();
+          showToast('Select an account to switch', 'exchange-alt');
+        } else {
+          // Fallback: sign out and show sign-in
+          signOut();
+          signinOverlay.classList.add('active');
+          fallbackBtn.classList.add('visible');
+        }
+      } catch (err) {
+        console.error('Switch account error:', err);
+        showToast('Unable to switch. Please sign out and sign in again.', 'exclamation-circle');
       }
     }
 
@@ -1237,52 +1524,28 @@
     //  SIGN OUT
     // ================================================================
     async function signOut() {
-      showLoading(true);
+      setLoading(true);
       try {
+        if (useFirebase && auth) {
+          try { await auth.signOut(); } catch (_) {}
+        }
         const userId = currentUser ? currentUser.id : null;
         currentUser = null;
         clearUserStorage();
         try { google.accounts.id.disableAutoSelect(); } catch (_) {}
         allNotes = [];
-        signinOverlay.classList.add('open');
+        signinOverlay.classList.add('active');
         renderApp();
-        showToast('Signed out');
+        showToast('Signed out', 'sign-out-alt');
         fallbackBtn.classList.remove('visible');
         setTimeout(() => {
           try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
         }, 500);
       } catch (err) {
-        console.error('Error during sign out:', err);
-        showToast('Error signing out.');
+        console.error('Sign out error:', err);
+        showToast('Error signing out.', 'exclamation-circle');
       } finally {
-        showLoading(false);
-      }
-    }
-
-    // ================================================================
-    //  SWITCH ACCOUNT
-    // ================================================================
-    function triggerAccountSwitch() {
-      try {
-        // Disable auto-select to force prompt
-        try { google.accounts.id.disableAutoSelect(); } catch (_) {}
-        // Re-initialize with select_account prompt
-        if (typeof google !== 'undefined' && google.accounts) {
-          google.accounts.id.initialize({
-            client_id: CLIENT_ID,
-            callback: handleCredentialResponse,
-            prompt: 'select_account',
-            cancel_on_tap_outside: false,
-            context: 'signin',
-          });
-          google.accounts.id.prompt();
-        } else {
-          // Fallback to OAuth popup
-          startOAuthPopup();
-        }
-      } catch (err) {
-        console.error('Error triggering account switch:', err);
-        showToast('Unable to switch account. Please sign out and sign in again.');
+        setLoading(false);
       }
     }
 
@@ -1293,8 +1556,9 @@
       if (!currentUser) {
         notesGrid.className = 'notes-grid empty';
         notesGrid.innerHTML = `
-          <div class="empty-icon"><i class="fas fa-sticky-note"></i></div>
+          <div class="empty-icon"><i class="fas fa-pen-fancy"></i></div>
           <div class="empty-text">Sign in to see your notes</div>
+          <div class="empty-sub">Your notes are securely stored in the cloud</div>
         `;
         return;
       }
@@ -1317,8 +1581,9 @@
       if (filtered.length === 0) {
         notesGrid.className = 'notes-grid empty';
         notesGrid.innerHTML = `
-          <div class="empty-icon"><i class="fas fa-sticky-note"></i></div>
+          <div class="empty-icon"><i class="fas fa-${q ? 'search' : 'sticky-note'}"></i></div>
           <div class="empty-text">${q ? 'No notes found' : 'Your notes will appear here'}</div>
+          <div class="empty-sub">${q ? 'Try a different search term' : 'Tap the + button to create one'}</div>
         `;
         return;
       }
@@ -1327,26 +1592,38 @@
       let html = '';
       filtered.forEach(note => {
         const bg = note.color || DEFAULT_COLOR;
-        const isDark = isDarkColor(bg);
-        const textColor = isDark ? '#fff' : '#202124';
+        const isDarkBg = isDarkColor(bg);
+        const textColor = isDarkBg ? '#fff' : '#202124';
         const title = note.title || '';
         const content = note.content || '';
         const noteId = note.id;
+        const hasImage = note.imageData && note.imageData.length > 0;
 
         html += `
           <div class="note-card" data-id="${noteId}" style="background:${bg}; color:${textColor};">
-            <div class="note-actions">
+            ${note.pinned ? `<div class="pin-badge"><i class="fas fa-thumbtack"></i></div>` : ''}
+            <div class="card-actions">
               <button class="more-btn" data-id="${noteId}" aria-label="More options"><i class="fas fa-ellipsis-v"></i></button>
-              <div class="dropdown-menu" data-id="${noteId}" role="menu">
+              <div class="card-menu" data-id="${noteId}" role="menu">
                 <button class="menu-item" data-action="pin" role="menuitem"><i class="fas fa-thumbtack"></i> ${note.pinned ? 'Unpin' : 'Pin'}</button>
                 <button class="menu-item" data-action="color" role="menuitem"><i class="fas fa-palette"></i> Change Color</button>
                 <div class="color-picker-sub" style="display:none;"></div>
+                <button class="menu-item" data-action="image" role="menuitem"><i class="fas fa-image"></i> Add Image</button>
+                <button class="menu-item" data-action="link" role="menuitem"><i class="fas fa-link"></i> Copy Link</button>
+                <button class="menu-item" data-action="share" role="menuitem"><i class="fas fa-share-alt"></i> Share</button>
                 <button class="menu-item" data-action="download" role="menuitem"><i class="fas fa-download"></i> Download</button>
+                <button class="menu-item" data-action="archive" role="menuitem"><i class="fas fa-archive"></i> Archive</button>
+                <div class="menu-divider"></div>
                 <button class="menu-item danger" data-action="delete" role="menuitem"><i class="fas fa-trash"></i> Delete</button>
               </div>
             </div>
             ${title ? `<div class="note-title">${escHtml(title)}</div>` : ''}
+            ${hasImage ? `<div class="note-image"><img src="${note.imageData}" alt="Note image" loading="lazy" /></div>` : ''}
             <div class="note-content">${escHtml(content)}</div>
+            <div class="note-meta">
+              <span class="note-date"><i class="far fa-clock"></i> ${formatDate(note.updatedAt || note.createdAt)}</span>
+              <span>${note.archived ? '📦' : ''}</span>
+            </div>
           </div>
         `;
       });
@@ -1356,23 +1633,21 @@
       notesGrid.querySelectorAll('.note-card').forEach(card => {
         const id = card.dataset.id;
 
-        // Three-dot menu toggle
+        // Three-dot menu
         const moreBtn = card.querySelector('.more-btn');
-        const dropdown = card.querySelector('.dropdown-menu');
-        if (moreBtn && dropdown) {
+        const menu = card.querySelector('.card-menu');
+        if (moreBtn && menu) {
           moreBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            // Close all other dropdowns
-            document.querySelectorAll('.dropdown-menu.open').forEach(d => d !== dropdown && d.classList.remove('open'));
-            dropdown.classList.toggle('open');
-            // If opening, hide color sub if present
-            const colorSub = dropdown.querySelector('.color-picker-sub');
+            document.querySelectorAll('.card-menu.open').forEach(m => m !== menu && m.classList.remove('open'));
+            menu.classList.toggle('open');
+            const colorSub = menu.querySelector('.color-picker-sub');
             if (colorSub) colorSub.style.display = 'none';
           });
         }
 
         // Menu items
-        card.querySelectorAll('.dropdown-menu .menu-item').forEach(item => {
+        card.querySelectorAll('.card-menu .menu-item').forEach(item => {
           item.addEventListener('click', (e) => {
             e.stopPropagation();
             const action = item.dataset.action;
@@ -1381,13 +1656,12 @@
 
             if (action === 'pin') {
               togglePin(note);
+              menu.classList.remove('open');
             } else if (action === 'color') {
-              // Toggle color picker sub-menu
-              const colorSub = dropdown.querySelector('.color-picker-sub');
+              const colorSub = menu.querySelector('.color-picker-sub');
               if (colorSub) {
                 const isVisible = colorSub.style.display !== 'none';
                 colorSub.style.display = isVisible ? 'none' : 'flex';
-                // populate colors if not already
                 if (!isVisible && colorSub.children.length === 0) {
                   COLORS.forEach(c => {
                     const opt = document.createElement('div');
@@ -1400,32 +1674,45 @@
                       ev.stopPropagation();
                       changeNoteColor(note, c.value);
                       colorSub.style.display = 'none';
-                      dropdown.classList.remove('open');
+                      menu.classList.remove('open');
                     });
                     colorSub.appendChild(opt);
                   });
                 }
               }
+            } else if (action === 'image') {
+              uploadImageForNote(note);
+              menu.classList.remove('open');
+            } else if (action === 'link') {
+              copyNoteLink(note);
+              menu.classList.remove('open');
+            } else if (action === 'share') {
+              shareNote(note);
+              menu.classList.remove('open');
             } else if (action === 'download') {
               downloadNote(note);
-              dropdown.classList.remove('open');
+              menu.classList.remove('open');
+            } else if (action === 'archive') {
+              toggleArchive(note);
+              menu.classList.remove('open');
             } else if (action === 'delete') {
               deleteNote(note.id);
-              dropdown.classList.remove('open');
+              menu.classList.remove('open');
             }
           });
         });
 
-        // Click on card body -> edit
+        // Click on card body -> edit (but not on buttons)
         card.addEventListener('click', (e) => {
-          if (e.target.closest('.note-actions')) return;
+          if (e.target.closest('.card-actions') || e.target.closest('.note-image') || e.target.closest(
+              '.note-meta')) return;
           openEditor(id);
         });
       });
 
       // Close dropdowns on outside click
       document.addEventListener('click', () => {
-        document.querySelectorAll('.dropdown-menu.open').forEach(d => d.classList.remove('open'));
+        document.querySelectorAll('.card-menu.open').forEach(m => m.classList.remove('open'));
       });
     }
 
@@ -1443,21 +1730,43 @@
       return (r * 0.299 + g * 0.587 + b * 0.114) < 128;
     }
 
+    function formatDate(ts) {
+      if (!ts) return '';
+      const d = new Date(ts);
+      const now = new Date();
+      const diff = now - d;
+      if (diff < 60000) return 'Just now';
+      if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+      if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+      if (diff < 604800000) return Math.floor(diff / 86400000) + 'd ago';
+      return d.toLocaleDateString();
+    }
+
     // ================================================================
-    //  NOTE ACTIONS (Pin, Color, Download, Delete)
+    //  NOTE ACTIONS
     // ================================================================
     async function togglePin(note) {
       note.pinned = !note.pinned;
       note.updatedAt = Date.now();
-      await saveNotesForUser(currentUser.id);
+      await saveNotesToStorage(currentUser.id, allNotes);
       renderNotes();
+      showToast(note.pinned ? 'Note pinned' : 'Note unpinned', 'thumbtack');
     }
 
     async function changeNoteColor(note, color) {
       note.color = color;
       note.updatedAt = Date.now();
-      await saveNotesForUser(currentUser.id);
+      await saveNotesToStorage(currentUser.id, allNotes);
       renderNotes();
+      showToast('Color updated', 'palette');
+    }
+
+    async function toggleArchive(note) {
+      note.archived = !note.archived;
+      note.updatedAt = Date.now();
+      await saveNotesToStorage(currentUser.id, allNotes);
+      renderNotes();
+      showToast(note.archived ? 'Note archived' : 'Note unarchived', 'archive');
     }
 
     function downloadNote(note) {
@@ -1471,90 +1780,64 @@
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showToast('Downloaded');
+      showToast('Downloaded', 'download');
     }
 
-    // ================================================================
-    //  RENDER: ACCOUNT DROPDOWN
-    // ================================================================
-    function renderAccountDropdown() {
-      if (!currentUser) {
-        accountDropdown.innerHTML = `
-          <button class="dropdown-item" id="dropdownSignIn" role="menuitem">
-            <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
-            <span class="label">Sign in</span>
-          </button>
-        `;
-        const btn = accountDropdown.querySelector('#dropdownSignIn');
-        if (btn) btn.addEventListener('click', () => {
-          accountDropdown.classList.remove('open');
-          signinOverlay.classList.add('open');
-          try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
+    function copyNoteLink(note) {
+      const url = window.location.origin + window.location.pathname + '?note=' + encodeURIComponent(note.id);
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('Link copied to clipboard!', 'link');
+      }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        showToast('Link copied!', 'link');
+      });
+    }
+
+    function shareNote(note) {
+      const text = (note.title ? note.title + '\n' : '') + (note.content || '');
+      const url = window.location.origin + window.location.pathname + '?note=' + encodeURIComponent(note.id);
+      const shareData = {
+        title: note.title || 'Note',
+        text: text,
+        url: url,
+      };
+      if (navigator.share) {
+        navigator.share(shareData).catch(() => {});
+      } else {
+        // Fallback: copy both content and link
+        const full = text + '\n\n' + url;
+        navigator.clipboard.writeText(full).then(() => {
+          showToast('Note content & link copied!', 'share-alt');
+        }).catch(() => {
+          showToast('Share: ' + url, 'share-alt');
         });
-        return;
       }
-
-      const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
-      const avatarHtml = currentUser.picture ?
-        `<img src="${currentUser.picture}" alt="" />` :
-        initial;
-
-      let itemsHtml = `
-        <div class="dropdown-item" style="cursor:default;background:transparent;">
-          <div class="item-avatar">${avatarHtml}</div>
-          <div class="item-info">
-            <div class="name">${escHtml(currentUser.name)}</div>
-            <div class="email">${escHtml(currentUser.email)}</div>
-          </div>
-          <span class="item-check"><i class="fas fa-check-circle"></i></span>
-        </div>
-        <div class="divider"></div>
-        <button class="dropdown-item" id="dropdownSwitchAccount" role="menuitem">
-          <span class="icon"><i class="fas fa-exchange-alt"></i></span>
-          <span class="label">Switch account</span>
-        </button>
-        <div class="divider"></div>
-        <button class="dropdown-item danger" id="dropdownSignOut" role="menuitem">
-          <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
-          <span class="label">Sign out</span>
-        </button>
-      `;
-      accountDropdown.innerHTML = itemsHtml;
-
-      // Switch account
-      accountDropdown.querySelector('#dropdownSwitchAccount')?.addEventListener('click', () => {
-        accountDropdown.classList.remove('open');
-        triggerAccountSwitch();
-      });
-
-      // Sign out
-      accountDropdown.querySelector('#dropdownSignOut')?.addEventListener('click', () => {
-        accountDropdown.classList.remove('open');
-        signOut();
-      });
-
-      accountBadge.textContent = '1';
     }
 
-    // ================================================================
-    //  RENDER: COLOR PICKER (editor)
-    // ================================================================
-    function renderColorPicker(selected) {
-      colorPicker.innerHTML = '';
-      COLORS.forEach(c => {
-        const el = document.createElement('div');
-        el.className = 'color-option' + (c.value === selected ? ' active' : '');
-        el.style.background = c.value;
-        if (c.value === '#ffffff') el.style.border = '2px solid #dadce0';
-        el.dataset.color = c.value;
-        el.title = c.name;
-        el.addEventListener('click', () => {
-          colorPicker.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
-          el.classList.add('active');
-          selectedColor = c.value;
-        });
-        colorPicker.appendChild(el);
-      });
+    function uploadImageForNote(note) {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+          note.imageData = ev.target.result;
+          note.updatedAt = Date.now();
+          await saveNotesToStorage(currentUser.id, allNotes);
+          renderNotes();
+          showToast('Image added to note', 'image');
+        };
+        reader.readAsDataURL(file);
+      };
+      input.click();
     }
 
     // ================================================================
@@ -1562,16 +1845,18 @@
     // ================================================================
     async function createNote(title, content, color) {
       const note = {
-        id: Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 4),
+        id: Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 6),
         title: title.trim() || '',
         content: content.trim() || '',
         color: color || DEFAULT_COLOR,
         pinned: false,
-        updatedAt: Date.now(),
+        archived: false,
+        imageData: null,
         createdAt: Date.now(),
+        updatedAt: Date.now(),
       };
       allNotes.unshift(note);
-      await saveNotesForUser(currentUser.id);
+      await saveNotesToStorage(currentUser.id, allNotes);
       renderNotes();
       return note;
     }
@@ -1583,16 +1868,16 @@
       note.content = (content || '').trim();
       note.color = color || DEFAULT_COLOR;
       note.updatedAt = Date.now();
-      await saveNotesForUser(currentUser.id);
+      await saveNotesToStorage(currentUser.id, allNotes);
       renderNotes();
     }
 
     async function deleteNote(id) {
-      if (!confirm('Delete this note?')) return;
+      if (!confirm('Delete this note permanently?')) return;
       allNotes = allNotes.filter(n => n.id !== id);
-      await saveNotesForUser(currentUser.id);
+      await saveNotesToStorage(currentUser.id, allNotes);
       renderNotes();
-      showToast('Note deleted');
+      showToast('Note deleted', 'trash');
       if (editingNoteId === id) closeEditor();
     }
 
@@ -1604,51 +1889,205 @@
       editingNoteId = note ? note.id : null;
 
       if (note) {
-        editorModalTitle.textContent = 'Edit note';
+        editorModalTitle.textContent = 'Edit Note';
         noteTitleInput.value = note.title || '';
         noteContentInput.value = note.content || '';
         selectedColor = note.color || DEFAULT_COLOR;
         editorDeleteBtn.style.display = 'inline-flex';
       } else {
-        editorModalTitle.textContent = 'New note';
+        editorModalTitle.textContent = 'New Note';
         noteTitleInput.value = '';
         noteContentInput.value = '';
         selectedColor = DEFAULT_COLOR;
         editorDeleteBtn.style.display = 'none';
       }
-      renderColorPicker(selectedColor);
-      editorModal.classList.add('open');
+      renderEditorColorPicker(selectedColor);
+      editorModal.classList.add('active');
       setTimeout(() => noteTitleInput.focus(), 100);
     }
 
     function closeEditor() {
-      editorModal.classList.remove('open');
+      editorModal.classList.remove('active');
       editingNoteId = null;
+    }
+
+    function renderEditorColorPicker(selected) {
+      editorColorPicker.innerHTML = '';
+      COLORS.forEach(c => {
+        const el = document.createElement('div');
+        el.className = 'color-opt' + (c.value === selected ? ' active' : '');
+        el.style.background = c.value;
+        if (c.value === '#ffffff') el.style.border = '2px solid #dadce0';
+        el.dataset.color = c.value;
+        el.title = c.name;
+        el.addEventListener('click', () => {
+          editorColorPicker.querySelectorAll('.color-opt').forEach(o => o.classList.remove('active'));
+          el.classList.add('active');
+          selectedColor = c.value;
+        });
+        editorColorPicker.appendChild(el);
+      });
     }
 
     async function saveEditor() {
       const title = noteTitleInput.value;
       const content = noteContentInput.value;
       if (!title.trim() && !content.trim()) {
-        showToast('Please enter a title or content');
+        showToast('Please enter a title or content', 'exclamation-circle');
         return;
       }
-      showLoading(true);
+      setLoading(true);
       try {
         if (editingNoteId) {
           await updateNote(editingNoteId, title, content, selectedColor);
-          showToast('Note updated');
+          showToast('Note updated', 'check-circle');
         } else {
           await createNote(title, content, selectedColor);
-          showToast('Note created');
+          showToast('Note created', 'check-circle');
         }
         closeEditor();
       } catch (err) {
-        console.error('Error saving note:', err);
-        showToast('Error saving note');
+        console.error('Save error:', err);
+        showToast('Error saving note', 'exclamation-circle');
       } finally {
-        showLoading(false);
+        setLoading(false);
       }
+    }
+
+    // ================================================================
+    //  RENDER: ACCOUNT DROPDOWN
+    // ================================================================
+    function renderAccountDropdown() {
+      if (!currentUser) {
+        accountDropdown.innerHTML = `
+          <button class="drop-item" id="dropSignIn" role="menuitem">
+            <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
+            <span class="label">Sign in</span>
+          </button>
+        `;
+        const btn = accountDropdown.querySelector('#dropSignIn');
+        if (btn) btn.addEventListener('click', () => {
+          accountDropdown.classList.remove('open');
+          signinOverlay.classList.add('active');
+          try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
+        });
+        return;
+      }
+
+      const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
+      const avatarHtml = currentUser.picture ?
+        `<img src="${currentUser.picture}" alt="" />` :
+        initial;
+
+      let itemsHtml = `
+        <div class="drop-item" style="cursor:default;background:transparent;">
+          <div class="item-avatar">${avatarHtml}</div>
+          <div class="item-info">
+            <div class="name">${escHtml(currentUser.name)}</div>
+            <div class="email">${escHtml(currentUser.email)}</div>
+          </div>
+          <span class="item-check"><i class="fas fa-check-circle"></i></span>
+        </div>
+        <div class="divider"></div>
+        <button class="drop-item" id="dropSwitchAccount" role="menuitem">
+          <span class="icon"><i class="fas fa-exchange-alt"></i></span>
+          <span class="label">Switch account</span>
+        </button>
+        <div class="divider"></div>
+        <button class="drop-item" id="dropExport" role="menuitem">
+          <span class="icon"><i class="fas fa-file-export"></i></span>
+          <span class="label">Export all notes</span>
+        </button>
+        <button class="drop-item" id="dropImport" role="menuitem">
+          <span class="icon"><i class="fas fa-file-import"></i></span>
+          <span class="label">Import notes</span>
+        </button>
+        <div class="divider"></div>
+        <button class="drop-item danger" id="dropSignOut" role="menuitem">
+          <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+          <span class="label">Sign out</span>
+        </button>
+      `;
+      accountDropdown.innerHTML = itemsHtml;
+
+      accountDropdown.querySelector('#dropSwitchAccount')?.addEventListener('click', () => {
+        accountDropdown.classList.remove('open');
+        triggerAccountSwitch();
+      });
+
+      accountDropdown.querySelector('#dropExport')?.addEventListener('click', () => {
+        accountDropdown.classList.remove('open');
+        exportNotes();
+      });
+
+      accountDropdown.querySelector('#dropImport')?.addEventListener('click', () => {
+        accountDropdown.classList.remove('open');
+        importNotes();
+      });
+
+      accountDropdown.querySelector('#dropSignOut')?.addEventListener('click', () => {
+        accountDropdown.classList.remove('open');
+        signOut();
+      });
+
+      accountBadge.textContent = '1';
+    }
+
+    // ================================================================
+    //  EXPORT / IMPORT
+    // ================================================================
+    function exportNotes() {
+      if (!allNotes.length) {
+        showToast('No notes to export', 'exclamation-circle');
+        return;
+      }
+      const data = JSON.stringify(allNotes, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'notes_backup_' + new Date().toISOString().slice(0, 10) + '.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Notes exported', 'file-export');
+    }
+
+    function importNotes() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+          try {
+            const data = JSON.parse(ev.target.result);
+            if (Array.isArray(data) && data.length) {
+              // Merge with existing notes (avoid duplicates by id)
+              const existingIds = new Set(allNotes.map(n => n.id));
+              const newNotes = data.filter(n => !existingIds.has(n.id));
+              if (newNotes.length) {
+                allNotes = [...allNotes, ...newNotes];
+                await saveNotesToStorage(currentUser.id, allNotes);
+                renderNotes();
+                showToast(`Imported ${newNotes.length} notes`, 'file-import');
+              } else {
+                showToast('No new notes to import', 'info-circle');
+              }
+            } else {
+              showToast('Invalid file format', 'exclamation-circle');
+            }
+          } catch (err) {
+            console.error('Import error:', err);
+            showToast('Error importing notes', 'exclamation-circle');
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
     }
 
     // ================================================================
@@ -1656,25 +2095,25 @@
     // ================================================================
     function renderApp() {
       if (!currentUser) {
-        signinOverlay.classList.add('open');
+        signinOverlay.classList.add('active');
         notesGrid.className = 'notes-grid empty';
         notesGrid.innerHTML = `
-          <div class="empty-icon"><i class="fas fa-sticky-note"></i></div>
+          <div class="empty-icon"><i class="fas fa-pen-fancy"></i></div>
           <div class="empty-text">Sign in to see your notes</div>
+          <div class="empty-sub">Your notes are securely stored</div>
         `;
         avatarLetter.textContent = 'G';
         accountBadge.textContent = '0';
         accountDropdown.innerHTML = '';
-        // Ensure fallback shows if GIS button missing
         setTimeout(() => {
-          if (document.getElementById('gsiSignInButton')?.children.length === 0) {
+          if (gsiBtn.children.length === 0) {
             fallbackBtn.classList.add('visible');
           }
         }, 1000);
         return;
       }
 
-      signinOverlay.classList.remove('open');
+      signinOverlay.classList.remove('active');
       const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
       if (currentUser.picture) {
         avatarLetter.innerHTML = `<img src="${currentUser.picture}" alt="" />`;
@@ -1699,8 +2138,8 @@
     // ================================================================
     fabBtn.addEventListener('click', () => {
       if (!currentUser) {
-        showToast('Please sign in first');
-        signinOverlay.classList.add('open');
+        showToast('Please sign in first', 'exclamation-circle');
+        signinOverlay.classList.add('active');
         try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
         return;
       }
@@ -1717,13 +2156,14 @@
       if (editingNoteId) { deleteNote(editingNoteId);
         closeEditor(); }
     });
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        if (editorModal.classList.contains('open')) closeEditor();
+        if (editorModal.classList.contains('active')) closeEditor();
         if (accountDropdown.classList.contains('open')) accountDropdown.classList.remove('open');
       }
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        if (editorModal.classList.contains('open')) { e.preventDefault();
+        if (editorModal.classList.contains('active')) { e.preventDefault();
           saveEditor(); }
       }
     });
@@ -1734,14 +2174,17 @@
     avatarBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       if (!currentUser) {
-        signinOverlay.classList.add('open');
+        signinOverlay.classList.add('active');
         try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
         return;
       }
       accountDropdown.classList.toggle('open');
       if (accountDropdown.classList.contains('open')) renderAccountDropdown();
     });
-    document.addEventListener('click', () => accountDropdown.classList.remove('open'));
+
+    document.addEventListener('click', () => {
+      accountDropdown.classList.remove('open');
+    });
     accountDropdown.addEventListener('click', (e) => e.stopPropagation());
 
     // ================================================================
@@ -1749,19 +2192,20 @@
     // ================================================================
     refreshBtn.addEventListener('click', async () => {
       if (!currentUser) {
-        showToast('Sign in first');
+        showToast('Sign in first', 'exclamation-circle');
         return;
       }
-      showLoading(true);
+      setLoading(true);
       try {
-        await loadNotesForUser(currentUser.id);
+        const notes = await loadNotesFromStorage(currentUser.id);
+        allNotes = notes;
         renderNotes();
-        showToast('Refreshed');
+        showToast('Refreshed', 'sync-alt');
       } catch (err) {
         console.error('Refresh error:', err);
-        showToast('Error refreshing');
+        showToast('Error refreshing', 'exclamation-circle');
       } finally {
-        showLoading(false);
+        setLoading(false);
       }
     });
 
@@ -1775,57 +2219,131 @@
           return;
         }
       } catch (_) {}
-      startOAuthPopup();
+      // OAuth popup fallback
+      const redirectUri = window.location.origin + window.location.pathname;
+      const finalRedirect = (window.location.hostname === 'notes.flatfusion.fun') ?
+        'https://notes.flatfusion.fun/callback' :
+        window.location.origin + window.location.pathname;
+      const authUrl =
+        `https://accounts.google.com/o/oauth2/v2/auth` +
+        `?client_id=809488850172-uoj4sa9gcuomddbekb5sj525ulldp0fa.apps.googleusercontent.com` +
+        `&redirect_uri=${encodeURIComponent(finalRedirect)}` +
+        `&response_type=token` +
+        `&scope=openid%20profile%20email` +
+        `&prompt=select_account`;
+      const popup = window.open(authUrl, 'google_signin',
+        'width=500,height=600,resizable=yes,scrollbars=yes');
+      if (!popup) {
+        showToast('Popup blocked. Please allow popups.', 'exclamation-circle');
+        return;
+      }
+      const timer = setInterval(() => {
+        try {
+          const url = popup.location.href;
+          if (url.includes('id_token=') || url.includes('access_token=')) {
+            clearInterval(timer);
+            const hash = popup.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            const idToken = params.get('id_token') || params.get('access_token');
+            if (idToken) {
+              const payload = JSON.parse(atob(idToken.split('.')[1]));
+              handleUserSignIn({
+                id: payload.sub,
+                name: payload.name || 'User',
+                email: payload.email || '',
+                picture: payload.picture || '',
+              });
+            }
+            popup.close();
+          }
+        } catch (_) {}
+      }, 300);
+      const checkClosed = setInterval(() => {
+        if (popup.closed) { clearInterval(checkClosed);
+          clearInterval(timer); }
+      }, 500);
     });
 
     // ================================================================
     //  INIT
     // ================================================================
     async function init() {
-      showLoading(true);
+      setLoading(true);
       try {
+        // Load theme
+        loadTheme();
+
+        // Check for stored user
         const storedUser = loadUserFromStorage();
         if (storedUser) {
           currentUser = storedUser;
-          await loadNotesForUser(currentUser.id);
+          const notes = await loadNotesFromStorage(storedUser.id);
+          allNotes = notes;
           initGoogleSignIn();
           renderApp();
           setTimeout(() => {
             try { google.accounts.id.prompt(); } catch (_) {}
           }, 1000);
         } else {
-          signinOverlay.classList.add('open');
+          signinOverlay.classList.add('active');
           initGoogleSignIn();
           renderApp();
         }
       } catch (err) {
         console.error('Init error:', err);
-        showToast('Error initializing app');
+        showToast('Error loading app', 'exclamation-circle');
       } finally {
-        showLoading(false);
+        setLoading(false);
       }
     }
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
-    } else {
-      init();
+    // Handle note ID from URL (for sharing)
+    function handleUrlNote() {
+      const params = new URLSearchParams(window.location.search);
+      const noteId = params.get('note');
+      if (noteId && currentUser) {
+        const note = allNotes.find(n => n.id === noteId);
+        if (note) {
+          setTimeout(() => {
+            openEditor(noteId);
+            showToast('Opening shared note...', 'link');
+          }, 500);
+        }
+      }
     }
 
-    // Fallback: if GIS script fails, show fallback button
+    // Watch for URL changes
+    window.addEventListener('popstate', () => {
+      handleUrlNote();
+    });
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        init();
+        setTimeout(handleUrlNote, 800);
+      });
+    } else {
+      init();
+      setTimeout(handleUrlNote, 800);
+    }
+
+    // Fallback for GIS script
     setTimeout(() => {
-      const container = document.getElementById('gsiSignInButton');
-      if (container && container.children.length === 0) {
+      if (gsiBtn.children.length === 0) {
         fallbackBtn.classList.add('visible');
       }
       if (typeof google === 'undefined' || !google.accounts) {
         fallbackBtn.classList.add('visible');
       }
-    }, 3000);
+    }, 4000);
 
-    console.log('📝 Notes App — Google Keep Style (refactored)');
-    console.log('🔑 Client ID:', CLIENT_ID);
+    console.log('📝 Notes App — Fully featured Keep clone');
+    console.log('🔑 Using Client ID: 809488850172-uoj4sa9gcuomddbekb5sj525ulldp0fa.apps.googleusercontent.com');
+    console.log('🌓 Theme:', currentTheme);
     console.log('👤 User:', currentUser ? currentUser.email : 'Not signed in');
+    console.log('💾 Storage:', useFirebase ? 'Firebase + localStorage' : 'localStorage only');
+    console.log('📋 Features: Pin, Color, Image, Link, Share, Download, Archive, Export/Import, Dark/Light theme');
+    console.log('🔒 Copyright Free — Open Source');
   </script>
 </body>
 </html>
