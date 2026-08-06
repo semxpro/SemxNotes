@@ -39,7 +39,6 @@
       --max-width: 1320px;
     }
 
-    /* Dark Theme — Keep Dark */
     [data-theme="dark"] {
       --bg-app: #1e1e1e;
       --bg-card: #2d2d2d;
@@ -361,28 +360,29 @@
       background: var(--border-color);
       margin: 4px 16px;
     }
-    .left-dropdown .sub-menu {
-      padding-left: 20px;
-      display: none;
-      background: var(--bg-card);
+
+    /* Appearance - clean sub-menu with just theme toggle */
+    .left-dropdown .appearance-wrap {
+      padding: 0 18px 8px 18px;
     }
-    .left-dropdown .sub-menu.open {
-      display: block;
-    }
-    .left-dropdown .sub-menu .drop-item {
-      padding-left: 30px;
-      font-size: 13px;
-    }
-    .left-dropdown .sub-menu .drop-item i {
-      font-size: 14px;
-    }
-    .left-dropdown .theme-toggle-item {
+    .left-dropdown .appearance-wrap .theme-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 18px;
+      padding: 6px 0;
     }
-    .left-dropdown .theme-toggle-item .toggle-track {
+    .left-dropdown .appearance-wrap .theme-row .theme-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    .left-dropdown .appearance-wrap .theme-row .theme-label i {
+      width: 18px;
+      color: var(--text-secondary);
+    }
+    .left-dropdown .toggle-track {
       width: 40px;
       height: 22px;
       background: var(--border-color);
@@ -392,7 +392,7 @@
       transition: var(--transition);
       flex-shrink: 0;
     }
-    .left-dropdown .theme-toggle-item .toggle-track .toggle-thumb {
+    .left-dropdown .toggle-track .toggle-thumb {
       width: 18px;
       height: 18px;
       background: var(--bg-card);
@@ -403,10 +403,10 @@
       transition: var(--transition);
       box-shadow: var(--shadow-sm);
     }
-    .left-dropdown .theme-toggle-item .toggle-track.active {
+    .left-dropdown .toggle-track.active {
       background: var(--accent);
     }
-    .left-dropdown .theme-toggle-item .toggle-track.active .toggle-thumb {
+    .left-dropdown .toggle-track.active .toggle-thumb {
       left: 20px;
     }
 
@@ -636,6 +636,123 @@
       transition: padding 0.3s ease;
     }
 
+    /* ===== DASHBOARD VIEW ===== */
+    .dashboard-view {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .dashboard-view.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .dashboard-view .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+    .dashboard-view .stat-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+    .dashboard-view .stat-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+    .dashboard-view .stat-card .stat-number {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .dashboard-view .stat-card .stat-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+    .dashboard-view .stat-card .stat-icon {
+      font-size: 24px;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .dashboard-view .recent-notes {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+    .dashboard-view .recent-notes h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dashboard-view .recent-notes .recent-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .dashboard-view .recent-notes .recent-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 14px;
+    }
+    .dashboard-view .recent-notes .recent-item:last-child {
+      border-bottom: none;
+    }
+    .dashboard-view .recent-notes .recent-item .recent-title {
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 70%;
+    }
+    .dashboard-view .recent-notes .recent-item .recent-date {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+    .dashboard-view .color-distribution {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .dashboard-view .color-distribution .color-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px 4px 6px;
+      border-radius: 999px;
+      background: var(--bg-input);
+      font-size: 13px;
+    }
+    .dashboard-view .color-distribution .color-chip .color-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+    }
+
     /* ===== NOTES GRID ===== */
     .notes-grid {
       display: grid;
@@ -706,6 +823,14 @@
       word-break: break-word;
       overflow-y: auto;
       max-height: 300px;
+    }
+    .note-card .note-content a {
+      color: var(--accent);
+      text-decoration: underline;
+      word-break: break-all;
+    }
+    .note-card .note-content a:hover {
+      text-decoration: none;
     }
     .note-card .note-content:empty {
       display: none;
@@ -1123,6 +1248,9 @@
       .left-dropdown {
         left: -10px;
       }
+      .dashboard-view .stats-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      }
     }
     @media (max-width: 480px) {
       .notes-grid {
@@ -1137,6 +1265,9 @@
       }
       .header-left .brand span {
         display: none;
+      }
+      .dashboard-view .stats-grid {
+        grid-template-columns: 1fr 1fr;
       }
     }
     .hidden {
@@ -1180,14 +1311,19 @@
       </div>
       <!-- Left dropdown -->
       <div class="left-dropdown" id="leftDropdown" role="menu">
+        <div class="drop-item" id="leftDashboard">
+          <i class="fas fa-chart-pie"></i>
+          <span class="label">Dashboard</span>
+        </div>
+        <div class="drop-divider"></div>
         <div class="drop-item" id="leftAppearance">
           <i class="fas fa-palette"></i>
           <span class="label">Appearance</span>
           <i class="fas fa-chevron-right" style="margin-left:auto;font-size:12px;"></i>
         </div>
-        <div class="sub-menu" id="appearanceSub">
-          <div class="drop-item theme-toggle-item" style="cursor:default;">
-            <span><i class="fas fa-moon"></i> Theme</span>
+        <div class="appearance-wrap" id="appearanceSub" style="display:none;">
+          <div class="theme-row">
+            <span class="theme-label"><i class="fas fa-moon"></i> Theme</span>
             <div class="toggle-track" id="themeToggleTrack">
               <div class="toggle-thumb"></div>
             </div>
@@ -1209,10 +1345,6 @@
           <span class="label">Import notes</span>
         </div>
         <div class="drop-divider"></div>
-        <div class="drop-item" id="leftClearAll">
-          <i class="fas fa-trash-alt" style="color:var(--danger);"></i>
-          <span class="label" style="color:var(--danger);">Clear all notes</span>
-        </div>
         <div class="drop-item" id="leftAbout">
           <i class="fas fa-info-circle"></i>
           <span class="label">About</span>
@@ -1237,6 +1369,15 @@
 
   <!-- ===== MAIN ===== -->
   <main class="main-content">
+    <!-- Dashboard View -->
+    <div class="dashboard-view" id="dashboardView">
+      <div class="stats-grid" id="statsGrid"></div>
+      <div class="recent-notes">
+        <h3><i class="fas fa-clock"></i> Recent Notes</h3>
+        <div class="recent-list" id="recentList"></div>
+      </div>
+    </div>
+    <!-- Notes Grid -->
     <div class="notes-grid" id="notesGrid"></div>
   </main>
 
@@ -1305,7 +1446,8 @@
     let searchQuery = '';
     let currentTheme = 'light';
     let gsiInited = false;
-    let showArchived = false; // toggle for viewing archived notes
+    let showArchived = false;
+    let showDashboard = false;
 
     // ================================================================
     //  DOM REFS
@@ -1318,6 +1460,9 @@
     const gsiBtn = $('#gsiBtn');
     const fallbackBtn = $('#fallbackBtn');
     const notesGrid = $('#notesGrid');
+    const dashboardView = $('#dashboardView');
+    const statsGrid = $('#statsGrid');
+    const recentList = $('#recentList');
     const searchInput = $('#searchInput');
     const fabBtn = $('#fabBtn');
     const avatarBtn = $('#avatarBtn');
@@ -1342,26 +1487,42 @@
     const themeToggleTrack = $('#themeToggleTrack');
     const leftExport = $('#leftExport');
     const leftImport = $('#leftImport');
-    const leftClearAll = $('#leftClearAll');
     const leftAbout = $('#leftAbout');
     const leftArchive = $('#leftArchive');
+    const leftDashboard = $('#leftDashboard');
     const archiveCount = $('#archiveCount');
 
     // ================================================================
-    //  TOAST
+    //  TOAST — single instance, no duplicates
     // ================================================================
     let toastTimer = null;
+    let toastEl = null;
 
     function showToast(msg, icon = 'info-circle', duration = 2800) {
-      const el = document.createElement('div');
-      el.className = 'toast-item';
-      el.innerHTML = `<i class="fas fa-${icon}"></i> ${msg}`;
-      toastContainer.appendChild(el);
-      requestAnimationFrame(() => el.classList.add('show'));
-      clearTimeout(toastTimer);
+      // Remove existing toast immediately
+      if (toastEl) {
+        toastEl.classList.remove('show');
+        setTimeout(() => {
+          if (toastEl && toastEl.parentNode) toastEl.parentNode.removeChild(toastEl);
+          toastEl = null;
+        }, 100);
+        clearTimeout(toastTimer);
+      }
+
+      toastEl = document.createElement('div');
+      toastEl.className = 'toast-item';
+      toastEl.innerHTML = `<i class="fas fa-${icon}"></i> ${msg}`;
+      toastContainer.appendChild(toastEl);
+      requestAnimationFrame(() => toastEl.classList.add('show'));
+
       toastTimer = setTimeout(() => {
-        el.classList.remove('show');
-        setTimeout(() => el.remove(), 400);
+        if (toastEl) {
+          toastEl.classList.remove('show');
+          setTimeout(() => {
+            if (toastEl && toastEl.parentNode) toastEl.parentNode.removeChild(toastEl);
+            toastEl = null;
+          }, 400);
+        }
       }, duration);
     }
 
@@ -1390,7 +1551,7 @@
         themeToggleTrack.classList.toggle('active', isDark);
       }
       try { localStorage.setItem(THEME_KEY, currentTheme); } catch (_) {}
-      renderNotes();
+      renderAll();
     }
 
     function toggleTheme() {
@@ -1489,6 +1650,7 @@
         saveUserToStorage(user);
         allNotes = await loadNotesFromStorage(user.id);
         signinOverlay.classList.remove('active');
+        showDashboard = false;
         renderApp();
         showToast(`Welcome, ${user.name}!`, 'check-circle');
         setTimeout(() => {
@@ -1508,27 +1670,16 @@
     function triggerAccountSwitch() {
       try {
         if (typeof google !== 'undefined' && google.accounts) {
-          // Force re-initialize with select_account prompt
-          try { google.accounts.id.disableAutoSelect(); } catch (_) {}
-          google.accounts.id.initialize({
-            client_id: CLIENT_ID,
-            callback: handleCredentialResponse,
-            prompt: 'select_account',
-            cancel_on_tap_outside: false,
-            context: 'signin',
-          });
-          // Re-render button to ensure UI, but we just need prompt
+          google.accounts.id.disableAutoSelect();
           google.accounts.id.prompt();
           showToast('Select an account to switch', 'exchange-alt');
         } else {
-          // Fallback: sign out and show sign-in
           signOut();
           signinOverlay.classList.add('active');
           fallbackBtn.classList.add('visible');
         }
       } catch (err) {
         console.error('Switch account error:', err);
-        // Last resort: sign out
         signOut();
         signinOverlay.classList.add('active');
         fallbackBtn.classList.add('visible');
@@ -1562,7 +1713,70 @@
     }
 
     // ================================================================
-    //  RENDER: NOTES (with archive toggle)
+    //  RENDER: DASHBOARD
+    // ================================================================
+    function renderDashboard() {
+      if (!currentUser) return;
+      const total = allNotes.length;
+      const pinned = allNotes.filter(n => n.pinned).length;
+      const archived = allNotes.filter(n => n.archived).length;
+      const colors = {};
+      allNotes.forEach(n => {
+        const c = n.color || 'default';
+        colors[c] = (colors[c] || 0) + 1;
+      });
+      const colorEntries = Object.entries(colors).sort((a, b) => b[1] - a[1]);
+
+      statsGrid.innerHTML = `
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-file-alt"></i></div><div class="stat-number">${total}</div><div class="stat-label">Total Notes</div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-thumbtack"></i></div><div class="stat-number">${pinned}</div><div class="stat-label">Pinned</div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-archive"></i></div><div class="stat-number">${archived}</div><div class="stat-label">Archived</div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-palette"></i></div><div class="stat-number">${colorEntries.length}</div><div class="stat-label">Colors Used</div></div>
+      `;
+
+      const recent = [...allNotes].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)).slice(0, 5);
+      if (recent.length === 0) {
+        recentList.innerHTML = `<div style="color:var(--text-muted);padding:8px 0;">No notes yet.</div>`;
+      } else {
+        let html = '';
+        recent.forEach(n => {
+          const title = n.title || 'Untitled';
+          const date = formatDate(n.updatedAt || n.createdAt);
+          html += `
+            <div class="recent-item">
+              <span class="recent-title">${escHtml(title)}</span>
+              <span class="recent-date">${date}</span>
+            </div>
+          `;
+        });
+        recentList.innerHTML = html;
+      }
+
+      if (colorEntries.length > 0) {
+        let colorHtml = '<div class="color-distribution">';
+        colorEntries.forEach(([color, count]) => {
+          const swatch = color === 'default' ? 'conic-gradient(white 50%, #ccc 50%)' : color;
+          colorHtml += `
+            <span class="color-chip">
+              <span class="color-swatch" style="background:${swatch};"></span>
+              ${count}
+            </span>
+          `;
+        });
+        colorHtml += '</div>';
+        const extra = document.createElement('div');
+        extra.className = 'stat-card';
+        extra.innerHTML = `<div class="stat-icon"><i class="fas fa-chart-bar"></i></div><div class="stat-label">Color Distribution</div>${colorHtml}`;
+        statsGrid.appendChild(extra);
+      }
+
+      dashboardView.classList.add('active');
+      notesGrid.style.display = 'none';
+      searchInput.style.display = 'none';
+    }
+
+    // ================================================================
+    //  RENDER: NOTES GRID with clickable links and image support
     // ================================================================
     function renderNotes() {
       if (!currentUser) {
@@ -1572,13 +1786,13 @@
           <div class="empty-text">Sign in to see your notes</div>
           <div class="empty-sub">Your notes are securely stored</div>
         `;
+        dashboardView.classList.remove('active');
+        notesGrid.style.display = 'grid';
+        searchInput.style.display = 'block';
         return;
       }
 
-      // Filter: if showArchived is true, show only archived; else show non-archived
       let filtered = allNotes.filter(n => n.archived === showArchived);
-
-      // Apply search query
       const q = searchQuery.trim().toLowerCase();
       if (q) {
         filtered = filtered.filter(n =>
@@ -1586,15 +1800,12 @@
           (n.content && n.content.toLowerCase().includes(q))
         );
       }
-
-      // Sort: pinned first, then updatedAt
       filtered.sort((a, b) => {
         if (a.pinned && !b.pinned) return -1;
         if (!a.pinned && b.pinned) return 1;
         return (b.updatedAt || 0) - (a.updatedAt || 0);
       });
 
-      // Update archive count
       const archiveCountVal = allNotes.filter(n => n.archived).length;
       archiveCount.textContent = archiveCountVal;
 
@@ -1607,6 +1818,9 @@
           <div class="empty-text">${msg}</div>
           <div class="empty-sub">${sub}</div>
         `;
+        dashboardView.classList.remove('active');
+        notesGrid.style.display = 'grid';
+        searchInput.style.display = 'block';
         return;
       }
 
@@ -1623,7 +1837,9 @@
         const isDarkBg = isDarkColor(bg);
         const textColor = isDarkBg ? '#fff' : '#202124';
         const title = note.title || '';
-        const content = note.content || '';
+        let content = note.content || '';
+        // Auto-linkify URLs
+        content = linkify(content);
         const noteId = note.id;
         const hasImage = note.imageData && note.imageData.length > 0;
 
@@ -1647,7 +1863,7 @@
             </div>
             ${title ? `<div class="note-title">${escHtml(title)}</div>` : ''}
             ${hasImage ? `<div class="note-image"><img src="${note.imageData}" alt="Note image" loading="lazy" /></div>` : ''}
-            <div class="note-content">${escHtml(content)}</div>
+            <div class="note-content">${content}</div>
             <div class="note-meta">
               <span class="note-date"><i class="far fa-clock"></i> ${formatDate(note.updatedAt || note.createdAt)}</span>
               ${note.archived ? '<span>📦</span>' : ''}
@@ -1732,8 +1948,39 @@
       document.addEventListener('click', () => {
         document.querySelectorAll('.card-menu.open').forEach(m => m.classList.remove('open'));
       });
+
+      dashboardView.classList.remove('active');
+      notesGrid.style.display = 'grid';
+      searchInput.style.display = 'block';
     }
 
+    // ================================================================
+    //  LINKIFY — convert URLs to clickable links
+    // ================================================================
+    function linkify(text) {
+      if (!text) return '';
+      const urlRegex = /(https?:\/\/[^\s<]+)/g;
+      return text.replace(urlRegex, (url) => {
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+      });
+    }
+
+    // ================================================================
+    //  RENDER ALL
+    // ================================================================
+    function renderAll() {
+      if (showDashboard) {
+        renderDashboard();
+      } else {
+        renderNotes();
+      }
+      const archiveCountVal = allNotes.filter(n => n.archived).length;
+      archiveCount.textContent = archiveCountVal;
+    }
+
+    // ================================================================
+    //  HELPERS
+    // ================================================================
     function escHtml(str) {
       const div = document.createElement('div');
       div.textContent = str;
@@ -1768,7 +2015,7 @@
       note.pinned = !note.pinned;
       note.updatedAt = Date.now();
       await saveNotesToStorage(currentUser.id, allNotes);
-      renderNotes();
+      renderAll();
       showToast(note.pinned ? 'Pinned' : 'Unpinned', 'thumbtack');
     }
 
@@ -1776,7 +2023,7 @@
       note.color = color;
       note.updatedAt = Date.now();
       await saveNotesToStorage(currentUser.id, allNotes);
-      renderNotes();
+      renderAll();
       showToast('Color updated', 'palette');
     }
 
@@ -1784,9 +2031,7 @@
       note.archived = archive;
       note.updatedAt = Date.now();
       await saveNotesToStorage(currentUser.id, allNotes);
-      // If we are viewing archived and we unarchive, stay in archive view? 
-      // We'll stay in current view but re-render.
-      renderNotes();
+      renderAll();
       showToast(archive ? 'Archived' : 'Unarchived', 'archive');
     }
 
@@ -1841,7 +2086,7 @@
           note.imageData = ev.target.result;
           note.updatedAt = Date.now();
           await saveNotesToStorage(currentUser.id, allNotes);
-          renderNotes();
+          renderAll();
           showToast('Image added', 'image');
         };
         reader.readAsDataURL(file);
@@ -1866,7 +2111,7 @@
       };
       allNotes.unshift(note);
       await saveNotesToStorage(currentUser.id, allNotes);
-      renderNotes();
+      renderAll();
       return note;
     }
 
@@ -1878,14 +2123,14 @@
       note.color = color;
       note.updatedAt = Date.now();
       await saveNotesToStorage(currentUser.id, allNotes);
-      renderNotes();
+      renderAll();
     }
 
     async function deleteNote(id) {
       if (!confirm('Delete this note?')) return;
       allNotes = allNotes.filter(n => n.id !== id);
       await saveNotesToStorage(currentUser.id, allNotes);
-      renderNotes();
+      renderAll();
       showToast('Deleted', 'trash');
       if (editingNoteId === id) closeEditor();
     }
@@ -1975,7 +2220,7 @@
     }
 
     // ================================================================
-    //  ACCOUNT DROPDOWN (no export/import)
+    //  ACCOUNT DROPDOWN
     // ================================================================
     function renderAccountDropdown() {
       if (!currentUser) {
@@ -2025,12 +2270,20 @@
       e.stopPropagation();
       leftDropdown.classList.toggle('open');
       accountDropdown.classList.remove('open');
-      appearanceSub.classList.remove('open');
+      // Toggle appearance sub-menu visibility
+      if (leftDropdown.classList.contains('open')) {
+        // Show appearance sub only if needed - we'll keep it hidden by default
+      }
     });
 
     leftAppearance.addEventListener('click', (e) => {
       e.stopPropagation();
-      appearanceSub.classList.toggle('open');
+      const sub = appearanceSub;
+      if (sub.style.display === 'block') {
+        sub.style.display = 'none';
+      } else {
+        sub.style.display = 'block';
+      }
     });
 
     themeToggleTrack.addEventListener('click', (e) => {
@@ -2041,9 +2294,31 @@
     leftArchive.addEventListener('click', () => {
       leftDropdown.classList.remove('open');
       showArchived = !showArchived;
-      renderNotes();
-      // Update left menu text
+      if (showDashboard) {
+        showDashboard = false;
+      }
+      renderAll();
       leftArchive.querySelector('.label').textContent = showArchived ? '📦 Archived (hide)' : 'Archived';
+    });
+
+    leftDashboard.addEventListener('click', () => {
+      leftDropdown.classList.remove('open');
+      showDashboard = !showDashboard;
+      if (showDashboard) {
+        if (showArchived) {
+          showArchived = false;
+          leftArchive.querySelector('.label').textContent = 'Archived';
+        }
+        renderDashboard();
+        searchInput.style.display = 'none';
+        notesGrid.style.display = 'none';
+        dashboardView.classList.add('active');
+      } else {
+        dashboardView.classList.remove('active');
+        searchInput.style.display = 'block';
+        notesGrid.style.display = 'grid';
+        renderNotes();
+      }
     });
 
     leftExport.addEventListener('click', () => {
@@ -2058,18 +2333,6 @@
       importNotes();
     });
 
-    leftClearAll.addEventListener('click', () => {
-      leftDropdown.classList.remove('open');
-      if (!currentUser) { showToast('Sign in first', 'exclamation-circle'); return; }
-      if (allNotes.length === 0) { showToast('No notes to clear', 'info-circle'); return; }
-      if (confirm('Are you sure you want to delete ALL notes? This cannot be undone.')) {
-        allNotes = [];
-        saveNotesToStorage(currentUser.id, allNotes);
-        renderNotes();
-        showToast('All notes cleared', 'trash');
-      }
-    });
-
     leftAbout.addEventListener('click', () => {
       leftDropdown.classList.remove('open');
       showToast('📝 Notes App — Built with ❤️, copyright free, version 2.0', 'info-circle', 4000);
@@ -2077,7 +2340,6 @@
 
     document.addEventListener('click', () => {
       leftDropdown.classList.remove('open');
-      appearanceSub.classList.remove('open');
     });
     leftDropdown.addEventListener('click', (e) => e.stopPropagation());
 
@@ -2116,7 +2378,7 @@
               if (newNotes.length) {
                 allNotes = [...allNotes, ...newNotes];
                 await saveNotesToStorage(currentUser.id, allNotes);
-                renderNotes();
+                renderAll();
                 showToast(`Imported ${newNotes.length} notes`, 'file-import');
               } else {
                 showToast('No new notes to import', 'info-circle');
@@ -2149,6 +2411,9 @@
         avatarLetter.textContent = 'G';
         accountBadge.textContent = '0';
         accountDropdown.innerHTML = '';
+        dashboardView.classList.remove('active');
+        searchInput.style.display = 'block';
+        notesGrid.style.display = 'grid';
         setTimeout(() => {
           if (gsiBtn.children.length === 0) fallbackBtn.classList.add('visible');
         }, 1000);
@@ -2161,9 +2426,10 @@
       } else {
         avatarLetter.textContent = initial;
       }
-      // Reset archive view when signing in
       showArchived = false;
-      renderNotes();
+      showDashboard = false;
+      leftArchive.querySelector('.label').textContent = 'Archived';
+      renderAll();
       renderAccountDropdown();
       accountBadge.textContent = '1';
     }
@@ -2173,7 +2439,9 @@
     // ================================================================
     searchInput.addEventListener('input', () => {
       searchQuery = searchInput.value;
-      renderNotes();
+      if (!showDashboard) {
+        renderNotes();
+      }
     });
 
     // ================================================================
@@ -2232,14 +2500,14 @@
     accountDropdown.addEventListener('click', (e) => e.stopPropagation());
 
     // ================================================================
-    //  REFRESH
+    //  REFRESH — single toast only
     // ================================================================
     refreshBtn.addEventListener('click', async () => {
       if (!currentUser) { showToast('Sign in first', 'exclamation-circle'); return; }
       setLoading(true);
       try {
         allNotes = await loadNotesFromStorage(currentUser.id);
-        renderNotes();
+        renderAll();
         showToast('Refreshed', 'sync-alt');
       } catch (err) {
         console.error('Refresh error:', err);
@@ -2259,7 +2527,6 @@
           return;
         }
       } catch (_) {}
-      // OAuth popup
       const redirectUri = window.location.origin + window.location.pathname;
       const finalRedirect = (window.location.hostname === 'notes.flatfusion.fun') ?
         'https://notes.flatfusion.fun/callback' :
@@ -2361,12 +2628,13 @@
       if (typeof google === 'undefined' || !google.accounts) fallbackBtn.classList.add('visible');
     }, 4000);
 
-    console.log('📝 Keep Notes — Fully loaded');
-    console.log('🔑 Client ID:', CLIENT_ID);
-    console.log('🌓 Theme:', currentTheme);
-    console.log('👤 User:', currentUser ? currentUser.email : 'Not signed in');
-    console.log('✅ Switch account works via GIS prompt.');
-    console.log('📦 Archive now hides notes and shows in Archived view.');
+    console.log('📝 Keep Notes — Fully loaded with all features');
+    console.log('✅ Removed Clear all notes');
+    console.log('✅ Clean Appearance sub-menu');
+    console.log('✅ Three-dot menu shows all options every time');
+    console.log('✅ Links in notes are clickable');
+    console.log('✅ Image upload works');
+    console.log('✅ Single toast on refresh');
   </script>
 </body>
 </html>
