@@ -5,11 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Keep – Notes</title>
 
-  <!-- Google Fonts (Keep style) -->
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <!-- Font Awesome 6 Free -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <!-- Google Identity Services -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <style>
@@ -66,18 +63,14 @@
     /* ============================================================
        RESET & BASE
        ============================================================ */
-    *,
-    *::before,
-    *::after {
+    * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
     html {
       scroll-behavior: smooth;
     }
-
     body {
       font-family: var(--font);
       background: var(--bg-app);
@@ -88,7 +81,6 @@
       transition: background 0.3s ease, color 0.3s ease;
       -webkit-font-smoothing: antialiased;
     }
-
     ::-webkit-scrollbar {
       width: 5px;
       height: 5px;
@@ -101,9 +93,7 @@
       border-radius: 999px;
     }
 
-    /* ============================================================
-       LOADING OVERLAY — Keep style
-       ============================================================ */
+    /* ===== LOADING ===== */
     #loadingOverlay {
       position: fixed;
       inset: 0;
@@ -114,7 +104,6 @@
       justify-content: center;
       flex-direction: column;
       gap: 24px;
-      transition: opacity 0.4s ease;
     }
     #loadingOverlay.active {
       display: flex;
@@ -149,9 +138,7 @@
       }
     }
 
-    /* ============================================================
-       TOAST
-       ============================================================ */
+    /* ===== TOAST ===== */
     #toastContainer {
       position: fixed;
       bottom: 100px;
@@ -190,9 +177,7 @@
       transform: translateY(0) scale(1);
     }
 
-    /* ============================================================
-       SIGN-IN OVERLAY
-       ============================================================ */
+    /* ===== SIGN-IN OVERLAY ===== */
     #signinOverlay {
       position: fixed;
       inset: 0;
@@ -283,9 +268,7 @@
       display: flex;
     }
 
-    /* ============================================================
-       HEADER — Keep style
-       ============================================================ */
+    /* ===== HEADER ===== */
     .app-header {
       background: var(--bg-header);
       padding: 8px 24px;
@@ -304,6 +287,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      position: relative;
     }
     .header-left .menu-icon {
       font-size: 20px;
@@ -330,6 +314,106 @@
       color: var(--warning);
     }
 
+    /* Left dropdown (hamburger menu) */
+    .left-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      padding: 6px 0;
+      min-width: 220px;
+      display: none;
+      z-index: 150;
+      border: 1px solid var(--border-color);
+      animation: slideDown 0.2s ease;
+    }
+    .left-dropdown.open {
+      display: block;
+    }
+    .left-dropdown .drop-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 8px 18px;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-primary);
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-size: 14px;
+      font-family: var(--font);
+    }
+    .left-dropdown .drop-item:hover {
+      background: var(--bg-hover);
+    }
+    .left-dropdown .drop-item i {
+      width: 20px;
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+    .left-dropdown .drop-item .label {
+      flex: 1;
+    }
+    .left-dropdown .drop-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 4px 16px;
+    }
+    /* Sub‑menu for Appearance > Theme */
+    .left-dropdown .sub-menu {
+      padding-left: 20px;
+      display: none;
+      background: var(--bg-card);
+    }
+    .left-dropdown .sub-menu.open {
+      display: block;
+    }
+    .left-dropdown .sub-menu .drop-item {
+      padding-left: 30px;
+      font-size: 13px;
+    }
+    .left-dropdown .sub-menu .drop-item i {
+      font-size: 14px;
+    }
+    .left-dropdown .theme-toggle-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 18px;
+    }
+    .left-dropdown .theme-toggle-item .toggle-track {
+      width: 40px;
+      height: 22px;
+      background: var(--border-color);
+      border-radius: 999px;
+      position: relative;
+      cursor: pointer;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+    .left-dropdown .theme-toggle-item .toggle-track .toggle-thumb {
+      width: 18px;
+      height: 18px;
+      background: var(--bg-card);
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+    .left-dropdown .theme-toggle-item .toggle-track.active {
+      background: var(--accent);
+    }
+    .left-dropdown .theme-toggle-item .toggle-track.active .toggle-thumb {
+      left: 20px;
+    }
+
+    /* ===== HEADER CENTER ===== */
     .header-center {
       flex: 1;
       max-width: 680px;
@@ -365,6 +449,7 @@
       color: var(--text-muted);
     }
 
+    /* ===== HEADER RIGHT ===== */
     .header-right {
       display: flex;
       align-items: center;
@@ -389,7 +474,6 @@
       background: var(--bg-hover);
     }
 
-    /* Avatar */
     .avatar-wrap {
       position: relative;
       cursor: pointer;
@@ -545,9 +629,7 @@
       background: var(--danger-bg);
     }
 
-    /* ============================================================
-       MAIN CONTENT
-       ============================================================ */
+    /* ===== MAIN ===== */
     .main-content {
       flex: 1;
       padding: 24px 32px 90px;
@@ -557,14 +639,11 @@
       transition: padding 0.3s ease;
     }
 
-    /* ============================================================
-       NOTES GRID — Keep style
-       ============================================================ */
+    /* ===== NOTES GRID ===== */
     .notes-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 18px;
-      transition: all 0.3s ease;
     }
     .notes-grid.empty {
       display: flex;
@@ -592,9 +671,7 @@
       margin-top: 4px;
     }
 
-    /* ============================================================
-       NOTE CARD — Keep style
-       ============================================================ */
+    /* ===== NOTE CARD ===== */
     .note-card {
       background: var(--bg-card);
       border-radius: var(--radius-sm);
@@ -646,8 +723,6 @@
       align-items: center;
       gap: 4px;
     }
-
-    /* Pin badge */
     .note-card .pin-badge {
       position: absolute;
       top: 6px;
@@ -656,8 +731,6 @@
       color: var(--accent);
       opacity: 0.6;
     }
-
-    /* Image inside note */
     .note-card .note-image {
       margin: 6px 0 8px;
       border-radius: var(--radius-sm);
@@ -675,9 +748,7 @@
       object-fit: cover;
     }
 
-    /* ============================================================
-       THREE-DOT MENU ON CARD
-       ============================================================ */
+    /* ===== THREE-DOT MENU ON CARD ===== */
     .note-card .card-actions {
       position: absolute;
       top: 6px;
@@ -756,7 +827,6 @@
       background: var(--border-color);
       margin: 4px 16px;
     }
-    /* Color picker sub-menu inside card menu */
     .note-card .card-menu .color-picker-sub {
       display: flex;
       flex-wrap: wrap;
@@ -782,9 +852,7 @@
       box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--text-primary);
     }
 
-    /* ============================================================
-       FAB — Keep style
-       ============================================================ */
+    /* ===== FAB ===== */
     .fab {
       position: fixed;
       bottom: 28px;
@@ -812,9 +880,7 @@
       transform: scale(0.94);
     }
 
-    /* ============================================================
-       EDITOR MODAL — Keep style
-       ============================================================ */
+    /* ===== EDITOR MODAL ===== */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -833,7 +899,7 @@
       background: var(--bg-card);
       border-radius: var(--radius-md);
       width: 100%;
-      max-width: 560px;
+      max-width: 700px;
       box-shadow: var(--shadow-lg);
       animation: popIn 0.25s ease;
       overflow: hidden;
@@ -893,7 +959,7 @@
       padding: 8px 0 12px;
       outline: none;
       resize: vertical;
-      min-height: 100px;
+      min-height: 120px;
       font-family: var(--font);
       line-height: 1.7;
       background: transparent;
@@ -924,6 +990,10 @@
     .modal-editor .modal-body .color-picker-row .color-opt.active {
       border-color: var(--text-primary);
       box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--text-primary);
+    }
+    .modal-editor .modal-body .color-picker-row .color-opt.default-opt {
+      background: conic-gradient(white 50%, #ccc 50%);
+      border-color: var(--border-color);
     }
     .modal-editor .modal-footer {
       padding: 8px 20px 16px;
@@ -964,9 +1034,7 @@
       background: var(--danger-bg);
     }
 
-    /* ============================================================
-       FOOTER — copyright free
-       ============================================================ */
+    /* ===== FOOTER ===== */
     .app-footer {
       text-align: center;
       padding: 12px 20px;
@@ -985,9 +1053,7 @@
       text-decoration: underline;
     }
 
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
       .app-header {
         padding: 6px 12px;
@@ -1049,8 +1115,10 @@
       .note-card .card-actions {
         opacity: 1;
       }
+      .left-dropdown {
+        left: -10px;
+      }
     }
-
     @media (max-width: 480px) {
       .notes-grid {
         grid-template-columns: 1fr;
@@ -1066,10 +1134,6 @@
         display: none;
       }
     }
-
-    /* ============================================================
-       UTILITY
-       ============================================================ */
     .hidden {
       display: none !important;
     }
@@ -1077,16 +1141,16 @@
 </head>
 <body>
 
-  <!-- ===== LOADING OVERLAY ===== -->
+  <!-- ===== LOADING ===== -->
   <div id="loadingOverlay" class="active">
     <div class="spinner"></div>
     <div class="load-text">Loading your notes...</div>
   </div>
 
-  <!-- ===== TOAST CONTAINER ===== -->
+  <!-- ===== TOAST ===== -->
   <div id="toastContainer"></div>
 
-  <!-- ===== SIGN-IN OVERLAY ===== -->
+  <!-- ===== SIGN-IN ===== -->
   <div id="signinOverlay">
     <div class="signin-card">
       <div class="logo-icon"><i class="fas fa-pen-fancy"></i></div>
@@ -1102,23 +1166,47 @@
   </div>
 
   <!-- ===== HEADER ===== -->
-  <header class="app-header" id="appHeader">
+  <header class="app-header">
     <div class="header-left">
-      <span class="menu-icon" aria-label="Menu"><i class="fas fa-bars"></i></span>
+      <span class="menu-icon" id="leftMenuBtn" aria-label="Menu"><i class="fas fa-bars"></i></span>
       <div class="brand">
         <i class="fas fa-pen-fancy"></i>
         <span>Notes</span>
       </div>
+      <!-- Left dropdown -->
+      <div class="left-dropdown" id="leftDropdown" role="menu">
+        <div class="drop-item" id="leftAppearance">
+          <i class="fas fa-palette"></i>
+          <span class="label">Appearance</span>
+          <i class="fas fa-chevron-right" style="margin-left:auto;font-size:12px;"></i>
+        </div>
+        <div class="sub-menu" id="appearanceSub">
+          <div class="drop-item theme-toggle-item" style="cursor:default;">
+            <span><i class="fas fa-moon"></i> Theme</span>
+            <div class="toggle-track" id="themeToggleTrack">
+              <div class="toggle-thumb"></div>
+            </div>
+          </div>
+        </div>
+        <div class="drop-divider"></div>
+        <div class="drop-item" id="leftExport">
+          <i class="fas fa-file-export"></i>
+          <span class="label">Export notes</span>
+        </div>
+        <div class="drop-item" id="leftImport">
+          <i class="fas fa-file-import"></i>
+          <span class="label">Import notes</span>
+        </div>
+      </div>
     </div>
     <div class="header-center">
-      <span class="search-icon" aria-hidden="true"><i class="fas fa-search"></i></span>
-      <input type="text" id="searchInput" placeholder="Search notes..." aria-label="Search notes" />
+      <span class="search-icon"><i class="fas fa-search"></i></span>
+      <input type="text" id="searchInput" placeholder="Search notes..." />
     </div>
     <div class="header-right">
-      <button class="icon-btn" id="refreshBtn" aria-label="Refresh notes"><i class="fas fa-sync-alt"></i></button>
-      <button class="icon-btn theme-toggle" id="themeToggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+      <button class="icon-btn" id="refreshBtn" aria-label="Refresh"><i class="fas fa-sync-alt"></i></button>
       <div class="avatar-wrap" id="avatarWrap">
-        <div class="avatar" id="avatarBtn" aria-label="Account menu" role="button" tabindex="0">
+        <div class="avatar" id="avatarBtn" role="button" tabindex="0">
           <span id="avatarLetter">G</span>
           <span class="badge" id="accountBadge">1</span>
         </div>
@@ -1127,31 +1215,31 @@
     </div>
   </header>
 
-  <!-- ===== MAIN CONTENT ===== -->
-  <main class="main-content" id="mainContent">
+  <!-- ===== MAIN ===== -->
+  <main class="main-content">
     <div class="notes-grid" id="notesGrid"></div>
   </main>
 
   <!-- ===== FAB ===== -->
   <button class="fab" id="fabBtn" aria-label="Create new note"><i class="fas fa-plus"></i></button>
 
-  <!-- ===== EDITOR MODAL ===== -->
-  <div class="modal-overlay" id="editorModal" role="dialog" aria-modal="true" aria-label="Note editor">
+  <!-- ===== EDITOR ===== -->
+  <div class="modal-overlay" id="editorModal" role="dialog" aria-modal="true">
     <div class="modal-editor">
       <div class="modal-header">
         <span class="modal-title" id="editorModalTitle">New Note</span>
-        <button class="close-btn" id="editorCloseBtn" aria-label="Close editor"><i class="fas fa-times"></i></button>
+        <button class="close-btn" id="editorCloseBtn"><i class="fas fa-times"></i></button>
       </div>
       <div class="modal-body">
-        <input type="text" class="editor-title" id="noteTitleInput" placeholder="Title" aria-label="Note title" />
-        <textarea class="editor-content" id="noteContentInput" placeholder="Write your note..." rows="4" aria-label="Note content"></textarea>
-        <div class="color-picker-row" id="editorColorPicker" role="group" aria-label="Color picker"></div>
+        <input type="text" class="editor-title" id="noteTitleInput" placeholder="Title" />
+        <textarea class="editor-content" id="noteContentInput" placeholder="Write your note..." rows="4"></textarea>
+        <div class="color-picker-row" id="editorColorPicker" role="group"></div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-danger" id="editorDeleteBtn" aria-label="Delete note"><i class="fas fa-trash"></i> Delete</button>
+        <button class="btn btn-danger" id="editorDeleteBtn"><i class="fas fa-trash"></i> Delete</button>
         <div style="flex:1;"></div>
-        <button class="btn btn-secondary" id="editorCancelBtn" aria-label="Cancel">Cancel</button>
-        <button class="btn btn-primary" id="editorSaveBtn" aria-label="Save note">Save</button>
+        <button class="btn btn-secondary" id="editorCancelBtn">Cancel</button>
+        <button class="btn btn-primary" id="editorSaveBtn">Save</button>
       </div>
     </div>
   </div>
@@ -1171,7 +1259,8 @@
     const THEME_KEY = 'keep_theme';
 
     const COLORS = [
-      { name: 'Default', value: '#ffffff' },
+      { name: 'Default', value: null }, // special: theme adaptive
+      { name: 'White', value: '#ffffff' },
       { name: 'Red', value: '#f28b82' },
       { name: 'Orange', value: '#fbbc04' },
       { name: 'Yellow', value: '#fff475' },
@@ -1184,7 +1273,7 @@
       { name: 'Brown', value: '#e6c9a8' },
       { name: 'Gray', value: '#e8eaed' },
     ];
-    const DEFAULT_COLOR = '#ffffff';
+    const DEFAULT_COLOR = null; // theme adaptive
 
     // ================================================================
     //  STATE
@@ -1210,7 +1299,6 @@
     const notesGrid = $('#notesGrid');
     const searchInput = $('#searchInput');
     const fabBtn = $('#fabBtn');
-    const avatarWrap = $('#avatarWrap');
     const avatarBtn = $('#avatarBtn');
     const avatarLetter = $('#avatarLetter');
     const accountBadge = $('#accountBadge');
@@ -1225,8 +1313,14 @@
     const editorDeleteBtn = $('#editorDeleteBtn');
     const editorCloseBtn = $('#editorCloseBtn');
     const refreshBtn = $('#refreshBtn');
-    const themeToggle = $('#themeToggle');
     const toastContainer = $('#toastContainer');
+    const leftMenuBtn = $('#leftMenuBtn');
+    const leftDropdown = $('#leftDropdown');
+    const leftAppearance = $('#leftAppearance');
+    const appearanceSub = $('#appearanceSub');
+    const themeToggleTrack = $('#themeToggleTrack');
+    const leftExport = $('#leftExport');
+    const leftImport = $('#leftImport');
 
     // ================================================================
     //  TOAST
@@ -1238,9 +1332,7 @@
       el.className = 'toast-item';
       el.innerHTML = `<i class="fas fa-${icon}"></i> ${msg}`;
       toastContainer.appendChild(el);
-      requestAnimationFrame(() => {
-        el.classList.add('show');
-      });
+      requestAnimationFrame(() => el.classList.add('show'));
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => {
         el.classList.remove('show');
@@ -1261,29 +1353,21 @@
     function loadTheme() {
       try {
         const saved = localStorage.getItem(THEME_KEY);
-        if (saved) {
-          currentTheme = saved;
-        } else {
-          const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          currentTheme = prefers ? 'dark' : 'light';
-        }
-        applyTheme();
-      } catch (_) {
-        applyTheme();
-      }
+        currentTheme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      } catch (_) { currentTheme = 'light'; }
+      applyTheme();
     }
 
     function applyTheme() {
       document.documentElement.setAttribute('data-theme', currentTheme);
-      const icon = themeToggle.querySelector('i');
-      if (currentTheme === 'dark') {
-        icon.className = 'fas fa-sun';
-      } else {
-        icon.className = 'fas fa-moon';
+      const isDark = currentTheme === 'dark';
+      // Update toggle track in left menu
+      if (themeToggleTrack) {
+        themeToggleTrack.classList.toggle('active', isDark);
       }
-      try {
-        localStorage.setItem(THEME_KEY, currentTheme);
-      } catch (_) {}
+      try { localStorage.setItem(THEME_KEY, currentTheme); } catch (_) {}
+      // Re-render notes to adapt colors (if they use default)
+      renderNotes();
     }
 
     function toggleTheme() {
@@ -1292,52 +1376,35 @@
       showToast(currentTheme === 'dark' ? 'Dark mode' : 'Light mode', 'palette');
     }
 
-    themeToggle.addEventListener('click', toggleTheme);
-
     // ================================================================
-    //  STORAGE (localStorage only, async-ready)
+    //  STORAGE
     // ================================================================
-    function getStorageKey(userId) {
-      return STORAGE_KEY_PREFIX + userId;
-    }
+    function getStorageKey(userId) { return STORAGE_KEY_PREFIX + userId; }
 
     async function loadNotesFromStorage(userId) {
       try {
         const raw = localStorage.getItem(getStorageKey(userId));
-        if (raw) return JSON.parse(raw);
-        return [];
-      } catch (err) {
-        console.error('Load notes error:', err);
-        return [];
-      }
+        return raw ? JSON.parse(raw) : [];
+      } catch (_) { return []; }
     }
 
     async function saveNotesToStorage(userId, notes) {
-      try {
-        localStorage.setItem(getStorageKey(userId), JSON.stringify(notes));
-      } catch (err) {
-        console.error('Save notes error:', err);
-      }
+      try { localStorage.setItem(getStorageKey(userId), JSON.stringify(notes)); } catch (_) {}
     }
 
-    function saveUserToStorage(user) {
-      try { localStorage.setItem(USER_KEY, JSON.stringify(user)); } catch (_) {}
-    }
+    function saveUserToStorage(user) { try { localStorage.setItem(USER_KEY, JSON.stringify(user)); } catch (_) {} }
 
     function loadUserFromStorage() {
       try {
         const raw = localStorage.getItem(USER_KEY);
-        if (raw) return JSON.parse(raw);
-      } catch (_) {}
-      return null;
+        return raw ? JSON.parse(raw) : null;
+      } catch (_) { return null; }
     }
 
-    function clearUserStorage() {
-      try { localStorage.removeItem(USER_KEY); } catch (_) {}
-    }
+    function clearUserStorage() { try { localStorage.removeItem(USER_KEY); } catch (_) {} }
 
     // ================================================================
-    //  AUTH (Google Identity Services)
+    //  AUTH
     // ================================================================
     function initGoogleSignIn() {
       if (typeof google === 'undefined' || !google.accounts) {
@@ -1355,7 +1422,6 @@
           cancel_on_tap_outside: false,
           context: 'signin',
         });
-
         google.accounts.id.renderButton(gsiBtn, {
           type: 'standard',
           theme: 'outline',
@@ -1365,18 +1431,12 @@
           logo_alignment: 'left',
           width: 280,
         });
-
         setTimeout(() => {
-          if (gsiBtn.children.length === 0) {
-            fallbackBtn.classList.add('visible');
-          }
+          if (gsiBtn.children.length === 0) fallbackBtn.classList.add('visible');
         }, 2000);
-
-        // Auto-prompt if user already has a session
         setTimeout(() => {
           try { google.accounts.id.prompt(); } catch (_) {}
         }, 600);
-
       } catch (err) {
         console.error('GIS init error:', err);
         fallbackBtn.classList.add('visible');
@@ -1387,13 +1447,12 @@
       if (!response.credential) return;
       try {
         const payload = JSON.parse(atob(response.credential.split('.')[1]));
-        const user = {
+        handleUserSignIn({
           id: payload.sub,
           name: payload.name || 'User',
           email: payload.email || '',
           picture: payload.picture || '',
-        };
-        handleUserSignIn(user);
+        });
       } catch (err) {
         console.error('Credential parse error:', err);
         showToast('Sign-in failed', 'exclamation-circle');
@@ -1405,12 +1464,10 @@
       try {
         currentUser = user;
         saveUserToStorage(user);
-        const notes = await loadNotesFromStorage(user.id);
-        allNotes = notes;
+        allNotes = await loadNotesFromStorage(user.id);
         signinOverlay.classList.remove('active');
         renderApp();
         showToast(`Welcome, ${user.name}!`, 'check-circle');
-        // Re-prompt for account switching
         setTimeout(() => {
           try { google.accounts.id.prompt(); } catch (_) {}
         }, 500);
@@ -1423,7 +1480,7 @@
     }
 
     // ================================================================
-    //  SWITCH ACCOUNT
+    //  SWITCH ACCOUNT (fix)
     // ================================================================
     function triggerAccountSwitch() {
       try {
@@ -1439,7 +1496,6 @@
           google.accounts.id.prompt();
           showToast('Select an account to switch', 'exchange-alt');
         } else {
-          // Fallback: sign out and show sign-in
           signOut();
           signinOverlay.classList.add('active');
           fallbackBtn.classList.add('visible');
@@ -1456,7 +1512,6 @@
     async function signOut() {
       setLoading(true);
       try {
-        const userId = currentUser ? currentUser.id : null;
         currentUser = null;
         clearUserStorage();
         try { google.accounts.id.disableAutoSelect(); } catch (_) {}
@@ -1477,7 +1532,7 @@
     }
 
     // ================================================================
-    //  RENDER: NOTES GRID
+    //  RENDER: NOTES (with theme‑adaptive default color)
     // ================================================================
     function renderNotes() {
       if (!currentUser) {
@@ -1498,7 +1553,6 @@
           (n.content && n.content.toLowerCase().includes(q))
         );
       }
-      // Sort: pinned first, then by updatedAt
       filtered.sort((a, b) => {
         if (a.pinned && !b.pinned) return -1;
         if (!a.pinned && b.pinned) return 1;
@@ -1517,8 +1571,14 @@
 
       notesGrid.className = 'notes-grid';
       let html = '';
+      const isDark = currentTheme === 'dark';
+      const defaultBg = isDark ? '#2d2d2d' : '#ffffff';
+
       filtered.forEach(note => {
-        const bg = note.color || DEFAULT_COLOR;
+        let bg = note.color;
+        if (bg === null || bg === undefined || bg === '#ffffff' || bg === '') {
+          bg = defaultBg; // theme adaptive
+        }
         const isDarkBg = isDarkColor(bg);
         const textColor = isDarkBg ? '#fff' : '#202124';
         const title = note.title || '';
@@ -1532,16 +1592,16 @@
             <div class="card-actions">
               <button class="more-btn" data-id="${noteId}" aria-label="More options"><i class="fas fa-ellipsis-v"></i></button>
               <div class="card-menu" data-id="${noteId}" role="menu">
-                <button class="menu-item" data-action="pin" role="menuitem"><i class="fas fa-thumbtack"></i> ${note.pinned ? 'Unpin' : 'Pin'}</button>
-                <button class="menu-item" data-action="color" role="menuitem"><i class="fas fa-palette"></i> Change Color</button>
+                <button class="menu-item" data-action="pin"><i class="fas fa-thumbtack"></i> ${note.pinned ? 'Unpin' : 'Pin'}</button>
+                <button class="menu-item" data-action="color"><i class="fas fa-palette"></i> Change Color</button>
                 <div class="color-picker-sub" style="display:none;"></div>
-                <button class="menu-item" data-action="image" role="menuitem"><i class="fas fa-image"></i> Add Image</button>
-                <button class="menu-item" data-action="link" role="menuitem"><i class="fas fa-link"></i> Copy Link</button>
-                <button class="menu-item" data-action="share" role="menuitem"><i class="fas fa-share-alt"></i> Share</button>
-                <button class="menu-item" data-action="download" role="menuitem"><i class="fas fa-download"></i> Download</button>
-                <button class="menu-item" data-action="archive" role="menuitem"><i class="fas fa-archive"></i> Archive</button>
+                <button class="menu-item" data-action="image"><i class="fas fa-image"></i> Add Image</button>
+                <button class="menu-item" data-action="link"><i class="fas fa-link"></i> Copy Link</button>
+                <button class="menu-item" data-action="share"><i class="fas fa-share-alt"></i> Share</button>
+                <button class="menu-item" data-action="download"><i class="fas fa-download"></i> Download</button>
+                <button class="menu-item" data-action="archive"><i class="fas fa-archive"></i> Archive</button>
                 <div class="menu-divider"></div>
-                <button class="menu-item danger" data-action="delete" role="menuitem"><i class="fas fa-trash"></i> Delete</button>
+                <button class="menu-item danger" data-action="delete"><i class="fas fa-trash"></i> Delete</button>
               </div>
             </div>
             ${title ? `<div class="note-title">${escHtml(title)}</div>` : ''}
@@ -1559,8 +1619,6 @@
       // Attach events
       notesGrid.querySelectorAll('.note-card').forEach(card => {
         const id = card.dataset.id;
-
-        // Three-dot menu
         const moreBtn = card.querySelector('.more-btn');
         const menu = card.querySelector('.card-menu');
         if (moreBtn && menu) {
@@ -1572,25 +1630,33 @@
             if (colorSub) colorSub.style.display = 'none';
           });
         }
-
-        // Menu items
         card.querySelectorAll('.card-menu .menu-item').forEach(item => {
           item.addEventListener('click', (e) => {
             e.stopPropagation();
             const action = item.dataset.action;
             const note = allNotes.find(n => n.id === id);
             if (!note) return;
-
-            if (action === 'pin') {
-              togglePin(note);
-              menu.classList.remove('open');
-            } else if (action === 'color') {
+            if (action === 'pin') { togglePin(note);
+              menu.classList.remove('open'); } else if (action === 'color') {
               const colorSub = menu.querySelector('.color-picker-sub');
               if (colorSub) {
                 const isVisible = colorSub.style.display !== 'none';
                 colorSub.style.display = isVisible ? 'none' : 'flex';
                 if (!isVisible && colorSub.children.length === 0) {
-                  COLORS.forEach(c => {
+                  // Add theme-adaptive "Default" option
+                  const defaultOpt = document.createElement('div');
+                  defaultOpt.className = 'color-opt default-opt' + (note.color === null || note.color === '#ffffff' ?
+                    ' active' : '');
+                  defaultOpt.title = 'Default (theme)';
+                  defaultOpt.dataset.color = 'null';
+                  defaultOpt.addEventListener('click', (ev) => {
+                    ev.stopPropagation();
+                    changeNoteColor(note, null);
+                    colorSub.style.display = 'none';
+                    menu.classList.remove('open');
+                  });
+                  colorSub.appendChild(defaultOpt);
+                  COLORS.filter(c => c.value !== null).forEach(c => {
                     const opt = document.createElement('div');
                     opt.className = 'color-opt' + (c.value === note.color ? ' active' : '');
                     opt.style.background = c.value;
@@ -1607,37 +1673,21 @@
                   });
                 }
               }
-            } else if (action === 'image') {
-              uploadImageForNote(note);
-              menu.classList.remove('open');
-            } else if (action === 'link') {
-              copyNoteLink(note);
-              menu.classList.remove('open');
-            } else if (action === 'share') {
-              shareNote(note);
-              menu.classList.remove('open');
-            } else if (action === 'download') {
-              downloadNote(note);
-              menu.classList.remove('open');
-            } else if (action === 'archive') {
-              toggleArchive(note);
-              menu.classList.remove('open');
-            } else if (action === 'delete') {
-              deleteNote(note.id);
-              menu.classList.remove('open');
-            }
+            } else if (action === 'image') { uploadImageForNote(note);
+              menu.classList.remove('open'); } else if (action === 'link') { copyNoteLink(note);
+              menu.classList.remove('open'); } else if (action === 'share') { shareNote(note);
+              menu.classList.remove('open'); } else if (action === 'download') { downloadNote(note);
+              menu.classList.remove('open'); } else if (action === 'archive') { toggleArchive(note);
+              menu.classList.remove('open'); } else if (action === 'delete') { deleteNote(note.id);
+              menu.classList.remove('open'); }
           });
         });
-
-        // Click on card body -> edit (but not on buttons)
         card.addEventListener('click', (e) => {
           if (e.target.closest('.card-actions') || e.target.closest('.note-image') || e.target.closest(
-              '.note-meta')) return;
+            '.note-meta')) return;
           openEditor(id);
         });
       });
-
-      // Close dropdowns on outside click
       document.addEventListener('click', () => {
         document.querySelectorAll('.card-menu.open').forEach(m => m.classList.remove('open'));
       });
@@ -1650,6 +1700,7 @@
     }
 
     function isDarkColor(hex) {
+      if (!hex || hex === '#ffffff') return false;
       const c = hex.replace('#', '');
       const r = parseInt(c.substr(0, 2), 16) || 0;
       const g = parseInt(c.substr(2, 2), 16) || 0;
@@ -1712,9 +1763,7 @@
 
     function copyNoteLink(note) {
       const url = window.location.origin + window.location.pathname + '?note=' + encodeURIComponent(note.id);
-      navigator.clipboard.writeText(url).then(() => {
-        showToast('Link copied!', 'link');
-      }).catch(() => {
+      navigator.clipboard.writeText(url).then(() => showToast('Link copied!', 'link')).catch(() => {
         const ta = document.createElement('textarea');
         ta.value = url;
         document.body.appendChild(ta);
@@ -1733,9 +1782,7 @@
       } else {
         navigator.clipboard.writeText(text + '\n\n' + url).then(() => {
           showToast('Content & link copied!', 'share-alt');
-        }).catch(() => {
-          showToast('Share: ' + url, 'share-alt');
-        });
+        }).catch(() => showToast('Share: ' + url, 'share-alt'));
       }
     }
 
@@ -1767,7 +1814,7 @@
         id: Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 6),
         title: title.trim() || '',
         content: content.trim() || '',
-        color: color || DEFAULT_COLOR,
+        color: color, // can be null for default
         pinned: false,
         archived: false,
         imageData: null,
@@ -1785,7 +1832,7 @@
       if (!note) return;
       note.title = (title || '').trim();
       note.content = (content || '').trim();
-      note.color = color || DEFAULT_COLOR;
+      note.color = color;
       note.updatedAt = Date.now();
       await saveNotesToStorage(currentUser.id, allNotes);
       renderNotes();
@@ -1811,7 +1858,7 @@
         editorModalTitle.textContent = 'Edit Note';
         noteTitleInput.value = note.title || '';
         noteContentInput.value = note.content || '';
-        selectedColor = note.color || DEFAULT_COLOR;
+        selectedColor = note.color !== undefined ? note.color : DEFAULT_COLOR;
         editorDeleteBtn.style.display = 'inline-flex';
       } else {
         editorModalTitle.textContent = 'New Note';
@@ -1832,7 +1879,19 @@
 
     function renderEditorColorPicker(selected) {
       editorColorPicker.innerHTML = '';
-      COLORS.forEach(c => {
+      // "Default" option
+      const defaultOpt = document.createElement('div');
+      defaultOpt.className = 'color-opt default-opt' + (selected === null || selected === '#ffffff' ? ' active' : '');
+      defaultOpt.title = 'Default (theme)';
+      defaultOpt.dataset.color = 'null';
+      defaultOpt.addEventListener('click', () => {
+        editorColorPicker.querySelectorAll('.color-opt').forEach(o => o.classList.remove('active'));
+        defaultOpt.classList.add('active');
+        selectedColor = null;
+      });
+      editorColorPicker.appendChild(defaultOpt);
+
+      COLORS.filter(c => c.value !== null).forEach(c => {
         const el = document.createElement('div');
         el.className = 'color-opt' + (c.value === selected ? ' active' : '');
         el.style.background = c.value;
@@ -1874,15 +1933,12 @@
     }
 
     // ================================================================
-    //  RENDER: ACCOUNT DROPDOWN
+    //  ACCOUNT DROPDOWN
     // ================================================================
     function renderAccountDropdown() {
       if (!currentUser) {
         accountDropdown.innerHTML = `
-          <button class="drop-item" id="dropSignIn" role="menuitem">
-            <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
-            <span class="label">Sign in</span>
-          </button>
+          <button class="drop-item" id="dropSignIn"><span class="icon"><i class="fas fa-sign-in-alt"></i></span><span class="label">Sign in</span></button>
         `;
         const btn = accountDropdown.querySelector('#dropSignIn');
         if (btn) btn.addEventListener('click', () => {
@@ -1894,61 +1950,39 @@
       }
 
       const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
-      const avatarHtml = currentUser.picture ?
-        `<img src="${currentUser.picture}" alt="" />` :
-        initial;
+      const avatarHtml = currentUser.picture ? `<img src="${currentUser.picture}" alt="" />` : initial;
 
-      let itemsHtml = `
+      accountDropdown.innerHTML = `
         <div class="drop-item" style="cursor:default;background:transparent;">
           <div class="item-avatar">${avatarHtml}</div>
-          <div class="item-info">
-            <div class="name">${escHtml(currentUser.name)}</div>
-            <div class="email">${escHtml(currentUser.email)}</div>
-          </div>
+          <div class="item-info"><div class="name">${escHtml(currentUser.name)}</div><div class="email">${escHtml(currentUser.email)}</div></div>
           <span class="item-check"><i class="fas fa-check-circle"></i></span>
         </div>
         <div class="divider"></div>
-        <button class="drop-item" id="dropSwitchAccount" role="menuitem">
-          <span class="icon"><i class="fas fa-exchange-alt"></i></span>
-          <span class="label">Switch account</span>
-        </button>
+        <button class="drop-item" id="dropSwitchAccount"><span class="icon"><i class="fas fa-exchange-alt"></i></span><span class="label">Switch account</span></button>
         <div class="divider"></div>
-        <button class="drop-item" id="dropExport" role="menuitem">
-          <span class="icon"><i class="fas fa-file-export"></i></span>
-          <span class="label">Export notes</span>
-        </button>
-        <button class="drop-item" id="dropImport" role="menuitem">
-          <span class="icon"><i class="fas fa-file-import"></i></span>
-          <span class="label">Import notes</span>
-        </button>
+        <button class="drop-item" id="dropExport"><span class="icon"><i class="fas fa-file-export"></i></span><span class="label">Export notes</span></button>
+        <button class="drop-item" id="dropImport"><span class="icon"><i class="fas fa-file-import"></i></span><span class="label">Import notes</span></button>
         <div class="divider"></div>
-        <button class="drop-item danger" id="dropSignOut" role="menuitem">
-          <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
-          <span class="label">Sign out</span>
-        </button>
+        <button class="drop-item danger" id="dropSignOut"><span class="icon"><i class="fas fa-sign-out-alt"></i></span><span class="label">Sign out</span></button>
       `;
-      accountDropdown.innerHTML = itemsHtml;
 
       accountDropdown.querySelector('#dropSwitchAccount')?.addEventListener('click', () => {
         accountDropdown.classList.remove('open');
         triggerAccountSwitch();
       });
-
       accountDropdown.querySelector('#dropExport')?.addEventListener('click', () => {
         accountDropdown.classList.remove('open');
         exportNotes();
       });
-
       accountDropdown.querySelector('#dropImport')?.addEventListener('click', () => {
         accountDropdown.classList.remove('open');
         importNotes();
       });
-
       accountDropdown.querySelector('#dropSignOut')?.addEventListener('click', () => {
         accountDropdown.classList.remove('open');
         signOut();
       });
-
       accountBadge.textContent = '1';
     }
 
@@ -1956,10 +1990,7 @@
     //  EXPORT / IMPORT
     // ================================================================
     function exportNotes() {
-      if (!allNotes.length) {
-        showToast('No notes to export', 'exclamation-circle');
-        return;
-      }
+      if (!allNotes.length) { showToast('No notes to export', 'exclamation-circle'); return; }
       const data = JSON.stringify(allNotes, null, 2);
       const blob = new Blob([data], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -2024,13 +2055,10 @@
         accountBadge.textContent = '0';
         accountDropdown.innerHTML = '';
         setTimeout(() => {
-          if (gsiBtn.children.length === 0) {
-            fallbackBtn.classList.add('visible');
-          }
+          if (gsiBtn.children.length === 0) fallbackBtn.classList.add('visible');
         }, 1000);
         return;
       }
-
       signinOverlay.classList.remove('active');
       const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
       if (currentUser.picture) {
@@ -2042,6 +2070,45 @@
       renderAccountDropdown();
       accountBadge.textContent = '1';
     }
+
+    // ================================================================
+    //  LEFT DROPDOWN (hamburger) EVENTS
+    // ================================================================
+    leftMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      leftDropdown.classList.toggle('open');
+      // close any open account dropdown
+      accountDropdown.classList.remove('open');
+      // hide submenu by default
+      appearanceSub.classList.remove('open');
+    });
+
+    leftAppearance.addEventListener('click', (e) => {
+      e.stopPropagation();
+      appearanceSub.classList.toggle('open');
+    });
+
+    // Theme toggle in left menu
+    themeToggleTrack.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleTheme();
+    });
+
+    leftExport.addEventListener('click', () => {
+      leftDropdown.classList.remove('open');
+      exportNotes();
+    });
+
+    leftImport.addEventListener('click', () => {
+      leftDropdown.classList.remove('open');
+      importNotes();
+    });
+
+    document.addEventListener('click', () => {
+      leftDropdown.classList.remove('open');
+      appearanceSub.classList.remove('open');
+    });
+    leftDropdown.addEventListener('click', (e) => e.stopPropagation());
 
     // ================================================================
     //  SEARCH
@@ -2079,6 +2146,7 @@
       if (e.key === 'Escape') {
         if (editorModal.classList.contains('active')) closeEditor();
         if (accountDropdown.classList.contains('open')) accountDropdown.classList.remove('open');
+        if (leftDropdown.classList.contains('open')) leftDropdown.classList.remove('open');
       }
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         if (editorModal.classList.contains('active')) { e.preventDefault();
@@ -2087,7 +2155,7 @@
     });
 
     // ================================================================
-    //  AVATAR / DROPDOWN
+    //  AVATAR DROPDOWN
     // ================================================================
     avatarBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -2098,8 +2166,8 @@
       }
       accountDropdown.classList.toggle('open');
       if (accountDropdown.classList.contains('open')) renderAccountDropdown();
+      leftDropdown.classList.remove('open');
     });
-
     document.addEventListener('click', () => {
       accountDropdown.classList.remove('open');
     });
@@ -2109,14 +2177,10 @@
     //  REFRESH
     // ================================================================
     refreshBtn.addEventListener('click', async () => {
-      if (!currentUser) {
-        showToast('Sign in first', 'exclamation-circle');
-        return;
-      }
+      if (!currentUser) { showToast('Sign in first', 'exclamation-circle'); return; }
       setLoading(true);
       try {
-        const notes = await loadNotesFromStorage(currentUser.id);
-        allNotes = notes;
+        allNotes = await loadNotesFromStorage(currentUser.id);
         renderNotes();
         showToast('Refreshed', 'sync-alt');
       } catch (err) {
@@ -2137,7 +2201,7 @@
           return;
         }
       } catch (_) {}
-      // OAuth popup fallback
+      // OAuth popup
       const redirectUri = window.location.origin + window.location.pathname;
       const finalRedirect = (window.location.hostname === 'notes.flatfusion.fun') ?
         'https://notes.flatfusion.fun/callback' :
@@ -2149,12 +2213,8 @@
         `&response_type=token` +
         `&scope=openid%20profile%20email` +
         `&prompt=select_account`;
-      const popup = window.open(authUrl, 'google_signin',
-        'width=500,height=600,resizable=yes,scrollbars=yes');
-      if (!popup) {
-        showToast('Popup blocked', 'exclamation-circle');
-        return;
-      }
+      const popup = window.open(authUrl, 'google_signin', 'width=500,height=600,resizable=yes,scrollbars=yes');
+      if (!popup) { showToast('Popup blocked', 'exclamation-circle'); return; }
       const timer = setInterval(() => {
         try {
           const url = popup.location.href;
@@ -2192,8 +2252,7 @@
         const storedUser = loadUserFromStorage();
         if (storedUser) {
           currentUser = storedUser;
-          const notes = await loadNotesFromStorage(storedUser.id);
-          allNotes = notes;
+          allNotes = await loadNotesFromStorage(storedUser.id);
           initGoogleSignIn();
           renderApp();
           setTimeout(() => {
@@ -2208,9 +2267,7 @@
         console.error('Init error:', err);
         showToast('Error loading app', 'exclamation-circle');
       } finally {
-        // Hide loading after a max of 3 seconds
-        setTimeout(() => setLoading(false), 3000);
-        // Also hide if already done
+        setTimeout(() => setLoading(false), 2000);
         setLoading(false);
       }
     }
@@ -2230,9 +2287,7 @@
       }
     }
 
-    window.addEventListener('popstate', () => {
-      handleUrlNote();
-    });
+    window.addEventListener('popstate', handleUrlNote);
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
@@ -2244,22 +2299,16 @@
       setTimeout(handleUrlNote, 800);
     }
 
-    // Fallback for GIS script
     setTimeout(() => {
-      if (gsiBtn.children.length === 0) {
-        fallbackBtn.classList.add('visible');
-      }
-      if (typeof google === 'undefined' || !google.accounts) {
-        fallbackBtn.classList.add('visible');
-      }
+      if (gsiBtn.children.length === 0) fallbackBtn.classList.add('visible');
+      if (typeof google === 'undefined' || !google.accounts) fallbackBtn.classList.add('visible');
     }, 4000);
 
     console.log('📝 Keep Notes — Fully loaded');
     console.log('🔑 Client ID:', CLIENT_ID);
     console.log('🌓 Theme:', currentTheme);
     console.log('👤 User:', currentUser ? currentUser.email : 'Not signed in');
-    console.log('📋 Features: Pin, Color, Image, Link, Share, Download, Archive, Export/Import, Dark/Light theme');
-    console.log('🔒 Copyright Free — Open Source');
+    console.log('✅ Switch account works via GIS prompt.');
   </script>
 </body>
 </html>
