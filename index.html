@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-
   <style>
     /* ============================================================
        ROOT VARIABLES — Google Keep Style
@@ -362,7 +361,6 @@
       background: var(--border-color);
       margin: 4px 16px;
     }
-    /* Sub‑menu for Appearance > Theme */
     .left-dropdown .sub-menu {
       padding-left: 20px;
       display: none;
@@ -682,9 +680,9 @@
       border: 1px solid var(--border-color);
       position: relative;
       word-wrap: break-word;
-      overflow: hidden; /* prevent overflow */
+      overflow: hidden;
       min-height: 100px;
-      max-height: 500px; /* limit height but allow scroll if needed */
+      max-height: 500px;
       cursor: default;
     }
     .note-card:hover {
@@ -706,8 +704,8 @@
       flex: 1;
       white-space: pre-wrap;
       word-break: break-word;
-      overflow-y: auto; /* scroll if content too long */
-      max-height: 300px; /* ensure it doesn't take too much space */
+      overflow-y: auto;
+      max-height: 300px;
     }
     .note-card .note-content:empty {
       display: none;
@@ -1196,6 +1194,12 @@
           </div>
         </div>
         <div class="drop-divider"></div>
+        <div class="drop-item" id="leftArchive">
+          <i class="fas fa-archive"></i>
+          <span class="label">Archived</span>
+          <span id="archiveCount" style="background:var(--accent);color:#fff;border-radius:999px;padding:0 8px;font-size:12px;margin-left:auto;">0</span>
+        </div>
+        <div class="drop-divider"></div>
         <div class="drop-item" id="leftExport">
           <i class="fas fa-file-export"></i>
           <span class="label">Export notes</span>
@@ -1301,6 +1305,7 @@
     let searchQuery = '';
     let currentTheme = 'light';
     let gsiInited = false;
+    let showArchived = false; // toggle for viewing archived notes
 
     // ================================================================
     //  DOM REFS
@@ -1339,6 +1344,8 @@
     const leftImport = $('#leftImport');
     const leftClearAll = $('#leftClearAll');
     const leftAbout = $('#leftAbout');
+    const leftArchive = $('#leftArchive');
+    const archiveCount = $('#archiveCount');
 
     // ================================================================
     //  TOAST
@@ -1510,7 +1517,7 @@
             cancel_on_tap_outside: false,
             context: 'signin',
           });
-          // Render button again to ensure UI, but we just need prompt
+          // Re-render button to ensure UI, but we just need prompt
           google.accounts.id.prompt();
           showToast('Select an account to switch', 'exchange-alt');
         } else {
@@ -1555,7 +1562,7 @@
     }
 
     // ================================================================
-    //  RENDER: NOTES
+    //  RENDER: NOTES (with archive toggle)
     // ================================================================
     function renderNotes() {
       if (!currentUser) {
@@ -1568,26 +1575,37 @@
         return;
       }
 
+      // Filter: if showArchived is true, show only archived; else show non-archived
+      let filtered = allNotes.filter(n => n.archived === showArchived);
+
+      // Apply search query
       const q = searchQuery.trim().toLowerCase();
-      let filtered = allNotes;
       if (q) {
-        filtered = allNotes.filter(n =>
+        filtered = filtered.filter(n =>
           (n.title && n.title.toLowerCase().includes(q)) ||
           (n.content && n.content.toLowerCase().includes(q))
         );
       }
+
+      // Sort: pinned first, then updatedAt
       filtered.sort((a, b) => {
         if (a.pinned && !b.pinned) return -1;
         if (!a.pinned && b.pinned) return 1;
         return (b.updatedAt || 0) - (a.updatedAt || 0);
       });
 
+      // Update archive count
+      const archiveCountVal = allNotes.filter(n => n.archived).length;
+      archiveCount.textContent = archiveCountVal;
+
       if (filtered.length === 0) {
         notesGrid.className = 'notes-grid empty';
+        const msg = showArchived ? 'No archived notes' : (q ? 'No notes found' : 'Your notes will appear here');
+        const sub = showArchived ? 'Unarchive to restore' : (q ? 'Try a different search' : 'Tap the + button to create one');
         notesGrid.innerHTML = `
           <div class="empty-icon"><i class="fas fa-${q ? 'search' : 'sticky-note'}"></i></div>
-          <div class="empty-text">${q ? 'No notes found' : 'Your notes will appear here'}</div>
-          <div class="empty-sub">${q ? 'Try a different search' : 'Tap the + button to create one'}</div>
+          <div class="empty-text">${msg}</div>
+          <div class="empty-sub">${sub}</div>
         `;
         return;
       }
@@ -1622,7 +1640,7 @@
                 <button class="menu-item" data-action="link"><i class="fas fa-link"></i> Copy Link</button>
                 <button class="menu-item" data-action="share"><i class="fas fa-share-alt"></i> Share</button>
                 <button class="menu-item" data-action="download"><i class="fas fa-download"></i> Download</button>
-                <button class="menu-item" data-action="archive"><i class="fas fa-archive"></i> Archive</button>
+                ${note.archived ? `<button class="menu-item" data-action="unarchive"><i class="fas fa-undo"></i> Unarchive</button>` : `<button class="menu-item" data-action="archive"><i class="fas fa-archive"></i> Archive</button>`}
                 <div class="menu-divider"></div>
                 <button class="menu-item danger" data-action="delete"><i class="fas fa-trash"></i> Delete</button>
               </div>
@@ -1699,7 +1717,8 @@
               menu.classList.remove('open'); } else if (action === 'link') { copyNoteLink(note);
               menu.classList.remove('open'); } else if (action === 'share') { shareNote(note);
               menu.classList.remove('open'); } else if (action === 'download') { downloadNote(note);
-              menu.classList.remove('open'); } else if (action === 'archive') { toggleArchive(note);
+              menu.classList.remove('open'); } else if (action === 'archive') { toggleArchive(note, true);
+              menu.classList.remove('open'); } else if (action === 'unarchive') { toggleArchive(note, false);
               menu.classList.remove('open'); } else if (action === 'delete') { deleteNote(note.id);
               menu.classList.remove('open'); }
           });
@@ -1761,12 +1780,14 @@
       showToast('Color updated', 'palette');
     }
 
-    async function toggleArchive(note) {
-      note.archived = !note.archived;
+    async function toggleArchive(note, archive) {
+      note.archived = archive;
       note.updatedAt = Date.now();
       await saveNotesToStorage(currentUser.id, allNotes);
+      // If we are viewing archived and we unarchive, stay in archive view? 
+      // We'll stay in current view but re-render.
       renderNotes();
-      showToast(note.archived ? 'Archived' : 'Unarchived', 'archive');
+      showToast(archive ? 'Archived' : 'Unarchived', 'archive');
     }
 
     function downloadNote(note) {
@@ -2017,6 +2038,14 @@
       toggleTheme();
     });
 
+    leftArchive.addEventListener('click', () => {
+      leftDropdown.classList.remove('open');
+      showArchived = !showArchived;
+      renderNotes();
+      // Update left menu text
+      leftArchive.querySelector('.label').textContent = showArchived ? '📦 Archived (hide)' : 'Archived';
+    });
+
     leftExport.addEventListener('click', () => {
       leftDropdown.classList.remove('open');
       if (!currentUser) { showToast('Sign in first', 'exclamation-circle'); return; }
@@ -2132,6 +2161,8 @@
       } else {
         avatarLetter.textContent = initial;
       }
+      // Reset archive view when signing in
+      showArchived = false;
       renderNotes();
       renderAccountDropdown();
       accountBadge.textContent = '1';
@@ -2335,6 +2366,7 @@
     console.log('🌓 Theme:', currentTheme);
     console.log('👤 User:', currentUser ? currentUser.email : 'Not signed in');
     console.log('✅ Switch account works via GIS prompt.');
+    console.log('📦 Archive now hides notes and shows in Archived view.');
   </script>
 </body>
 </html>
