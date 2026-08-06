@@ -57,9 +57,7 @@
       --accent-bg: #1e2a3a;
     }
 
-    /* ============================================================
-       RESET & BASE
-       ============================================================ */
+    /* ===== RESET & BASE ===== */
     * {
       margin: 0;
       padding: 0;
@@ -534,16 +532,6 @@
     .account-dropdown.open {
       display: block;
     }
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
     .account-dropdown .drop-item {
       display: flex;
       align-items: center;
@@ -797,7 +785,7 @@
       border: 1px solid var(--border-color);
       position: relative;
       word-wrap: break-word;
-      overflow: visible; /* FIX: allow dropdown to show */
+      overflow: visible;
       min-height: 100px;
       max-height: 500px;
       cursor: default;
@@ -903,16 +891,17 @@
       background: var(--bg-hover);
     }
 
+    /* Menu appears ABOVE the button to avoid being cut off */
     .note-card .card-menu {
       position: absolute;
-      top: 32px;
+      bottom: 32px;
       right: 0;
       background: var(--bg-card);
       border-radius: var(--radius-md);
       box-shadow: var(--shadow-lg);
       padding: 6px 0;
       min-width: 210px;
-      max-height: 400px;
+      max-height: 380px;
       overflow-y: auto;
       display: none;
       z-index: 50;
@@ -983,11 +972,18 @@
       box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--text-primary);
     }
 
-    /* ===== FAB ===== */
-    .fab {
+    /* ===== FAB + FAB MENU ===== */
+    .fab-wrapper {
       position: fixed;
       bottom: 28px;
       right: 28px;
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+    .fab {
       width: 56px;
       height: 56px;
       border-radius: 50%;
@@ -1001,7 +997,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 60;
     }
     .fab:hover {
       transform: scale(1.06);
@@ -1009,6 +1004,53 @@
     }
     .fab:active {
       transform: scale(0.94);
+    }
+
+    .fab-menu {
+      display: none;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      animation: slideUp 0.25s ease;
+    }
+    .fab-menu.open {
+      display: flex;
+    }
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .fab-menu .fab-option {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 10px 18px;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-family: var(--font);
+      color: var(--text-primary);
+      min-width: 140px;
+      justify-content: flex-start;
+    }
+    .fab-menu .fab-option:hover {
+      background: var(--bg-hover);
+      transform: scale(1.02);
+    }
+    .fab-menu .fab-option i {
+      font-size: 18px;
+      width: 24px;
+      color: var(--text-secondary);
     }
 
     /* ===== EDITOR MODAL ===== */
@@ -1166,6 +1208,113 @@
       background: var(--danger-bg);
     }
 
+    /* ===== TRASH VIEW ===== */
+    .trash-view {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .trash-view.active {
+      display: block;
+    }
+    .trash-view .trash-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .trash-view .trash-header h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .trash-view .trash-header .trash-count {
+      background: var(--bg-input);
+      padding: 2px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .trash-view .trash-note {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+    }
+    .trash-view .trash-note:hover {
+      box-shadow: var(--shadow-sm);
+    }
+    .trash-view .trash-note .trash-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .trash-view .trash-note .trash-info .trash-title {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .trash-view .trash-note .trash-info .trash-excerpt {
+      font-size: 13px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .trash-view .trash-note .trash-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .trash-view .trash-note .trash-actions .trash-btn {
+      background: none;
+      border: none;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-family: var(--font);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .trash-view .trash-note .trash-actions .trash-btn:hover {
+      background: var(--bg-hover);
+    }
+    .trash-view .trash-note .trash-actions .trash-btn.restore-btn {
+      color: var(--accent);
+    }
+    .trash-view .trash-note .trash-actions .trash-btn.restore-btn:hover {
+      background: var(--accent-bg);
+    }
+    .trash-view .trash-note .trash-actions .trash-btn.delete-forever-btn {
+      color: var(--danger);
+    }
+    .trash-view .trash-note .trash-actions .trash-btn.delete-forever-btn:hover {
+      background: var(--danger-bg);
+    }
+    .trash-view .trash-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    .trash-view .trash-empty i {
+      font-size: 48px;
+      opacity: 0.3;
+      margin-bottom: 16px;
+    }
+    .trash-view .trash-empty .empty-text {
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .trash-view .trash-empty .empty-sub {
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
     /* ===== FOOTER ===== */
     .app-footer {
       text-align: center;
@@ -1237,9 +1386,11 @@
       .signin-card {
         padding: 32px 20px 28px;
       }
-      .fab {
+      .fab-wrapper {
         bottom: 18px;
         right: 18px;
+      }
+      .fab {
         width: 50px;
         height: 50px;
         font-size: 24px;
@@ -1252,6 +1403,12 @@
       }
       .dashboard-view .stats-grid {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      }
+      .note-card .card-menu {
+        bottom: 30px;
+        right: -10px;
+        min-width: 180px;
+        max-height: 300px;
       }
     }
     @media (max-width: 480px) {
@@ -1270,6 +1427,15 @@
       }
       .dashboard-view .stats-grid {
         grid-template-columns: 1fr 1fr;
+      }
+      .note-card .card-menu {
+        right: -6px;
+        min-width: 160px;
+      }
+      .fab-menu .fab-option {
+        min-width: 120px;
+        padding: 8px 14px;
+        font-size: 13px;
       }
     }
     .hidden {
@@ -1337,6 +1503,11 @@
           <span class="label">Archived</span>
           <span id="archiveCount" style="background:var(--accent);color:#fff;border-radius:999px;padding:0 8px;font-size:12px;margin-left:auto;">0</span>
         </div>
+        <div class="drop-item" id="leftTrash">
+          <i class="fas fa-trash"></i>
+          <span class="label">Trash</span>
+          <span id="trashCount" style="background:var(--danger);color:#fff;border-radius:999px;padding:0 8px;font-size:12px;margin-left:auto;">0</span>
+        </div>
         <div class="drop-divider"></div>
         <div class="drop-item" id="leftExport">
           <i class="fas fa-file-export"></i>
@@ -1379,14 +1550,32 @@
         <div class="recent-list" id="recentList"></div>
       </div>
     </div>
+    <!-- Trash View -->
+    <div class="trash-view" id="trashView">
+      <div class="trash-header">
+        <h2><i class="fas fa-trash" style="color:var(--danger);"></i> Trash</h2>
+        <span class="trash-count" id="trashCountLabel">0 items</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);">Notes in Trash are deleted after 7 days</span>
+      </div>
+      <div id="trashList"></div>
+    </div>
     <!-- Notes Grid -->
     <div class="notes-grid" id="notesGrid"></div>
   </main>
 
-  <!-- ===== FAB ===== -->
-  <button class="fab" id="fabBtn" aria-label="Create new note"><i class="fas fa-plus"></i></button>
+  <!-- ===== FAB + FAB MENU ===== -->
+  <div class="fab-wrapper">
+    <div class="fab-menu" id="fabMenu">
+      <button class="fab-option" data-type="text"><i class="fas fa-pen"></i> Text</button>
+      <button class="fab-option" data-type="image"><i class="fas fa-image"></i> Image</button>
+      <button class="fab-option" data-type="drawing"><i class="fas fa-paint-brush"></i> Drawing</button>
+      <button class="fab-option" data-type="list"><i class="fas fa-list-ul"></i> List</button>
+      <button class="fab-option" data-type="public"><i class="fas fa-globe"></i> Public</button>
+    </div>
+    <button class="fab" id="fabBtn" aria-label="Create new note"><i class="fas fa-plus"></i></button>
+  </div>
 
-  <!-- ===== EDITOR ===== -->
+  <!-- ===== EDITOR MODAL ===== -->
   <div class="modal-overlay" id="editorModal" role="dialog" aria-modal="true">
     <div class="modal-editor">
       <div class="modal-header">
@@ -1396,6 +1585,8 @@
       <div class="modal-body">
         <input type="text" class="editor-title" id="noteTitleInput" placeholder="Title" />
         <textarea class="editor-content" id="noteContentInput" placeholder="Write your note..." rows="4"></textarea>
+        <!-- Drawing canvas (hidden by default) -->
+        <canvas id="drawingCanvas" style="display:none;width:100%;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:#fff;touch-action:none;margin-top:8px;"></canvas>
         <div class="color-picker-row" id="editorColorPicker" role="group"></div>
       </div>
       <div class="modal-footer">
@@ -1420,6 +1611,7 @@
     const STORAGE_KEY_PREFIX = 'keep_notes_';
     const USER_KEY = 'keep_user';
     const THEME_KEY = 'keep_theme';
+    const TRASH_DAYS = 7;
 
     const COLORS = [
       { name: 'Default', value: null },
@@ -1450,6 +1642,12 @@
     let gsiInited = false;
     let showArchived = false;
     let showDashboard = false;
+    let showTrash = false;
+    let noteType = 'text'; // 'text', 'image', 'drawing', 'list', 'public'
+    let isDrawing = false;
+    let drawingContext = null;
+    let lastX = 0,
+      lastY = 0;
 
     // ================================================================
     //  DOM REFS
@@ -1463,10 +1661,14 @@
     const fallbackBtn = $('#fallbackBtn');
     const notesGrid = $('#notesGrid');
     const dashboardView = $('#dashboardView');
+    const trashView = $('#trashView');
+    const trashList = $('#trashList');
+    const trashCountLabel = $('#trashCountLabel');
     const statsGrid = $('#statsGrid');
     const recentList = $('#recentList');
     const searchInput = $('#searchInput');
     const fabBtn = $('#fabBtn');
+    const fabMenu = $('#fabMenu');
     const avatarBtn = $('#avatarBtn');
     const avatarLetter = $('#avatarLetter');
     const accountBadge = $('#accountBadge');
@@ -1480,6 +1682,7 @@
     const editorCancelBtn = $('#editorCancelBtn');
     const editorDeleteBtn = $('#editorDeleteBtn');
     const editorCloseBtn = $('#editorCloseBtn');
+    const drawingCanvas = $('#drawingCanvas');
     const refreshBtn = $('#refreshBtn');
     const toastContainer = $('#toastContainer');
     const leftMenuBtn = $('#leftMenuBtn');
@@ -1491,11 +1694,13 @@
     const leftImport = $('#leftImport');
     const leftAbout = $('#leftAbout');
     const leftArchive = $('#leftArchive');
+    const leftTrash = $('#leftTrash');
     const leftDashboard = $('#leftDashboard');
     const archiveCount = $('#archiveCount');
+    const trashCount = $('#trashCount');
 
     // ================================================================
-    //  TOAST — single instance, no duplicates
+    //  TOAST
     // ================================================================
     let toastTimer = null;
     let toastEl = null;
@@ -1509,13 +1714,11 @@
         }, 100);
         clearTimeout(toastTimer);
       }
-
       toastEl = document.createElement('div');
       toastEl.className = 'toast-item';
       toastEl.innerHTML = `<i class="fas fa-${icon}"></i> ${msg}`;
       toastContainer.appendChild(toastEl);
       requestAnimationFrame(() => toastEl.classList.add('show'));
-
       toastTimer = setTimeout(() => {
         if (toastEl) {
           toastEl.classList.remove('show');
@@ -1652,6 +1855,7 @@
         allNotes = await loadNotesFromStorage(user.id);
         signinOverlay.classList.remove('active');
         showDashboard = false;
+        showTrash = false;
         renderApp();
         showToast(`Welcome, ${user.name}!`, 'check-circle');
         setTimeout(() => {
@@ -1666,14 +1870,12 @@
     }
 
     // ================================================================
-    //  SWITCH ACCOUNT — FIXED with robust retry
+    //  SWITCH ACCOUNT
     // ================================================================
     function triggerAccountSwitch() {
       try {
         if (typeof google !== 'undefined' && google.accounts) {
-          // Disable auto-select to force prompt
           google.accounts.id.disableAutoSelect();
-          // Re-initialize with fresh config to avoid session conflicts
           google.accounts.id.initialize({
             client_id: CLIENT_ID,
             callback: handleCredentialResponse,
@@ -1681,11 +1883,9 @@
             cancel_on_tap_outside: false,
             context: 'signin',
           });
-          // Show the prompt
           google.accounts.id.prompt();
           showToast('Select an account to switch', 'exchange-alt');
         } else {
-          // Fallback: sign out and show sign-in
           signOut();
           signinOverlay.classList.add('active');
           fallbackBtn.classList.add('visible');
@@ -1693,7 +1893,6 @@
         }
       } catch (err) {
         console.error('Switch account error:', err);
-        // Last resort: sign out
         signOut();
         signinOverlay.classList.add('active');
         fallbackBtn.classList.add('visible');
@@ -1727,15 +1926,36 @@
     }
 
     // ================================================================
+    //  TRASH — Auto-delete after 7 days
+    // ================================================================
+    function cleanTrash() {
+      const now = Date.now();
+      const threshold = TRASH_DAYS * 24 * 60 * 60 * 1000;
+      let changed = false;
+      allNotes = allNotes.filter(n => {
+        if (n.deletedAt && (now - n.deletedAt > threshold)) {
+          changed = true;
+          return false;
+        }
+        return true;
+      });
+      if (changed) {
+        saveNotesToStorage(currentUser.id, allNotes);
+      }
+    }
+
+    // ================================================================
     //  RENDER: DASHBOARD
     // ================================================================
     function renderDashboard() {
       if (!currentUser) return;
-      const total = allNotes.length;
-      const pinned = allNotes.filter(n => n.pinned).length;
-      const archived = allNotes.filter(n => n.archived).length;
+      const active = allNotes.filter(n => !n.deletedAt);
+      const total = active.length;
+      const pinned = active.filter(n => n.pinned).length;
+      const archived = active.filter(n => n.archived).length;
+      const trash = allNotes.filter(n => n.deletedAt).length;
       const colors = {};
-      allNotes.forEach(n => {
+      active.forEach(n => {
         const c = n.color || 'default';
         colors[c] = (colors[c] || 0) + 1;
       });
@@ -1745,10 +1965,11 @@
         <div class="stat-card"><div class="stat-icon"><i class="fas fa-file-alt"></i></div><div class="stat-number">${total}</div><div class="stat-label">Total Notes</div></div>
         <div class="stat-card"><div class="stat-icon"><i class="fas fa-thumbtack"></i></div><div class="stat-number">${pinned}</div><div class="stat-label">Pinned</div></div>
         <div class="stat-card"><div class="stat-icon"><i class="fas fa-archive"></i></div><div class="stat-number">${archived}</div><div class="stat-label">Archived</div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-trash"></i></div><div class="stat-number">${trash}</div><div class="stat-label">In Trash</div></div>
         <div class="stat-card"><div class="stat-icon"><i class="fas fa-palette"></i></div><div class="stat-number">${colorEntries.length}</div><div class="stat-label">Colors Used</div></div>
       `;
 
-      const recent = [...allNotes].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)).slice(0, 5);
+      const recent = [...active].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)).slice(0, 5);
       if (recent.length === 0) {
         recentList.innerHTML = `<div style="color:var(--text-muted);padding:8px 0;">No notes yet.</div>`;
       } else {
@@ -1786,11 +2007,79 @@
 
       dashboardView.classList.add('active');
       notesGrid.style.display = 'none';
+      trashView.classList.remove('active');
       searchInput.style.display = 'none';
     }
 
     // ================================================================
-    //  RENDER: NOTES GRID with clickable links and image support
+    //  RENDER: TRASH
+    // ================================================================
+    function renderTrash() {
+      if (!currentUser) {
+        trashView.classList.remove('active');
+        return;
+      }
+      const trashNotes = allNotes.filter(n => n.deletedAt).sort((a, b) => (b.deletedAt || 0) - (a.deletedAt || 0));
+      trashCount.textContent = trashNotes.length;
+      trashCountLabel.textContent = trashNotes.length + ' items';
+
+      if (trashNotes.length === 0) {
+        trashList.innerHTML = `
+          <div class="trash-empty">
+            <div><i class="fas fa-trash"></i></div>
+            <div class="empty-text">Trash is empty</div>
+            <div class="empty-sub">Notes you delete will appear here</div>
+          </div>
+        `;
+      } else {
+        let html = '';
+        trashNotes.forEach(n => {
+          const title = n.title || 'Untitled';
+          const content = n.content || '';
+          const excerpt = content.substring(0, 60) + (content.length > 60 ? '…' : '');
+          const daysAgo = Math.floor((Date.now() - n.deletedAt) / (24 * 60 * 60 * 1000));
+          const daysLeft = TRASH_DAYS - daysAgo;
+          html += `
+            <div class="trash-note" data-id="${n.id}">
+              <div class="trash-info">
+                <div class="trash-title">${escHtml(title)}</div>
+                <div class="trash-excerpt">${escHtml(excerpt)}</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Deleted ${formatDate(n.deletedAt)} · ${daysLeft > 0 ? daysLeft + ' days left' : 'Expiring soon'}</div>
+              </div>
+              <div class="trash-actions">
+                <button class="trash-btn restore-btn" data-id="${n.id}"><i class="fas fa-undo"></i> Restore</button>
+                <button class="trash-btn delete-forever-btn" data-id="${n.id}"><i class="fas fa-trash-alt"></i> Delete</button>
+              </div>
+            </div>
+          `;
+        });
+        trashList.innerHTML = html;
+
+        // Attach events
+        trashList.querySelectorAll('.restore-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            restoreNote(id);
+          });
+        });
+        trashList.querySelectorAll('.delete-forever-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            if (confirm('Permanently delete this note? This cannot be undone.')) {
+              deleteForever(id);
+            }
+          });
+        });
+      }
+
+      trashView.classList.add('active');
+      dashboardView.classList.remove('active');
+      notesGrid.style.display = 'none';
+      searchInput.style.display = 'none';
+    }
+
+    // ================================================================
+    //  RENDER: NOTES GRID
     // ================================================================
     function renderNotes() {
       if (!currentUser) {
@@ -1801,12 +2090,19 @@
           <div class="empty-sub">Your notes are securely stored</div>
         `;
         dashboardView.classList.remove('active');
+        trashView.classList.remove('active');
         notesGrid.style.display = 'grid';
         searchInput.style.display = 'block';
         return;
       }
 
-      let filtered = allNotes.filter(n => n.archived === showArchived);
+      // Clean trash first
+      cleanTrash();
+
+      // Active notes (not in trash)
+      let active = allNotes.filter(n => !n.deletedAt);
+      let filtered = active.filter(n => n.archived === showArchived);
+
       const q = searchQuery.trim().toLowerCase();
       if (q) {
         filtered = filtered.filter(n =>
@@ -1820,8 +2116,10 @@
         return (b.updatedAt || 0) - (a.updatedAt || 0);
       });
 
-      const archiveCountVal = allNotes.filter(n => n.archived).length;
+      const archiveCountVal = active.filter(n => n.archived).length;
       archiveCount.textContent = archiveCountVal;
+      const trashCountVal = allNotes.filter(n => n.deletedAt).length;
+      trashCount.textContent = trashCountVal;
 
       if (filtered.length === 0) {
         notesGrid.className = 'notes-grid empty';
@@ -1833,6 +2131,7 @@
           <div class="empty-sub">${sub}</div>
         `;
         dashboardView.classList.remove('active');
+        trashView.classList.remove('active');
         notesGrid.style.display = 'grid';
         searchInput.style.display = 'block';
         return;
@@ -1855,10 +2154,14 @@
         content = linkify(content);
         const noteId = note.id;
         const hasImage = note.imageData && note.imageData.length > 0;
+        const isList = note.type === 'list';
+        const isDrawing = note.type === 'drawing';
+        const isPublic = note.type === 'public';
 
         html += `
           <div class="note-card" data-id="${noteId}" style="background:${bg}; color:${textColor};">
             ${note.pinned ? `<div class="pin-badge"><i class="fas fa-thumbtack"></i></div>` : ''}
+            ${isPublic ? `<div style="position:absolute;top:6px;left:10px;font-size:12px;color:var(--accent);"><i class="fas fa-globe"></i> Public</div>` : ''}
             <div class="card-actions">
               <button class="more-btn" data-id="${noteId}" aria-label="More options"><i class="fas fa-ellipsis-v"></i></button>
               <div class="card-menu" data-id="${noteId}" role="menu">
@@ -1871,15 +2174,18 @@
                 <button class="menu-item" data-action="download"><i class="fas fa-download"></i> Download</button>
                 ${note.archived ? `<button class="menu-item" data-action="unarchive"><i class="fas fa-undo"></i> Unarchive</button>` : `<button class="menu-item" data-action="archive"><i class="fas fa-archive"></i> Archive</button>`}
                 <div class="menu-divider"></div>
-                <button class="menu-item danger" data-action="delete"><i class="fas fa-trash"></i> Delete</button>
+                <button class="menu-item danger" data-action="delete"><i class="fas fa-trash"></i> Move to Trash</button>
               </div>
             </div>
             ${title ? `<div class="note-title">${escHtml(title)}</div>` : ''}
             ${hasImage ? `<div class="note-image"><img src="${note.imageData}" alt="Note image" loading="lazy" /></div>` : ''}
-            <div class="note-content">${content}</div>
+            ${isDrawing ? `<div style="margin:6px 0 8px;border-radius:var(--radius-sm);overflow:hidden;background:#fff;border:1px solid var(--border-color);"><img src="${note.imageData}" alt="Drawing" style="width:100%;height:auto;max-height:140px;object-fit:contain;" /></div>` : ''}
+            ${isList ? `<div style="margin:4px 0;"><ul style="list-style:none;padding:0;">${content.split('\n').filter(s=>s.trim()).map(s=>`<li style="padding:2px 0;display:flex;align-items:center;gap:8px;font-size:14px;"><span style="display:inline-block;width:16px;height:16px;border:2px solid var(--text-muted);border-radius:50%;flex-shrink:0;"></span>${escHtml(s)}</li>`).join('')}</ul></div>` : ''}
+            ${!isList && !isDrawing ? `<div class="note-content">${content}</div>` : ''}
             <div class="note-meta">
               <span class="note-date"><i class="far fa-clock"></i> ${formatDate(note.updatedAt || note.createdAt)}</span>
               ${note.archived ? '<span>📦</span>' : ''}
+              ${note.type === 'public' ? '<span>🔗</span>' : ''}
             </div>
           </div>
         `;
@@ -1894,7 +2200,6 @@
         if (moreBtn && menu) {
           moreBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            // Close any other open menus
             document.querySelectorAll('.card-menu.open').forEach(m => {
               if (m !== menu) m.classList.remove('open');
             });
@@ -1951,7 +2256,7 @@
               menu.classList.remove('open'); } else if (action === 'download') { downloadNote(note);
               menu.classList.remove('open'); } else if (action === 'archive') { toggleArchive(note, true);
               menu.classList.remove('open'); } else if (action === 'unarchive') { toggleArchive(note, false);
-              menu.classList.remove('open'); } else if (action === 'delete') { deleteNote(note.id);
+              menu.classList.remove('open'); } else if (action === 'delete') { moveToTrash(note);
               menu.classList.remove('open'); }
           });
         });
@@ -1966,12 +2271,13 @@
       });
 
       dashboardView.classList.remove('active');
+      trashView.classList.remove('active');
       notesGrid.style.display = 'grid';
       searchInput.style.display = 'block';
     }
 
     // ================================================================
-    //  LINKIFY — convert URLs to clickable links
+    //  LINKIFY
     // ================================================================
     function linkify(text) {
       if (!text) return '';
@@ -1985,13 +2291,18 @@
     //  RENDER ALL
     // ================================================================
     function renderAll() {
-      if (showDashboard) {
+      if (showTrash) {
+        renderTrash();
+      } else if (showDashboard) {
         renderDashboard();
       } else {
         renderNotes();
       }
-      const archiveCountVal = allNotes.filter(n => n.archived).length;
+      const active = allNotes.filter(n => !n.deletedAt);
+      const archiveCountVal = active.filter(n => n.archived).length;
       archiveCount.textContent = archiveCountVal;
+      const trashCountVal = allNotes.filter(n => n.deletedAt).length;
+      trashCount.textContent = trashCountVal;
     }
 
     // ================================================================
@@ -2049,6 +2360,34 @@
       await saveNotesToStorage(currentUser.id, allNotes);
       renderAll();
       showToast(archive ? 'Archived' : 'Unarchived', 'archive');
+    }
+
+    async function moveToTrash(note) {
+      if (!confirm('Move this note to Trash?')) return;
+      note.deletedAt = Date.now();
+      note.archived = false;
+      note.updatedAt = Date.now();
+      await saveNotesToStorage(currentUser.id, allNotes);
+      renderAll();
+      showToast('Moved to Trash', 'trash');
+      if (editingNoteId === note.id) closeEditor();
+    }
+
+    async function restoreNote(id) {
+      const note = allNotes.find(n => n.id === id);
+      if (!note) return;
+      delete note.deletedAt;
+      note.updatedAt = Date.now();
+      await saveNotesToStorage(currentUser.id, allNotes);
+      renderAll();
+      showToast('Restored from Trash', 'undo');
+    }
+
+    async function deleteForever(id) {
+      allNotes = allNotes.filter(n => n.id !== id);
+      await saveNotesToStorage(currentUser.id, allNotes);
+      renderAll();
+      showToast('Permanently deleted', 'trash-alt');
     }
 
     function downloadNote(note) {
@@ -2113,7 +2452,7 @@
     // ================================================================
     //  NOTE CRUD
     // ================================================================
-    async function createNote(title, content, color) {
+    async function createNote(title, content, color, type = 'text', imageData = null) {
       const note = {
         id: Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 6),
         title: title.trim() || '',
@@ -2121,7 +2460,9 @@
         color: color,
         pinned: false,
         archived: false,
-        imageData: null,
+        deletedAt: null,
+        imageData: imageData,
+        type: type,
         createdAt: Date.now(),
         updatedAt: Date.now(),
       };
@@ -2131,32 +2472,38 @@
       return note;
     }
 
-    async function updateNote(id, title, content, color) {
+    async function updateNote(id, title, content, color, imageData = null) {
       const note = allNotes.find(n => n.id === id);
       if (!note) return;
       note.title = (title || '').trim();
       note.content = (content || '').trim();
       note.color = color;
+      if (imageData !== undefined) note.imageData = imageData;
       note.updatedAt = Date.now();
       await saveNotesToStorage(currentUser.id, allNotes);
       renderAll();
     }
 
     async function deleteNote(id) {
-      if (!confirm('Delete this note?')) return;
-      allNotes = allNotes.filter(n => n.id !== id);
-      await saveNotesToStorage(currentUser.id, allNotes);
-      renderAll();
-      showToast('Deleted', 'trash');
-      if (editingNoteId === id) closeEditor();
+      const note = allNotes.find(n => n.id === id);
+      if (note) {
+        moveToTrash(note);
+      }
     }
 
     // ================================================================
     //  EDITOR
     // ================================================================
+    let currentNoteType = 'text';
+    let drawingData = null;
+
     function openEditor(noteId) {
       const note = noteId ? allNotes.find(n => n.id === noteId) : null;
       editingNoteId = note ? note.id : null;
+
+      // Reset drawing canvas
+      drawingCanvas.style.display = 'none';
+      currentNoteType = note ? (note.type || 'text') : 'text';
 
       if (note) {
         editorModalTitle.textContent = 'Edit Note';
@@ -2164,12 +2511,51 @@
         noteContentInput.value = note.content || '';
         selectedColor = note.color !== undefined ? note.color : DEFAULT_COLOR;
         editorDeleteBtn.style.display = 'inline-flex';
+        if (note.type === 'drawing' && note.imageData) {
+          drawingData = note.imageData;
+          drawingCanvas.style.display = 'block';
+          const ctx = drawingCanvas.getContext('2d');
+          const img = new Image();
+          img.onload = () => {
+            drawingCanvas.width = img.width;
+            drawingCanvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+          };
+          img.src = note.imageData;
+        } else if (note.type === 'list') {
+          // Show list items
+          noteContentInput.placeholder = 'Enter list items (one per line)';
+        } else {
+          noteContentInput.placeholder = 'Write your note...';
+        }
       } else {
         editorModalTitle.textContent = 'New Note';
         noteTitleInput.value = '';
         noteContentInput.value = '';
         selectedColor = DEFAULT_COLOR;
         editorDeleteBtn.style.display = 'none';
+        drawingData = null;
+        drawingCanvas.style.display = 'none';
+        noteContentInput.placeholder = 'Write your note...';
+        // Set type based on FAB selection
+        if (currentNoteType === 'drawing') {
+          drawingCanvas.style.display = 'block';
+          drawingCanvas.width = drawingCanvas.clientWidth || 400;
+          drawingCanvas.height = 300;
+          const ctx = drawingCanvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+          ctx.strokeStyle = '#000000';
+          ctx.lineWidth = 2;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+        } else if (currentNoteType === 'list') {
+          noteContentInput.placeholder = 'Enter list items (one per line)';
+        } else if (currentNoteType === 'image') {
+          // Image type - show upload prompt
+          showToast('Select an image to attach', 'image');
+          // We'll handle this in save
+        }
       }
       renderEditorColorPicker(selectedColor);
       editorModal.classList.add('active');
@@ -2179,6 +2565,7 @@
     function closeEditor() {
       editorModal.classList.remove('active');
       editingNoteId = null;
+      drawingCanvas.style.display = 'none';
     }
 
     function renderEditorColorPicker(selected) {
@@ -2212,18 +2599,71 @@
 
     async function saveEditor() {
       const title = noteTitleInput.value;
-      const content = noteContentInput.value;
-      if (!title.trim() && !content.trim()) {
+      let content = noteContentInput.value;
+      let imageData = null;
+
+      // Handle different note types
+      if (currentNoteType === 'drawing') {
+        const canvas = drawingCanvas;
+        if (canvas.style.display !== 'none') {
+          imageData = canvas.toDataURL('image/png');
+          content = 'Drawing note';
+        } else {
+          showToast('Draw something first', 'exclamation-circle');
+          return;
+        }
+      } else if (currentNoteType === 'image') {
+        // If editing, keep existing image; if new, prompt
+        if (!editingNoteId) {
+          const input = document.createElement('input');
+          input.type = 'file';
+          input.accept = 'image/*';
+          const promise = new Promise((resolve) => {
+            input.onchange = (e) => {
+              const file = e.target.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                  imageData = ev.target.result;
+                  resolve(true);
+                };
+                reader.readAsDataURL(file);
+              } else {
+                resolve(false);
+              }
+            };
+            input.click();
+          });
+          const result = await promise;
+          if (!result) {
+            showToast('No image selected', 'exclamation-circle');
+            return;
+          }
+        }
+      }
+
+      if (!title.trim() && !content.trim() && !imageData) {
         showToast('Enter a title or content', 'exclamation-circle');
         return;
       }
+
       setLoading(true);
       try {
         if (editingNoteId) {
-          await updateNote(editingNoteId, title, content, selectedColor);
-          showToast('Updated', 'check-circle');
+          const note = allNotes.find(n => n.id === editingNoteId);
+          if (note) {
+            note.title = title.trim() || '';
+            note.content = content.trim() || '';
+            note.color = selectedColor;
+            if (imageData) note.imageData = imageData;
+            if (currentNoteType) note.type = currentNoteType;
+            note.updatedAt = Date.now();
+            await saveNotesToStorage(currentUser.id, allNotes);
+            renderAll();
+            showToast('Updated', 'check-circle');
+          }
         } else {
-          await createNote(title, content, selectedColor);
+          await createNote(title, content, selectedColor, currentNoteType, imageData);
           showToast('Created', 'check-circle');
         }
         closeEditor();
@@ -2233,6 +2673,67 @@
       } finally {
         setLoading(false);
       }
+    }
+
+    // ================================================================
+    //  DRAWING FUNCTIONS
+    // ================================================================
+    function initDrawing() {
+      const canvas = drawingCanvas;
+      const ctx = canvas.getContext('2d');
+
+      function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: (clientX - rect.left) * (canvas.width / rect.width),
+          y: (clientY - rect.top) * (canvas.height / rect.height)
+        };
+      }
+
+      function startDraw(e) {
+        e.preventDefault();
+        isDrawing = true;
+        const pos = getPos(e);
+        lastX = pos.x;
+        lastY = pos.y;
+      }
+
+      function draw(e) {
+        e.preventDefault();
+        if (!isDrawing) return;
+        const pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        lastX = pos.x;
+        lastY = pos.y;
+      }
+
+      function endDraw(e) {
+        e.preventDefault();
+        isDrawing = false;
+      }
+
+      canvas.addEventListener('mousedown', startDraw);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', endDraw);
+      canvas.addEventListener('mouseleave', endDraw);
+      canvas.addEventListener('touchstart', startDraw);
+      canvas.addEventListener('touchmove', draw);
+      canvas.addEventListener('touchend', endDraw);
+
+      // Set initial size
+      canvas.width = canvas.clientWidth || 400;
+      canvas.height = 300;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = '#202124';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
     }
 
     // ================================================================
@@ -2306,17 +2807,28 @@
     leftArchive.addEventListener('click', () => {
       leftDropdown.classList.remove('open');
       showArchived = !showArchived;
-      if (showDashboard) {
-        showDashboard = false;
-      }
+      if (showDashboard) showDashboard = false;
+      if (showTrash) showTrash = false;
       renderAll();
       leftArchive.querySelector('.label').textContent = showArchived ? '📦 Archived (hide)' : 'Archived';
+    });
+
+    leftTrash.addEventListener('click', () => {
+      leftDropdown.classList.remove('open');
+      showTrash = !showTrash;
+      if (showTrash) {
+        showDashboard = false;
+        showArchived = false;
+        leftArchive.querySelector('.label').textContent = 'Archived';
+      }
+      renderAll();
     });
 
     leftDashboard.addEventListener('click', () => {
       leftDropdown.classList.remove('open');
       showDashboard = !showDashboard;
       if (showDashboard) {
+        showTrash = false;
         if (showArchived) {
           showArchived = false;
           leftArchive.querySelector('.label').textContent = 'Archived';
@@ -2324,6 +2836,7 @@
         renderDashboard();
         searchInput.style.display = 'none';
         notesGrid.style.display = 'none';
+        trashView.classList.remove('active');
         dashboardView.classList.add('active');
       } else {
         dashboardView.classList.remove('active');
@@ -2409,6 +2922,43 @@
     }
 
     // ================================================================
+    //  FAB + FAB MENU
+    // ================================================================
+    fabBtn.addEventListener('click', () => {
+      if (!currentUser) {
+        showToast('Please sign in first', 'exclamation-circle');
+        signinOverlay.classList.add('active');
+        try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
+        return;
+      }
+      fabMenu.classList.toggle('open');
+    });
+
+    fabMenu.querySelectorAll('.fab-option').forEach(option => {
+      option.addEventListener('click', () => {
+        const type = option.dataset.type;
+        fabMenu.classList.remove('open');
+        currentNoteType = type;
+        if (type === 'drawing') {
+          // Initialize drawing canvas
+          setTimeout(() => {
+            openEditor(null);
+            initDrawing();
+          }, 100);
+        } else {
+          openEditor(null);
+        }
+      });
+    });
+
+    // Close FAB menu on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.fab-wrapper')) {
+        fabMenu.classList.remove('open');
+      }
+    });
+
+    // ================================================================
     //  RENDER APP
     // ================================================================
     function renderApp() {
@@ -2424,6 +2974,7 @@
         accountBadge.textContent = '0';
         accountDropdown.innerHTML = '';
         dashboardView.classList.remove('active');
+        trashView.classList.remove('active');
         searchInput.style.display = 'block';
         notesGrid.style.display = 'grid';
         setTimeout(() => {
@@ -2440,6 +2991,7 @@
       }
       showArchived = false;
       showDashboard = false;
+      showTrash = false;
       leftArchive.querySelector('.label').textContent = 'Archived';
       renderAll();
       renderAccountDropdown();
@@ -2451,22 +3003,9 @@
     // ================================================================
     searchInput.addEventListener('input', () => {
       searchQuery = searchInput.value;
-      if (!showDashboard) {
+      if (!showDashboard && !showTrash) {
         renderNotes();
       }
-    });
-
-    // ================================================================
-    //  FAB
-    // ================================================================
-    fabBtn.addEventListener('click', () => {
-      if (!currentUser) {
-        showToast('Please sign in first', 'exclamation-circle');
-        signinOverlay.classList.add('active');
-        try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
-        return;
-      }
-      openEditor(null);
     });
 
     // ================================================================
@@ -2476,8 +3015,11 @@
     editorCancelBtn.addEventListener('click', closeEditor);
     editorCloseBtn.addEventListener('click', closeEditor);
     editorDeleteBtn.addEventListener('click', () => {
-      if (editingNoteId) { deleteNote(editingNoteId);
-        closeEditor(); }
+      if (editingNoteId) {
+        const note = allNotes.find(n => n.id === editingNoteId);
+        if (note) moveToTrash(note);
+        closeEditor();
+      }
     });
 
     document.addEventListener('keydown', (e) => {
@@ -2485,6 +3027,7 @@
         if (editorModal.classList.contains('active')) closeEditor();
         if (accountDropdown.classList.contains('open')) accountDropdown.classList.remove('open');
         if (leftDropdown.classList.contains('open')) leftDropdown.classList.remove('open');
+        if (fabMenu.classList.contains('open')) fabMenu.classList.remove('open');
       }
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         if (editorModal.classList.contains('active')) { e.preventDefault();
@@ -2512,7 +3055,7 @@
     accountDropdown.addEventListener('click', (e) => e.stopPropagation());
 
     // ================================================================
-    //  REFRESH — single toast only
+    //  REFRESH
     // ================================================================
     refreshBtn.addEventListener('click', async () => {
       if (!currentUser) { showToast('Sign in first', 'exclamation-circle'); return; }
@@ -2640,10 +3183,11 @@
       if (typeof google === 'undefined' || !google.accounts) fallbackBtn.classList.add('visible');
     }, 4000);
 
-    console.log('📝 Keep Notes — Fully loaded with all features');
-    console.log('✅ Three-dot menu shows all options');
+    console.log('📝 Keep Notes — Fully loaded with Trash & FAB Menu');
+    console.log('✅ Trash: deleted notes go here, auto-delete after 7 days');
+    console.log('✅ FAB Menu: Text, Image, Drawing, List, Public');
+    console.log('✅ Three-dot menu: all options visible (positioned above)');
     console.log('✅ Switch Account works with robust fallback');
-    console.log('✅ Links clickable, image upload works');
   </script>
 </body>
 </html>
