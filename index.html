@@ -316,7 +316,7 @@
             padding: 6px 0;
             min-width: 220px;
             display: none;
-            z-index: 150;
+            z-index: 9999;
             border: 1px solid var(--border-color);
             animation: slideDown 0.2s ease;
         }
@@ -408,6 +408,7 @@
             max-width: 680px;
             margin: 0 16px;
             position: relative;
+            overflow: visible;
         }
         .header-center .search-icon {
             position: absolute;
@@ -518,7 +519,7 @@
             box-shadow: var(--shadow-lg);
             padding: 10px 0;
             display: none;
-            z-index: 200;
+            z-index: 9999;
             border: 1px solid var(--border-color);
             animation: slideDown 0.2s ease;
         }
@@ -615,14 +616,10 @@
             margin: 0 auto;
             width: 100%;
             transition: padding 0.3s;
+            overflow: visible;
         }
 
         /* ===== SIDEBAR VIEWS ===== */
-        .sidebar-views {
-            display: none; /* We'll show them as full-page views */
-        }
-
-        /* Dashboard */
         .dashboard-view {
             display: none;
             animation: fadeIn 0.3s ease;
@@ -714,6 +711,41 @@
             max-width: 70%;
         }
         .dashboard-view .recent-notes .recent-item .recent-date {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+        .dashboard-view .all-notes-list {
+            margin-top: 24px;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            border: 1px solid var(--border-color);
+        }
+        .dashboard-view .all-notes-list h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dashboard-view .all-notes-list .all-note-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+        .dashboard-view .all-notes-list .all-note-item:last-child {
+            border-bottom: none;
+        }
+        .dashboard-view .all-notes-list .all-note-item .note-title {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .dashboard-view .all-notes-list .all-note-item .note-info {
             color: var(--text-muted);
             font-size: 12px;
         }
@@ -832,6 +864,41 @@
         }
         .archive-view.active {
             display: block;
+        }
+        .archive-view .archive-note {
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .archive-view .archive-note .archive-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .archive-view .archive-note .archive-info .archive-title {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .archive-view .archive-note .archive-info .archive-excerpt {
+            font-size: 13px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .archive-view .archive-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .archive-view .archive-empty i {
+            font-size: 48px;
+            opacity: 0.3;
+            margin-bottom: 16px;
         }
 
         /* Labels view */
@@ -1122,7 +1189,7 @@
             right: 6px;
             opacity: 0;
             transition: var(--transition);
-            z-index: 10;
+            z-index: 999;
         }
         .note-card:hover .card-actions {
             opacity: 1;
@@ -1151,7 +1218,7 @@
             max-height: 380px;
             overflow-y: auto;
             display: none;
-            z-index: 9999;
+            z-index: 99999;
             border: 1px solid var(--border-color);
         }
         .note-card .card-menu.open {
@@ -1663,118 +1730,39 @@
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            .app-header {
-                padding: 6px 12px;
-                min-height: 56px;
-            }
-            .header-left .brand {
-                font-size: 17px;
-            }
-            .header-left .brand i {
-                font-size: 22px;
-            }
-            .header-center {
-                margin: 0 8px;
-            }
-            .header-center #searchInput {
-                padding: 8px 12px 8px 36px;
-                font-size: 14px;
-            }
-            .header-center .search-icon {
-                left: 10px;
-                font-size: 14px;
-            }
-            .header-right .icon-btn {
-                width: 34px;
-                height: 34px;
-                font-size: 16px;
-            }
-            .avatar-wrap .avatar {
-                width: 32px;
-                height: 32px;
-                font-size: 13px;
-            }
-            .main-content {
-                padding: 16px 12px 80px;
-            }
-            .notes-grid {
-                grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-                gap: 12px;
-            }
-            .notes-grid.masonry {
-                column-count: 2;
-            }
-            .account-dropdown {
-                width: 280px;
-                right: -8px;
-            }
-            .modal-editor {
-                max-width: 100%;
-                margin: 8px;
-                border-radius: var(--radius-sm);
-            }
-            .signin-card {
-                padding: 32px 20px 28px;
-            }
-            .fab-wrapper {
-                bottom: 18px;
-                right: 18px;
-            }
-            .fab {
-                width: 50px;
-                height: 50px;
-                font-size: 24px;
-            }
-            .note-card .card-actions {
-                opacity: 1;
-            }
-            .left-dropdown {
-                left: -10px;
-            }
-            .dashboard-view .stats-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            }
-            .link-embed {
-                flex-direction: column;
-                max-height: none;
-            }
-            .link-embed .link-image {
-                width: 100%;
-                height: 100px;
-            }
-            .view-toolbar {
-                gap: 8px;
-            }
+            .app-header { padding: 6px 12px; min-height: 56px; }
+            .header-left .brand { font-size: 17px; }
+            .header-left .brand i { font-size: 22px; }
+            .header-center { margin: 0 8px; }
+            .header-center #searchInput { padding: 8px 12px 8px 36px; font-size: 14px; }
+            .header-center .search-icon { left: 10px; font-size: 14px; }
+            .header-right .icon-btn { width: 34px; height: 34px; font-size: 16px; }
+            .avatar-wrap .avatar { width: 32px; height: 32px; font-size: 13px; }
+            .main-content { padding: 16px 12px 80px; }
+            .notes-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+            .notes-grid.masonry { column-count: 2; }
+            .account-dropdown { width: 280px; right: -8px; }
+            .modal-editor { max-width: 100%; margin: 8px; border-radius: var(--radius-sm); }
+            .signin-card { padding: 32px 20px 28px; }
+            .fab-wrapper { bottom: 18px; right: 18px; }
+            .fab { width: 50px; height: 50px; font-size: 24px; }
+            .note-card .card-actions { opacity: 1; }
+            .left-dropdown { left: -10px; }
+            .dashboard-view .stats-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+            .link-embed { flex-direction: column; max-height: none; }
+            .link-embed .link-image { width: 100%; height: 100px; }
+            .view-toolbar { gap: 8px; }
         }
         @media (max-width: 480px) {
-            .notes-grid {
-                grid-template-columns: 1fr;
-            }
-            .notes-grid.masonry {
-                column-count: 1;
-            }
-            .header-center #searchInput {
-                font-size: 13px;
-            }
-            .account-dropdown {
-                width: 260px;
-                right: -4px;
-            }
-            .header-left .brand span {
-                display: none;
-            }
-            .dashboard-view .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .fab-menu .fab-option {
-                min-width: 120px;
-                padding: 8px 14px;
-                font-size: 13px;
-            }
+            .notes-grid { grid-template-columns: 1fr; }
+            .notes-grid.masonry { column-count: 1; }
+            .header-center #searchInput { font-size: 13px; }
+            .account-dropdown { width: 260px; right: -4px; }
+            .header-left .brand span { display: none; }
+            .dashboard-view .stats-grid { grid-template-columns: 1fr 1fr; }
+            .fab-menu .fab-option { min-width: 120px; padding: 8px 14px; font-size: 13px; }
         }
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -1881,6 +1869,10 @@
         <div class="dashboard-view" id="dashboardView">
             <div class="stats-grid" id="statsGrid"></div>
             <div class="recent-notes"><h3><i class="fas fa-clock"></i> Recent Notes</h3><div class="recent-list" id="recentList"></div></div>
+            <div class="all-notes-list">
+                <h3><i class="fas fa-list-ul"></i> All Notes</h3>
+                <div id="allNotesList"></div>
+            </div>
         </div>
 
         <!-- Trash View -->
@@ -2084,6 +2076,7 @@
         const calendarContainer = $('#calendarContainer');
         const statsGrid = $('#statsGrid');
         const recentList = $('#recentList');
+        const allNotesList = $('#allNotesList');
         const searchInput = $('#searchInput');
         const fabBtn = $('#fabBtn');
         const fabMenu = $('#fabMenu');
@@ -2478,7 +2471,7 @@
         });
 
         // ================================================================
-        //  RENDER: DASHBOARD
+        //  RENDER: DASHBOARD (including all notes)
         // ================================================================
         function renderDashboard() {
             if (!currentUser) return;
@@ -2513,6 +2506,30 @@
                 });
                 recentList.innerHTML = html;
             }
+
+            // --- ALL NOTES LIST (all notes, no filter) ---
+            const allNotesSorted = [...active].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+            if (allNotesSorted.length === 0) {
+                allNotesList.innerHTML = `<div style="color:var(--text-muted);padding:8px 0;">No notes yet.</div>`;
+            } else {
+                let html = '';
+                allNotesSorted.forEach(n => {
+                    const title = n.title || 'Untitled';
+                    const date = formatDate(n.updatedAt || n.createdAt);
+                    const preview = (n.content || '').substring(0, 50) + ((n.content || '').length > 50 ? '…' : '');
+                    html += `
+                        <div class="all-note-item">
+                            <div>
+                                <span class="note-title">${escHtml(title)}</span>
+                                <span style="color:var(--text-muted);font-size:12px;margin-left:8px;">${escHtml(preview)}</span>
+                            </div>
+                            <span class="note-info">${date}</span>
+                        </div>
+                    `;
+                });
+                allNotesList.innerHTML = html;
+            }
+
             dashboardView.classList.add('active');
             notesGrid.style.display = 'none';
             trashView.classList.remove('active');
@@ -2580,15 +2597,18 @@
             const archived = allNotes.filter(n => n.archived && !n.deletedAt);
             if (archived.length === 0) {
                 archiveList.innerHTML =
-                    `<div class="empty-icon" style="text-align:center;padding:40px 0;color:var(--text-muted);"><i class="fas fa-archive" style="font-size:48px;opacity:0.3;display:block;margin-bottom:16px;"></i>No archived notes</div>`;
+                    `<div class="archive-empty"><div><i class="fas fa-archive" style="font-size:48px;opacity:0.3;display:block;margin-bottom:16px;"></i>No archived notes</div></div>`;
             } else {
                 let html = '';
                 archived.forEach(n => {
                     html += `
-                        <div class="note-card" data-id="${n.id}" style="background:var(--bg-card);">
-                            <div class="note-title">${escHtml(n.title || 'Untitled')}</div>
-                            <div class="note-content">${escHtml((n.content||'').substring(0,100))}</div>
-                            <div class="note-meta"><span class="note-date"><i class="far fa-clock"></i> ${formatDate(n.updatedAt)}</span>
+                        <div class="archive-note" data-id="${n.id}">
+                            <div class="archive-info">
+                                <div class="archive-title">${escHtml(n.title || 'Untitled')}</div>
+                                <div class="archive-excerpt">${escHtml((n.content||'').substring(0,80))}</div>
+                                <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Archived ${formatDate(n.updatedAt)}</div>
+                            </div>
+                            <div>
                                 <button class="trash-btn restore-btn" data-action="unarchive" data-id="${n.id}"><i class="fas fa-undo"></i> Unarchive</button>
                             </div>
                         </div>
@@ -2656,14 +2676,16 @@
         // ================================================================
         //  RENDER: CALENDAR
         // ================================================================
+        let calendarDate = new Date();
+
         function renderCalendar() {
             if (!currentUser) { calendarView.classList.remove('active'); return; }
-            const now = new Date();
+            const now = calendarDate;
             const year = now.getFullYear();
             const month = now.getMonth();
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const today = now.getDate();
+            const today = new Date();
 
             let html = `
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
@@ -2692,7 +2714,7 @@
                     const remDate = new Date(n.reminder);
                     return remDate.getFullYear() === year && remDate.getMonth() === month && remDate.getDate() === d;
                 });
-                const isToday = d === today;
+                const isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
                 html += `
                     <div style="padding:8px 4px;border-radius:var(--radius-sm);background:${isToday ? 'var(--accent-bg)' : 'transparent'};${hasReminder ? 'border:1px solid var(--accent);' : ''}">
                         ${d}
@@ -2703,13 +2725,12 @@
             html += `</div>`;
             calendarContainer.innerHTML = html;
 
-            // Month navigation (simple)
             document.getElementById('prevMonthBtn')?.addEventListener('click', () => {
-                now.setMonth(now.getMonth() - 1);
+                calendarDate.setMonth(calendarDate.getMonth() - 1);
                 renderCalendar();
             });
             document.getElementById('nextMonthBtn')?.addEventListener('click', () => {
-                now.setMonth(now.getMonth() + 1);
+                calendarDate.setMonth(calendarDate.getMonth() + 1);
                 renderCalendar();
             });
 
@@ -2756,7 +2777,6 @@
             const q = searchQuery.trim().toLowerCase();
             if (q) {
                 filtered = filtered.filter(n => {
-                    // Search by title, content, tags, reminder, color, pinned, archived, checklist
                     const matchTitle = n.title && n.title.toLowerCase().includes(q);
                     const matchContent = n.content && n.content.toLowerCase().includes(q);
                     const matchTags = n.tags && n.tags.some(t => t.toLowerCase().includes(q));
@@ -3172,7 +3192,6 @@
                 // Update editor UI
                 noteTitleInput.value = note.title;
                 noteContentEditable.innerHTML = note.content || '';
-                // For list, etc. (not fully implemented for undo in editor)
                 showToast('Undo', 'undo');
             }
         }
@@ -3284,7 +3303,6 @@
             if (!note.locked) {
                 const pwd = prompt('Set a password for this note:');
                 if (!pwd) return;
-                // In production, you'd hash this; we store plain for demo
                 note.password = pwd;
                 note.locked = true;
             } else {
@@ -3915,10 +3933,6 @@
         // Navigation
         function navigateTo(page) {
             currentPage = page;
-            // Reset search when switching pages
-            if (page !== 'notes') {
-                // Keep search for notes
-            }
             renderAll();
         }
 
@@ -4026,7 +4040,6 @@
         }
 
         function backupNotes() {
-            // Manual backup: export with timestamp
             if (!allNotes.length) { showToast('No notes to backup', 'exclamation-circle'); return; }
             const data = JSON.stringify(allNotes, null, 2);
             const blob = new Blob([data], { type: 'application/json' });
@@ -4093,7 +4106,6 @@
             const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
             if (currentUser.picture) { avatarLetter.innerHTML = `<img src="${currentUser.picture}" alt="" />`; } else { avatarLetter
                     .textContent = initial; }
-            // Ensure we are on notes page by default
             if (!currentPage) currentPage = 'notes';
             renderAll();
             renderAccountDropdown();
@@ -4101,7 +4113,7 @@
         }
 
         // ================================================================
-        //  SEARCH — real-time
+        //  SEARCH
         // ================================================================
         searchInput.addEventListener('input', () => {
             searchQuery = searchInput.value;
@@ -4176,7 +4188,7 @@
         accountDropdown.addEventListener('click', (e) => e.stopPropagation());
 
         // ================================================================
-        //  REFRESH — fixed glitch
+        //  REFRESH
         // ================================================================
         refreshBtn.addEventListener('click', async () => {
             if (!currentUser) { showToast('Sign in first', 'exclamation-circle'); return; }
@@ -4241,7 +4253,6 @@
                     currentUser = storedUser;
                     allNotes = await loadNotesFromStorage(storedUser.id);
                     initGoogleSignIn();
-                    // Request notification permission
                     if ('Notification' in window && Notification.permission === 'default') {
                         Notification.requestPermission();
                     }
@@ -4285,8 +4296,9 @@
             if (typeof google === 'undefined' || !google.accounts) fallbackBtn.classList.add('visible');
         }, 4000);
 
-        console.log('📝 Premium Notes App — Fully loaded');
-        console.log('✅ All bugs fixed, all features added.');
+        console.log('📝 Premium Notes App — Fully loaded with dashboard all-notes list.');
+        console.log('✅ Dropdowns positioned with absolute and high z-index.');
+        console.log('✅ Dashboard shows all notes in a separate list.');
     </script>
 </body>
 </html>
