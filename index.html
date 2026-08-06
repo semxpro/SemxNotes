@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Keep – Notes</title>
-
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -683,7 +682,9 @@
       border: 1px solid var(--border-color);
       position: relative;
       word-wrap: break-word;
+      overflow: hidden; /* prevent overflow */
       min-height: 100px;
+      max-height: 500px; /* limit height but allow scroll if needed */
       cursor: default;
     }
     .note-card:hover {
@@ -696,6 +697,7 @@
       color: var(--text-primary);
       margin-bottom: 4px;
       line-height: 1.3;
+      word-break: break-word;
     }
     .note-card .note-content {
       font-size: 14px;
@@ -703,7 +705,9 @@
       line-height: 1.6;
       flex: 1;
       white-space: pre-wrap;
-      overflow: hidden;
+      word-break: break-word;
+      overflow-y: auto; /* scroll if content too long */
+      max-height: 300px; /* ensure it doesn't take too much space */
     }
     .note-card .note-content:empty {
       display: none;
@@ -717,6 +721,7 @@
       border-top: 1px solid var(--border-color);
       font-size: 11px;
       color: var(--text-muted);
+      flex-shrink: 0;
     }
     .note-card .note-meta .note-date {
       display: flex;
@@ -740,6 +745,7 @@
       align-items: center;
       justify-content: center;
       background: var(--bg-input);
+      flex-shrink: 0;
     }
     .note-card .note-image img {
       width: 100%;
@@ -963,6 +969,7 @@
       font-family: var(--font);
       line-height: 1.7;
       background: transparent;
+      word-break: break-word;
     }
     .modal-editor .modal-body .editor-content::placeholder {
       color: var(--text-muted);
@@ -1197,6 +1204,15 @@
           <i class="fas fa-file-import"></i>
           <span class="label">Import notes</span>
         </div>
+        <div class="drop-divider"></div>
+        <div class="drop-item" id="leftClearAll">
+          <i class="fas fa-trash-alt" style="color:var(--danger);"></i>
+          <span class="label" style="color:var(--danger);">Clear all notes</span>
+        </div>
+        <div class="drop-item" id="leftAbout">
+          <i class="fas fa-info-circle"></i>
+          <span class="label">About</span>
+        </div>
       </div>
     </div>
     <div class="header-center">
@@ -1259,7 +1275,7 @@
     const THEME_KEY = 'keep_theme';
 
     const COLORS = [
-      { name: 'Default', value: null }, // special: theme adaptive
+      { name: 'Default', value: null },
       { name: 'White', value: '#ffffff' },
       { name: 'Red', value: '#f28b82' },
       { name: 'Orange', value: '#fbbc04' },
@@ -1273,7 +1289,7 @@
       { name: 'Brown', value: '#e6c9a8' },
       { name: 'Gray', value: '#e8eaed' },
     ];
-    const DEFAULT_COLOR = null; // theme adaptive
+    const DEFAULT_COLOR = null;
 
     // ================================================================
     //  STATE
@@ -1321,6 +1337,8 @@
     const themeToggleTrack = $('#themeToggleTrack');
     const leftExport = $('#leftExport');
     const leftImport = $('#leftImport');
+    const leftClearAll = $('#leftClearAll');
+    const leftAbout = $('#leftAbout');
 
     // ================================================================
     //  TOAST
@@ -1361,12 +1379,10 @@
     function applyTheme() {
       document.documentElement.setAttribute('data-theme', currentTheme);
       const isDark = currentTheme === 'dark';
-      // Update toggle track in left menu
       if (themeToggleTrack) {
         themeToggleTrack.classList.toggle('active', isDark);
       }
       try { localStorage.setItem(THEME_KEY, currentTheme); } catch (_) {}
-      // Re-render notes to adapt colors (if they use default)
       renderNotes();
     }
 
@@ -1480,11 +1496,12 @@
     }
 
     // ================================================================
-    //  SWITCH ACCOUNT (fix)
+    //  SWITCH ACCOUNT (FIXED)
     // ================================================================
     function triggerAccountSwitch() {
       try {
         if (typeof google !== 'undefined' && google.accounts) {
+          // Force re-initialize with select_account prompt
           try { google.accounts.id.disableAutoSelect(); } catch (_) {}
           google.accounts.id.initialize({
             client_id: CLIENT_ID,
@@ -1493,16 +1510,22 @@
             cancel_on_tap_outside: false,
             context: 'signin',
           });
+          // Render button again to ensure UI, but we just need prompt
           google.accounts.id.prompt();
           showToast('Select an account to switch', 'exchange-alt');
         } else {
+          // Fallback: sign out and show sign-in
           signOut();
           signinOverlay.classList.add('active');
           fallbackBtn.classList.add('visible');
         }
       } catch (err) {
         console.error('Switch account error:', err);
-        showToast('Unable to switch', 'exclamation-circle');
+        // Last resort: sign out
+        signOut();
+        signinOverlay.classList.add('active');
+        fallbackBtn.classList.add('visible');
+        showToast('Unable to switch, please sign in again', 'exclamation-circle');
       }
     }
 
@@ -1532,7 +1555,7 @@
     }
 
     // ================================================================
-    //  RENDER: NOTES (with theme‑adaptive default color)
+    //  RENDER: NOTES
     // ================================================================
     function renderNotes() {
       if (!currentUser) {
@@ -1577,7 +1600,7 @@
       filtered.forEach(note => {
         let bg = note.color;
         if (bg === null || bg === undefined || bg === '#ffffff' || bg === '') {
-          bg = defaultBg; // theme adaptive
+          bg = defaultBg;
         }
         const isDarkBg = isDarkColor(bg);
         const textColor = isDarkBg ? '#fff' : '#202124';
@@ -1643,7 +1666,6 @@
                 const isVisible = colorSub.style.display !== 'none';
                 colorSub.style.display = isVisible ? 'none' : 'flex';
                 if (!isVisible && colorSub.children.length === 0) {
-                  // Add theme-adaptive "Default" option
                   const defaultOpt = document.createElement('div');
                   defaultOpt.className = 'color-opt default-opt' + (note.color === null || note.color === '#ffffff' ?
                     ' active' : '');
@@ -1814,7 +1836,7 @@
         id: Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 6),
         title: title.trim() || '',
         content: content.trim() || '',
-        color: color, // can be null for default
+        color: color,
         pinned: false,
         archived: false,
         imageData: null,
@@ -1879,7 +1901,6 @@
 
     function renderEditorColorPicker(selected) {
       editorColorPicker.innerHTML = '';
-      // "Default" option
       const defaultOpt = document.createElement('div');
       defaultOpt.className = 'color-opt default-opt' + (selected === null || selected === '#ffffff' ? ' active' : '');
       defaultOpt.title = 'Default (theme)';
@@ -1933,7 +1954,7 @@
     }
 
     // ================================================================
-    //  ACCOUNT DROPDOWN
+    //  ACCOUNT DROPDOWN (no export/import)
     // ================================================================
     function renderAccountDropdown() {
       if (!currentUser) {
@@ -1961,9 +1982,6 @@
         <div class="divider"></div>
         <button class="drop-item" id="dropSwitchAccount"><span class="icon"><i class="fas fa-exchange-alt"></i></span><span class="label">Switch account</span></button>
         <div class="divider"></div>
-        <button class="drop-item" id="dropExport"><span class="icon"><i class="fas fa-file-export"></i></span><span class="label">Export notes</span></button>
-        <button class="drop-item" id="dropImport"><span class="icon"><i class="fas fa-file-import"></i></span><span class="label">Import notes</span></button>
-        <div class="divider"></div>
         <button class="drop-item danger" id="dropSignOut"><span class="icon"><i class="fas fa-sign-out-alt"></i></span><span class="label">Sign out</span></button>
       `;
 
@@ -1971,20 +1989,68 @@
         accountDropdown.classList.remove('open');
         triggerAccountSwitch();
       });
-      accountDropdown.querySelector('#dropExport')?.addEventListener('click', () => {
-        accountDropdown.classList.remove('open');
-        exportNotes();
-      });
-      accountDropdown.querySelector('#dropImport')?.addEventListener('click', () => {
-        accountDropdown.classList.remove('open');
-        importNotes();
-      });
+
       accountDropdown.querySelector('#dropSignOut')?.addEventListener('click', () => {
         accountDropdown.classList.remove('open');
         signOut();
       });
       accountBadge.textContent = '1';
     }
+
+    // ================================================================
+    //  LEFT DROPDOWN EVENTS
+    // ================================================================
+    leftMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      leftDropdown.classList.toggle('open');
+      accountDropdown.classList.remove('open');
+      appearanceSub.classList.remove('open');
+    });
+
+    leftAppearance.addEventListener('click', (e) => {
+      e.stopPropagation();
+      appearanceSub.classList.toggle('open');
+    });
+
+    themeToggleTrack.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleTheme();
+    });
+
+    leftExport.addEventListener('click', () => {
+      leftDropdown.classList.remove('open');
+      if (!currentUser) { showToast('Sign in first', 'exclamation-circle'); return; }
+      exportNotes();
+    });
+
+    leftImport.addEventListener('click', () => {
+      leftDropdown.classList.remove('open');
+      if (!currentUser) { showToast('Sign in first', 'exclamation-circle'); return; }
+      importNotes();
+    });
+
+    leftClearAll.addEventListener('click', () => {
+      leftDropdown.classList.remove('open');
+      if (!currentUser) { showToast('Sign in first', 'exclamation-circle'); return; }
+      if (allNotes.length === 0) { showToast('No notes to clear', 'info-circle'); return; }
+      if (confirm('Are you sure you want to delete ALL notes? This cannot be undone.')) {
+        allNotes = [];
+        saveNotesToStorage(currentUser.id, allNotes);
+        renderNotes();
+        showToast('All notes cleared', 'trash');
+      }
+    });
+
+    leftAbout.addEventListener('click', () => {
+      leftDropdown.classList.remove('open');
+      showToast('📝 Notes App — Built with ❤️, copyright free, version 2.0', 'info-circle', 4000);
+    });
+
+    document.addEventListener('click', () => {
+      leftDropdown.classList.remove('open');
+      appearanceSub.classList.remove('open');
+    });
+    leftDropdown.addEventListener('click', (e) => e.stopPropagation());
 
     // ================================================================
     //  EXPORT / IMPORT
@@ -2070,45 +2136,6 @@
       renderAccountDropdown();
       accountBadge.textContent = '1';
     }
-
-    // ================================================================
-    //  LEFT DROPDOWN (hamburger) EVENTS
-    // ================================================================
-    leftMenuBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      leftDropdown.classList.toggle('open');
-      // close any open account dropdown
-      accountDropdown.classList.remove('open');
-      // hide submenu by default
-      appearanceSub.classList.remove('open');
-    });
-
-    leftAppearance.addEventListener('click', (e) => {
-      e.stopPropagation();
-      appearanceSub.classList.toggle('open');
-    });
-
-    // Theme toggle in left menu
-    themeToggleTrack.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleTheme();
-    });
-
-    leftExport.addEventListener('click', () => {
-      leftDropdown.classList.remove('open');
-      exportNotes();
-    });
-
-    leftImport.addEventListener('click', () => {
-      leftDropdown.classList.remove('open');
-      importNotes();
-    });
-
-    document.addEventListener('click', () => {
-      leftDropdown.classList.remove('open');
-      appearanceSub.classList.remove('open');
-    });
-    leftDropdown.addEventListener('click', (e) => e.stopPropagation());
 
     // ================================================================
     //  SEARCH
@@ -2272,7 +2299,6 @@
       }
     }
 
-    // Handle URL note sharing
     function handleUrlNote() {
       const params = new URLSearchParams(window.location.search);
       const noteId = params.get('note');
