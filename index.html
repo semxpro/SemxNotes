@@ -1,1577 +1,1719 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Notes - Google Keep Style</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <!-- Google Identity Services -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notes – Keep Style</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: #f1f3f4;
-            color: #202124;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #c1c7cd;
-            border-radius: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f1f3f4;
+      color: #202124;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #c1c7cd;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
 
-        /* HEADER */
-        .header {
-            background: #fff;
-            padding: 8px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            height: 64px;
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .header-left .menu-icon {
-            font-size: 20px;
-            color: #5f6368;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: background 0.2s;
-        }
-        .header-left .menu-icon:hover {
-            background: #f1f3f4;
-        }
-        .header-left .logo {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 22px;
-            font-weight: 500;
-            color: #5f6368;
-            letter-spacing: -0.5px;
-        }
-        .header-left .logo span {
-            color: #202124;
-        }
-        .header-left .logo i {
-            font-size: 26px;
-            color: #fbbc04;
-        }
-        .header-center {
-            flex: 1;
-            max-width: 720px;
-            margin: 0 20px;
-            position: relative;
-        }
-        .header-center .search-box {
-            width: 100%;
-            padding: 10px 16px 10px 48px;
-            border: none;
-            border-radius: 8px;
-            background: #f1f3f4;
-            font-size: 15px;
-            color: #202124;
-            outline: none;
-            transition: background 0.2s, box-shadow 0.2s;
-        }
-        .header-center .search-box:focus {
-            background: #fff;
-            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
-        }
-        .header-center .search-box::placeholder {
-            color: #5f6368;
-        }
-        .header-center .search-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #5f6368;
-            font-size: 18px;
-            pointer-events: none;
-        }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            position: relative;
-        }
-        .header-right .icon-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            background: transparent;
-            color: #5f6368;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-        .header-right .icon-btn:hover {
-            background: #f1f3f4;
-        }
+    /* HEADER */
+    .header {
+      background: #fff;
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 64px;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-left .menu-icon {
+      font-size: 20px;
+      color: #5f6368;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+    .header-left .menu-icon:hover {
+      background: #f1f3f4;
+    }
+    .header-left .logo {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 22px;
+      font-weight: 500;
+      color: #5f6368;
+      letter-spacing: -0.5px;
+    }
+    .header-left .logo span {
+      color: #202124;
+    }
+    .header-left .logo i {
+      font-size: 26px;
+      color: #fbbc04;
+    }
+    .header-center {
+      flex: 1;
+      max-width: 720px;
+      margin: 0 20px;
+      position: relative;
+    }
+    .header-center .search-box {
+      width: 100%;
+      padding: 10px 16px 10px 48px;
+      border: none;
+      border-radius: 8px;
+      background: #f1f3f4;
+      font-size: 15px;
+      color: #202124;
+      outline: none;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .header-center .search-box:focus {
+      background: #fff;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+    }
+    .header-center .search-box::placeholder {
+      color: #5f6368;
+    }
+    .header-center .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #5f6368;
+      font-size: 18px;
+      pointer-events: none;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+    .header-right .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: #5f6368;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .header-right .icon-btn:hover {
+      background: #f1f3f4;
+    }
 
-        /* AVATAR */
-        .avatar-wrapper {
-            position: relative;
-            cursor: pointer;
-        }
-        .avatar-wrapper .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #1a73e8;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 500;
-            font-size: 16px;
-            transition: filter 0.2s;
-            overflow: hidden;
-            border: 2px solid transparent;
-            position: relative;
-        }
-        .avatar-wrapper .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .avatar-wrapper .avatar:hover {
-            filter: brightness(0.95);
-        }
-        .avatar-wrapper .avatar .badge-count {
-            position: absolute;
-            bottom: -4px;
-            right: -4px;
-            background: #1a73e8;
-            color: #fff;
-            font-size: 10px;
-            font-weight: 600;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #fff;
-        }
-        .avatar-wrapper .avatar .badge-count.multiple {
-            background: #ea4335;
-        }
+    /* AVATAR */
+    .avatar-wrapper {
+      position: relative;
+      cursor: pointer;
+    }
+    .avatar-wrapper .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #1a73e8;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+      font-size: 16px;
+      transition: filter 0.2s;
+      overflow: hidden;
+      border: 2px solid transparent;
+      position: relative;
+    }
+    .avatar-wrapper .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .avatar-wrapper .avatar:hover {
+      filter: brightness(0.95);
+    }
+    .avatar-wrapper .avatar .badge-count {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      background: #1a73e8;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+    }
 
-        /* DROPDOWN */
-        .account-dropdown {
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            width: 320px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-            padding: 12px 0;
-            display: none;
-            z-index: 200;
-            animation: slideDown 0.2s ease;
-        }
-        .account-dropdown.open {
-            display: block;
-        }
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .account-dropdown .dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 10px 20px;
-            cursor: pointer;
-            transition: background 0.15s;
-            text-decoration: none;
-            color: #202124;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            font-size: 14px;
-            font-family: 'Roboto', sans-serif;
-        }
-        .account-dropdown .dropdown-item:hover {
-            background: #f1f3f4;
-        }
-        .account-dropdown .dropdown-item .item-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #1a73e8;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 500;
-            font-size: 14px;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-        .account-dropdown .dropdown-item .item-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .account-dropdown .dropdown-item .item-info {
-            flex: 1;
-            min-width: 0;
-        }
-        .account-dropdown .dropdown-item .item-info .name {
-            font-weight: 500;
-            font-size: 14px;
-            color: #202124;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .account-dropdown .dropdown-item .item-info .email {
-            font-size: 12px;
-            color: #5f6368;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .account-dropdown .dropdown-item .item-check {
-            color: #1a73e8;
-            font-size: 18px;
-        }
-        .account-dropdown .divider {
-            height: 1px;
-            background: #e8eaed;
-            margin: 6px 16px;
-        }
-        .account-dropdown .dropdown-item .icon {
-            width: 24px;
-            color: #5f6368;
-            font-size: 18px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-        .account-dropdown .dropdown-item .label {
-            flex: 1;
-        }
-        .account-dropdown .dropdown-item.danger .label {
-            color: #d93025;
-        }
-        .account-dropdown .dropdown-item.danger:hover {
-            background: #fce8e6;
-        }
+    /* DROPDOWN */
+    .account-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: 320px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      padding: 12px 0;
+      display: none;
+      z-index: 200;
+      animation: slideDown 0.2s ease;
+    }
+    .account-dropdown.open {
+      display: block;
+    }
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .account-dropdown .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background 0.15s;
+      text-decoration: none;
+      color: #202124;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-size: 14px;
+      font-family: 'Roboto', sans-serif;
+    }
+    .account-dropdown .dropdown-item:hover {
+      background: #f1f3f4;
+    }
+    .account-dropdown .dropdown-item .item-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #1a73e8;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+      font-size: 14px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .account-dropdown .dropdown-item .item-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .account-dropdown .dropdown-item .item-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .account-dropdown .dropdown-item .item-info .name {
+      font-weight: 500;
+      font-size: 14px;
+      color: #202124;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .account-dropdown .dropdown-item .item-info .email {
+      font-size: 12px;
+      color: #5f6368;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .account-dropdown .dropdown-item .item-check {
+      color: #1a73e8;
+      font-size: 18px;
+    }
+    .account-dropdown .divider {
+      height: 1px;
+      background: #e8eaed;
+      margin: 6px 16px;
+    }
+    .account-dropdown .dropdown-item .icon {
+      width: 24px;
+      color: #5f6368;
+      font-size: 18px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .account-dropdown .dropdown-item .label {
+      flex: 1;
+    }
+    .account-dropdown .dropdown-item.danger .label {
+      color: #d93025;
+    }
+    .account-dropdown .dropdown-item.danger:hover {
+      background: #fce8e6;
+    }
 
-        /* SIGN-IN OVERLAY */
-        .signin-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(6px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 300;
-            padding: 20px;
-        }
-        .signin-overlay.open {
-            display: flex;
-        }
-        .signin-card {
-            background: #fff;
-            border-radius: 16px;
-            padding: 48px 40px 40px;
-            max-width: 420px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3);
-            animation: popIn 0.3s ease;
-        }
-        @keyframes popIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        .signin-card .logo-large {
-            font-size: 48px;
-            color: #fbbc04;
-            margin-bottom: 12px;
-        }
-        .signin-card h2 {
-            font-weight: 400;
-            font-size: 24px;
-            color: #202124;
-            margin-bottom: 6px;
-        }
-        .signin-card p {
-            color: #5f6368;
-            font-size: 14px;
-            margin-bottom: 28px;
-            line-height: 1.5;
-        }
-        .signin-card .gsi-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            min-height: 60px;
-            justify-content: center;
-        }
-        .signin-card .gsi-container #gsiSignInButton {
-            min-height: 44px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-        .signin-card .gsi-container .fallback-btn {
-            display: none;
-            background: #fff;
-            border: 1px solid #dadce0;
-            border-radius: 40px;
-            padding: 10px 24px;
-            font-size: 15px;
-            font-weight: 500;
-            color: #3c4043;
-            cursor: pointer;
-            transition: background 0.2s, box-shadow 0.2s;
-            font-family: 'Roboto', sans-serif;
-            width: 100%;
-            max-width: 280px;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .signin-card .gsi-container .fallback-btn:hover {
-            background: #f8f9fa;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-        }
-        .signin-card .gsi-container .fallback-btn i {
-            font-size: 20px;
-            color: #1a73e8;
-        }
-        .signin-card .gsi-container .fallback-btn.visible {
-            display: flex;
-        }
+    /* SIGN-IN OVERLAY */
+    .signin-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+      padding: 20px;
+    }
+    .signin-overlay.open {
+      display: flex;
+    }
+    .signin-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 48px 40px 40px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3);
+      animation: popIn 0.3s ease;
+    }
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    .signin-card .logo-large {
+      font-size: 48px;
+      color: #fbbc04;
+      margin-bottom: 12px;
+    }
+    .signin-card h2 {
+      font-weight: 400;
+      font-size: 24px;
+      color: #202124;
+      margin-bottom: 6px;
+    }
+    .signin-card p {
+      color: #5f6368;
+      font-size: 14px;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+    .signin-card .gsi-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      min-height: 60px;
+      justify-content: center;
+    }
+    .signin-card .gsi-container #gsiSignInButton {
+      min-height: 44px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .signin-card .gsi-container .fallback-btn {
+      display: none;
+      background: #fff;
+      border: 1px solid #dadce0;
+      border-radius: 40px;
+      padding: 10px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #3c4043;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      font-family: 'Roboto', sans-serif;
+      width: 100%;
+      max-width: 280px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .signin-card .gsi-container .fallback-btn:hover {
+      background: #f8f9fa;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+    .signin-card .gsi-container .fallback-btn i {
+      font-size: 20px;
+      color: #1a73e8;
+    }
+    .signin-card .gsi-container .fallback-btn.visible {
+      display: flex;
+    }
 
-        /* MAIN */
-        .main-content {
-            flex: 1;
-            padding: 24px 32px 80px;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-        }
+    /* MAIN */
+    .main-content {
+      flex: 1;
+      padding: 24px 32px 80px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
 
-        /* NOTES GRID */
-        .notes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 16px;
-        }
-        .notes-grid.empty {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 300px;
-            color: #5f6368;
-        }
-        .notes-grid.empty .empty-icon {
-            font-size: 64px;
-            color: #dadce0;
-            margin-bottom: 16px;
-        }
-        .notes-grid.empty .empty-text {
-            font-size: 16px;
-            font-weight: 400;
-        }
+    /* NOTES GRID */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .notes-grid.empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+      color: #5f6368;
+    }
+    .notes-grid.empty .empty-icon {
+      font-size: 64px;
+      color: #dadce0;
+      margin-bottom: 16px;
+    }
+    .notes-grid.empty .empty-text {
+      font-size: 16px;
+      font-weight: 400;
+    }
 
-        /* NOTE CARD */
-        .note-card {
-            background: #fff;
-            border-radius: 8px;
-            padding: 16px 18px 10px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-            transition: box-shadow 0.25s, transform 0.15s;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid transparent;
-            position: relative;
-            word-wrap: break-word;
-            min-height: 100px;
-        }
-        .note-card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        .note-card .note-title {
-            font-size: 16px;
-            font-weight: 500;
-            color: #202124;
-            margin-bottom: 6px;
-            line-height: 1.3;
-        }
-        .note-card .note-content {
-            font-size: 14px;
-            color: #3c4043;
-            line-height: 1.5;
-            flex: 1;
-            white-space: pre-wrap;
-            overflow: hidden;
-        }
-        .note-card .note-content:empty {
-            display: none;
-        }
-        .note-card .note-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 4px;
-            margin-top: 12px;
-            padding-top: 8px;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        .note-card:hover .note-footer {
-            opacity: 1;
-        }
-        .note-card .note-footer .footer-btn {
-            background: none;
-            border: none;
-            color: #5f6368;
-            padding: 6px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.15s;
-        }
-        .note-card .note-footer .footer-btn:hover {
-            background: rgba(0, 0, 0, 0.06);
-        }
-        .note-card .note-footer .footer-btn.danger:hover {
-            color: #d93025;
-            background: #fce8e6;
-        }
+    /* NOTE CARD */
+    .note-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px 18px 10px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      transition: box-shadow 0.25s, transform 0.15s;
+      cursor: default;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid transparent;
+      position: relative;
+      word-wrap: break-word;
+      min-height: 100px;
+    }
+    .note-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    .note-card .note-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #202124;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .note-card .note-content {
+      font-size: 14px;
+      color: #3c4043;
+      line-height: 1.5;
+      flex: 1;
+      white-space: pre-wrap;
+      overflow: hidden;
+    }
+    .note-card .note-content:empty {
+      display: none;
+    }
+    .note-card .note-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 4px;
+      margin-top: 12px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .note-card:hover .note-footer {
+      opacity: 1;
+    }
+    .note-card .note-footer .footer-btn {
+      background: none;
+      border: none;
+      color: #5f6368;
+      padding: 6px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.15s;
+    }
+    .note-card .note-footer .footer-btn:hover {
+      background: rgba(0, 0, 0, 0.06);
+    }
+    .note-card .note-footer .footer-btn.danger:hover {
+      color: #d93025;
+      background: #fce8e6;
+    }
 
-        /* FAB */
-        .fab {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: #fbbc04;
-            color: #202124;
-            border: none;
-            font-size: 28px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-        }
-        .fab:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-        .fab:active {
-            transform: scale(0.95);
-        }
+    /* 3-DOT MENU */
+    .note-card .note-actions {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .note-card:hover .note-actions {
+      opacity: 1;
+    }
+    .note-card .note-actions .more-btn {
+      background: none;
+      border: none;
+      color: #5f6368;
+      font-size: 20px;
+      padding: 4px 8px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .note-card .note-actions .more-btn:hover {
+      background: rgba(0, 0, 0, 0.08);
+    }
+    .note-card .note-actions .dropdown-menu {
+      position: absolute;
+      top: 30px;
+      right: 0;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      padding: 8px 0;
+      min-width: 160px;
+      display: none;
+      z-index: 50;
+    }
+    .note-card .note-actions .dropdown-menu.open {
+      display: block;
+    }
+    .note-card .note-actions .dropdown-menu .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 20px;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-size: 14px;
+      font-family: 'Roboto', sans-serif;
+      color: #202124;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .note-card .note-actions .dropdown-menu .menu-item:hover {
+      background: #f1f3f4;
+    }
+    .note-card .note-actions .dropdown-menu .menu-item i {
+      width: 18px;
+      color: #5f6368;
+    }
+    .note-card .note-actions .dropdown-menu .menu-item.danger {
+      color: #d93025;
+    }
+    .note-card .note-actions .dropdown-menu .menu-item.danger i {
+      color: #d93025;
+    }
+    .note-card .note-actions .dropdown-menu .menu-item.danger:hover {
+      background: #fce8e6;
+    }
 
-        /* EDITOR MODAL */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(4px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 400;
-            padding: 20px;
-        }
-        .modal-overlay.open {
-            display: flex;
-        }
-        .modal-editor {
-            background: #fff;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 560px;
-            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3);
-            animation: popIn 0.25s ease;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            max-height: 90vh;
-        }
-        .modal-editor .modal-header {
-            padding: 16px 20px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .modal-editor .modal-header .close-btn {
-            background: none;
-            border: none;
-            font-size: 22px;
-            color: #5f6368;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 50%;
-            transition: background 0.15s;
-        }
-        .modal-editor .modal-header .close-btn:hover {
-            background: #f1f3f4;
-        }
-        .modal-editor .modal-body {
-            padding: 8px 20px 20px;
-            overflow-y: auto;
-            flex: 1;
-        }
-        .modal-editor .modal-body .editor-title {
-            width: 100%;
-            border: none;
-            font-size: 18px;
-            font-weight: 500;
-            color: #202124;
-            padding: 8px 0 4px;
-            outline: none;
-            font-family: 'Roboto', sans-serif;
-        }
-        .modal-editor .modal-body .editor-title::placeholder {
-            color: #9aa0a6;
-        }
-        .modal-editor .modal-body .editor-content {
-            width: 100%;
-            border: none;
-            font-size: 15px;
-            color: #3c4043;
-            padding: 8px 0 12px;
-            outline: none;
-            resize: vertical;
-            min-height: 100px;
-            font-family: 'Roboto', sans-serif;
-            line-height: 1.6;
-        }
-        .modal-editor .modal-body .editor-content::placeholder {
-            color: #9aa0a6;
-        }
-        .modal-editor .modal-body .color-picker {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            padding: 12px 0 4px;
-            border-top: 1px solid #e8eaed;
-            margin-top: 4px;
-        }
-        .modal-editor .modal-body .color-picker .color-option {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: border 0.2s, transform 0.15s;
-            flex-shrink: 0;
-        }
-        .modal-editor .modal-body .color-picker .color-option:hover {
-            transform: scale(1.08);
-        }
-        .modal-editor .modal-body .color-picker .color-option.active {
-            border-color: #202124;
-            box-shadow: 0 0 0 2px #fff, 0 0 0 4px #202124;
-        }
-        .modal-editor .modal-footer {
-            padding: 8px 20px 16px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            border-top: 1px solid #e8eaed;
-        }
-        .modal-editor .modal-footer .btn {
-            padding: 8px 20px;
-            border-radius: 6px;
-            border: none;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.15s;
-            font-family: 'Roboto', sans-serif;
-        }
-        .modal-editor .modal-footer .btn-primary {
-            background: #1a73e8;
-            color: #fff;
-        }
-        .modal-editor .modal-footer .btn-primary:hover {
-            background: #1557b0;
-        }
-        .modal-editor .modal-footer .btn-secondary {
-            background: transparent;
-            color: #5f6368;
-        }
-        .modal-editor .modal-footer .btn-secondary:hover {
-            background: #f1f3f4;
-        }
-        .modal-editor .modal-footer .btn-danger {
-            background: transparent;
-            color: #d93025;
-        }
-        .modal-editor .modal-footer .btn-danger:hover {
-            background: #fce8e6;
-        }
+    /* FAB */
+    .fab {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #fbbc04;
+      color: #202124;
+      border: none;
+      font-size: 28px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .fab:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+    .fab:active {
+      transform: scale(0.95);
+    }
 
-        /* TOAST */
-        .toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: #323232;
-            color: #fff;
-            padding: 12px 28px;
-            border-radius: 8px;
-            font-size: 14px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
-            z-index: 500;
-            pointer-events: none;
-            white-space: nowrap;
-        }
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
+    /* EDITOR MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 400;
+      padding: 20px;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-editor {
+      background: #fff;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 560px;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3);
+      animation: popIn 0.25s ease;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+    }
+    .modal-editor .modal-header {
+      padding: 16px 20px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-editor .modal-header .close-btn {
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: #5f6368;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 50%;
+      transition: background 0.15s;
+    }
+    .modal-editor .modal-header .close-btn:hover {
+      background: #f1f3f4;
+    }
+    .modal-editor .modal-body {
+      padding: 8px 20px 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .modal-editor .modal-body .editor-title {
+      width: 100%;
+      border: none;
+      font-size: 18px;
+      font-weight: 500;
+      color: #202124;
+      padding: 8px 0 4px;
+      outline: none;
+      font-family: 'Roboto', sans-serif;
+    }
+    .modal-editor .modal-body .editor-title::placeholder {
+      color: #9aa0a6;
+    }
+    .modal-editor .modal-body .editor-content {
+      width: 100%;
+      border: none;
+      font-size: 15px;
+      color: #3c4043;
+      padding: 8px 0 12px;
+      outline: none;
+      resize: vertical;
+      min-height: 100px;
+      font-family: 'Roboto', sans-serif;
+      line-height: 1.6;
+    }
+    .modal-editor .modal-body .editor-content::placeholder {
+      color: #9aa0a6;
+    }
+    .modal-editor .modal-body .color-picker {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 12px 0 4px;
+      border-top: 1px solid #e8eaed;
+      margin-top: 4px;
+    }
+    .modal-editor .modal-body .color-picker .color-option {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: border 0.2s, transform 0.15s;
+      flex-shrink: 0;
+    }
+    .modal-editor .modal-body .color-picker .color-option:hover {
+      transform: scale(1.08);
+    }
+    .modal-editor .modal-body .color-picker .color-option.active {
+      border-color: #202124;
+      box-shadow: 0 0 0 2px #fff, 0 0 0 4px #202124;
+    }
+    .modal-editor .modal-footer {
+      padding: 8px 20px 16px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      border-top: 1px solid #e8eaed;
+    }
+    .modal-editor .modal-footer .btn {
+      padding: 8px 20px;
+      border-radius: 6px;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-family: 'Roboto', sans-serif;
+    }
+    .modal-editor .modal-footer .btn-primary {
+      background: #1a73e8;
+      color: #fff;
+    }
+    .modal-editor .modal-footer .btn-primary:hover {
+      background: #1557b0;
+    }
+    .modal-editor .modal-footer .btn-secondary {
+      background: transparent;
+      color: #5f6368;
+    }
+    .modal-editor .modal-footer .btn-secondary:hover {
+      background: #f1f3f4;
+    }
+    .modal-editor .modal-footer .btn-danger {
+      background: transparent;
+      color: #d93025;
+    }
+    .modal-editor .modal-footer .btn-danger:hover {
+      background: #fce8e6;
+    }
 
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .header {
-                padding: 8px 12px;
-                height: 56px;
-            }
-            .header-left .logo {
-                font-size: 18px;
-            }
-            .header-left .logo i {
-                font-size: 22px;
-            }
-            .header-center {
-                margin: 0 10px;
-            }
-            .header-center .search-box {
-                padding: 8px 12px 8px 38px;
-                font-size: 14px;
-            }
-            .header-center .search-icon {
-                left: 10px;
-                font-size: 16px;
-            }
-            .header-right .icon-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 18px;
-            }
-            .avatar-wrapper .avatar {
-                width: 32px;
-                height: 32px;
-                font-size: 14px;
-            }
-            .main-content {
-                padding: 16px 12px 80px;
-            }
-            .notes-grid {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-                gap: 12px;
-            }
-            .account-dropdown {
-                width: 280px;
-                right: -8px;
-            }
-            .modal-editor {
-                max-width: 100%;
-                margin: 10px;
-                border-radius: 8px;
-            }
-            .fab {
-                bottom: 20px;
-                right: 20px;
-                width: 48px;
-                height: 48px;
-                font-size: 24px;
-            }
-            .signin-card {
-                padding: 32px 20px 28px;
-            }
-            .toast {
-                font-size: 13px;
-                padding: 10px 20px;
-                bottom: 80px;
-                white-space: normal;
-                max-width: 90%;
-            }
-        }
-        @media (max-width: 480px) {
-            .notes-grid {
-                grid-template-columns: 1fr;
-            }
-            .header-center .search-box {
-                font-size: 13px;
-            }
-            .account-dropdown {
-                width: 260px;
-                right: -4px;
-            }
-        }
-        .hidden {
-            display: none !important;
-        }
-    </style>
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #323232;
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 14px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 500;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .header {
+        padding: 8px 12px;
+        height: 56px;
+      }
+      .header-left .logo {
+        font-size: 18px;
+      }
+      .header-left .logo i {
+        font-size: 22px;
+      }
+      .header-center {
+        margin: 0 10px;
+      }
+      .header-center .search-box {
+        padding: 8px 12px 8px 38px;
+        font-size: 14px;
+      }
+      .header-center .search-icon {
+        left: 10px;
+        font-size: 16px;
+      }
+      .header-right .icon-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+      }
+      .avatar-wrapper .avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+      }
+      .main-content {
+        padding: 16px 12px 80px;
+      }
+      .notes-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 12px;
+      }
+      .account-dropdown {
+        width: 280px;
+        right: -8px;
+      }
+      .modal-editor {
+        max-width: 100%;
+        margin: 10px;
+        border-radius: 8px;
+      }
+      .fab {
+        bottom: 20px;
+        right: 20px;
+        width: 48px;
+        height: 48px;
+        font-size: 24px;
+      }
+      .signin-card {
+        padding: 32px 20px 28px;
+      }
+      .toast {
+        font-size: 13px;
+        padding: 10px 20px;
+        bottom: 80px;
+        white-space: normal;
+        max-width: 90%;
+      }
+    }
+    @media (max-width: 480px) {
+      .notes-grid {
+        grid-template-columns: 1fr;
+      }
+      .header-center .search-box {
+        font-size: 13px;
+      }
+      .account-dropdown {
+        width: 260px;
+        right: -4px;
+      }
+    }
+    .hidden {
+      display: none !important;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- TOAST -->
-    <div id="toast" class="toast"></div>
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
 
-    <!-- SIGN-IN OVERLAY -->
-    <div id="signinOverlay" class="signin-overlay open">
-        <div class="signin-card">
-            <div class="logo-large"><i class="fas fa-sticky-note"></i></div>
-            <h2>Notes</h2>
-            <p>আপনার নোট সংরক্ষণ করতে Google অ্যাকাউন্ট দিয়ে সাইন ইন করুন</p>
-            <div class="gsi-container">
-                <div id="gsiSignInButton"></div>
-                <button id="fallbackSignInBtn" class="fallback-btn">
-                    <i class="fab fa-google"></i> Google দিয়ে সাইন ইন করুন
-                </button>
-            </div>
-        </div>
+  <!-- SIGN-IN OVERLAY -->
+  <div id="signinOverlay" class="signin-overlay open">
+    <div class="signin-card">
+      <div class="logo-large"><i class="fas fa-sticky-note"></i></div>
+      <h2>Notes</h2>
+      <p>Sign in with your Google account to save your notes</p>
+      <div class="gsi-container">
+        <div id="gsiSignInButton"></div>
+        <button id="fallbackSignInBtn" class="fallback-btn">
+          <i class="fab fa-google"></i> Sign in with Google
+        </button>
+      </div>
     </div>
+  </div>
 
-    <!-- HEADER -->
-    <header class="header" id="appHeader">
-        <div class="header-left">
-            <span class="menu-icon"><i class="fas fa-bars"></i></span>
-            <div class="logo">
-                <i class="fas fa-sticky-note"></i>
-                <span>Notes</span>
-            </div>
-        </div>
-        <div class="header-center">
-            <span class="search-icon"><i class="fas fa-search"></i></span>
-            <input type="text" class="search-box" id="searchInput" placeholder="নোট খুঁজুন..." />
-        </div>
-        <div class="header-right">
-            <button class="icon-btn" id="refreshBtn" title="রিফ্রেশ"><i class="fas fa-sync-alt"></i></button>
-            <div class="avatar-wrapper" id="avatarWrapper">
-                <div class="avatar" id="avatarBtn">
-                    <span id="avatarLetter">G</span>
-                    <span class="badge-count" id="accountBadge">1</span>
-                </div>
-                <div class="account-dropdown" id="accountDropdown"></div>
-            </div>
-        </div>
-    </header>
-
-    <!-- MAIN -->
-    <main class="main-content" id="mainContent">
-        <div class="notes-grid" id="notesGrid"></div>
-    </main>
-
-    <!-- FAB -->
-    <button class="fab" id="fabBtn" title="নতুন নোট"><i class="fas fa-plus"></i></button>
-
-    <!-- EDITOR MODAL -->
-    <div class="modal-overlay" id="editorModal">
-        <div class="modal-editor">
-            <div class="modal-header">
-                <span style="font-weight:500;font-size:16px;color:#5f6368;" id="editorModalTitle">নতুন নোট</span>
-                <button class="close-btn" id="editorCloseBtn"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="modal-body">
-                <input type="text" class="editor-title" id="noteTitleInput" placeholder="শিরোনাম" />
-                <textarea class="editor-content" id="noteContentInput" placeholder="নোট লিখুন..." rows="4"></textarea>
-                <div class="color-picker" id="colorPicker"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-danger" id="editorDeleteBtn"><i class="fas fa-trash"></i> মুছে ফেলুন</button>
-                <div style="flex:1;"></div>
-                <button class="btn btn-secondary" id="editorCancelBtn">বাতিল</button>
-                <button class="btn btn-primary" id="editorSaveBtn">সংরক্ষণ</button>
-            </div>
-        </div>
+  <!-- HEADER -->
+  <header class="header" id="appHeader">
+    <div class="header-left">
+      <span class="menu-icon"><i class="fas fa-bars"></i></span>
+      <div class="logo">
+        <i class="fas fa-sticky-note"></i>
+        <span>Notes</span>
+      </div>
     </div>
+    <div class="header-center">
+      <span class="search-icon"><i class="fas fa-search"></i></span>
+      <input type="text" class="search-box" id="searchInput" placeholder="Search notes..." />
+    </div>
+    <div class="header-right">
+      <button class="icon-btn" id="refreshBtn" title="Refresh"><i class="fas fa-sync-alt"></i></button>
+      <div class="avatar-wrapper" id="avatarWrapper">
+        <div class="avatar" id="avatarBtn">
+          <span id="avatarLetter">G</span>
+          <span class="badge-count" id="accountBadge">1</span>
+        </div>
+        <div class="account-dropdown" id="accountDropdown"></div>
+      </div>
+    </div>
+  </header>
 
-    <script>
-        // ================================================================
-        //  CONFIG
-        // ================================================================
-        const CLIENT_ID = '809488850172-uoj4sa9gcuomddbekb5sj525ulldp0fa.apps.googleusercontent.com';
-        // Client secret is not used in frontend — it's for backend OAuth flows.
-        // The GIS library uses only the client ID.
-        const STORAGE_KEY = 'keep_notes_data';
-        const COLORS = [
-            { name: 'সাদা', value: '#ffffff' },
-            { name: 'লাল', value: '#f28b82' },
-            { name: 'কমলা', value: '#fbbc04' },
-            { name: 'হলুদ', value: '#fff475' },
-            { name: 'সবুজ', value: '#ccff90' },
-            { name: 'টিল', value: '#a7ffeb' },
-            { name: 'নীল', value: '#cbf0f8' },
-            { name: 'গাঢ় নীল', value: '#aecbfa' },
-            { name: 'বেগুনি', value: '#d7aefb' },
-            { name: 'গোলাপি', value: '#fdcfe8' },
-            { name: 'বাদামী', value: '#e6c9a8' },
-            { name: 'ধূসর', value: '#e8eaed' },
-        ];
-        const DEFAULT_COLOR = '#ffffff';
+  <!-- MAIN -->
+  <main class="main-content" id="mainContent">
+    <div class="notes-grid" id="notesGrid"></div>
+  </main>
 
-        // ================================================================
-        //  STATE
-        // ================================================================
-        let currentUser = null;
-        let allNotes = [];
-        let editingNoteId = null;
-        let selectedColor = DEFAULT_COLOR;
-        let searchQuery = '';
-        let gsiInitialized = false;
+  <!-- FAB -->
+  <button class="fab" id="fabBtn" title="New note"><i class="fas fa-plus"></i></button>
 
-        // ================================================================
-        //  DOM REFS
-        // ================================================================
-        const $ = (sel) => document.querySelector(sel);
-        const $$ = (sel) => document.querySelectorAll(sel);
+  <!-- EDITOR MODAL -->
+  <div class="modal-overlay" id="editorModal">
+    <div class="modal-editor">
+      <div class="modal-header">
+        <span style="font-weight:500;font-size:16px;color:#5f6368;" id="editorModalTitle">New note</span>
+        <button class="close-btn" id="editorCloseBtn"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="editor-title" id="noteTitleInput" placeholder="Title" />
+        <textarea class="editor-content" id="noteContentInput" placeholder="Write your note..." rows="4"></textarea>
+        <div class="color-picker" id="colorPicker"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="editorDeleteBtn"><i class="fas fa-trash"></i> Delete</button>
+        <div style="flex:1;"></div>
+        <button class="btn btn-secondary" id="editorCancelBtn">Cancel</button>
+        <button class="btn btn-primary" id="editorSaveBtn">Save</button>
+      </div>
+    </div>
+  </div>
 
-        const signinOverlay = $('#signinOverlay');
-        const gsiBtnContainer = $('#gsiSignInButton');
-        const fallbackBtn = $('#fallbackSignInBtn');
-        const notesGrid = $('#notesGrid');
-        const searchInput = $('#searchInput');
-        const fabBtn = $('#fabBtn');
-        const avatarWrapper = $('#avatarWrapper');
-        const avatarBtn = $('#avatarBtn');
-        const avatarLetter = $('#avatarLetter');
-        const accountBadge = $('#accountBadge');
-        const accountDropdown = $('#accountDropdown');
-        const editorModal = $('#editorModal');
-        const editorModalTitle = $('#editorModalTitle');
-        const noteTitleInput = $('#noteTitleInput');
-        const noteContentInput = $('#noteContentInput');
-        const colorPicker = $('#colorPicker');
-        const editorSaveBtn = $('#editorSaveBtn');
-        const editorCancelBtn = $('#editorCancelBtn');
-        const editorDeleteBtn = $('#editorDeleteBtn');
-        const editorCloseBtn = $('#editorCloseBtn');
-        const refreshBtn = $('#refreshBtn');
-        const toast = $('#toast');
+  <script>
+    // ================================================================
+    //  CONFIG
+    // ================================================================
+    const CLIENT_ID = '809488850172-uoj4sa9gcuomddbekb5sj525ulldp0fa.apps.googleusercontent.com';
+    const STORAGE_KEY_PREFIX = 'keep_notes_';
+    const USER_STORAGE_KEY = 'keep_user';
+    const COLORS = [
+      { name: 'White', value: '#ffffff' },
+      { name: 'Red', value: '#f28b82' },
+      { name: 'Orange', value: '#fbbc04' },
+      { name: 'Yellow', value: '#fff475' },
+      { name: 'Green', value: '#ccff90' },
+      { name: 'Teal', value: '#a7ffeb' },
+      { name: 'Blue', value: '#cbf0f8' },
+      { name: 'Dark Blue', value: '#aecbfa' },
+      { name: 'Purple', value: '#d7aefb' },
+      { name: 'Pink', value: '#fdcfe8' },
+      { name: 'Brown', value: '#e6c9a8' },
+      { name: 'Gray', value: '#e8eaed' },
+    ];
+    const DEFAULT_COLOR = '#ffffff';
 
-        // ================================================================
-        //  TOAST
-        // ================================================================
-        let toastTimer = null;
+    // ================================================================
+    //  STATE
+    // ================================================================
+    let currentUser = null; // { id, name, email, picture }
+    let allNotes = [];
+    let editingNoteId = null;
+    let selectedColor = DEFAULT_COLOR;
+    let searchQuery = '';
+    let gsiInitialized = false;
 
-        function showToast(msg) {
-            toast.textContent = msg;
-            toast.classList.add('show');
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    // ================================================================
+    //  DOM REFS
+    // ================================================================
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
+
+    const signinOverlay = $('#signinOverlay');
+    const gsiBtnContainer = $('#gsiSignInButton');
+    const fallbackBtn = $('#fallbackSignInBtn');
+    const notesGrid = $('#notesGrid');
+    const searchInput = $('#searchInput');
+    const fabBtn = $('#fabBtn');
+    const avatarWrapper = $('#avatarWrapper');
+    const avatarBtn = $('#avatarBtn');
+    const avatarLetter = $('#avatarLetter');
+    const accountBadge = $('#accountBadge');
+    const accountDropdown = $('#accountDropdown');
+    const editorModal = $('#editorModal');
+    const editorModalTitle = $('#editorModalTitle');
+    const noteTitleInput = $('#noteTitleInput');
+    const noteContentInput = $('#noteContentInput');
+    const colorPicker = $('#colorPicker');
+    const editorSaveBtn = $('#editorSaveBtn');
+    const editorCancelBtn = $('#editorCancelBtn');
+    const editorDeleteBtn = $('#editorDeleteBtn');
+    const editorCloseBtn = $('#editorCloseBtn');
+    const refreshBtn = $('#refreshBtn');
+    const toast = $('#toast');
+
+    // ================================================================
+    //  TOAST
+    // ================================================================
+    let toastTimer = null;
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // ================================================================
+    //  STORAGE HELPERS (per account)
+    // ================================================================
+    function getStorageKey(userId) {
+      return STORAGE_KEY_PREFIX + userId;
+    }
+
+    function loadNotesForUser(userId) {
+      try {
+        const raw = localStorage.getItem(getStorageKey(userId));
+        if (raw) {
+          allNotes = JSON.parse(raw);
+          return;
+        }
+      } catch (_) {}
+      allNotes = [];
+    }
+
+    function saveNotesForUser(userId) {
+      try {
+        localStorage.setItem(getStorageKey(userId), JSON.stringify(allNotes));
+      } catch (_) {}
+    }
+
+    function saveUserToStorage(user) {
+      try { localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user)); } catch (_) {}
+    }
+
+    function loadUserFromStorage() {
+      try { const raw = localStorage.getItem(USER_STORAGE_KEY); if (raw) return JSON.parse(raw); } catch (_) {}
+      return null;
+    }
+
+    function clearUserStorage() {
+      localStorage.removeItem(USER_STORAGE_KEY);
+    }
+
+    // ================================================================
+    //  GOOGLE SIGN-IN (GIS) + FALLBACK
+    // ================================================================
+    function initGoogleSignIn() {
+      if (typeof google === 'undefined' || !google.accounts) {
+        setTimeout(initGoogleSignIn, 300);
+        return;
+      }
+      if (gsiInitialized) return;
+      gsiInitialized = true;
+
+      try {
+        google.accounts.id.initialize({
+          client_id: CLIENT_ID,
+          callback: handleCredentialResponse,
+          prompt: 'select_account',
+          cancel_on_tap_outside: false,
+          context: 'signin',
+        });
+
+        const container = document.getElementById('gsiSignInButton');
+        if (container) {
+          google.accounts.id.renderButton(container, {
+            type: 'standard',
+            theme: 'outline',
+            size: 'large',
+            text: 'signin_with',
+            shape: 'rectangular',
+            logo_alignment: 'left',
+            width: 280,
+          });
+          setTimeout(() => {
+            if (container.children.length === 0) {
+              fallbackBtn.classList.add('visible');
+            }
+          }, 2000);
+        } else {
+          fallbackBtn.classList.add('visible');
         }
 
-        // ================================================================
-        //  GOOGLE SIGN-IN (GIS) + FALLBACK
-        // ================================================================
-        function initGoogleSignIn() {
-            if (typeof google === 'undefined' || !google.accounts) {
-                setTimeout(initGoogleSignIn, 300);
-                return;
-            }
-            if (gsiInitialized) return;
-            gsiInitialized = true;
+        setTimeout(() => {
+          try { google.accounts.id.prompt(); } catch (_) {}
+        }, 800);
 
-            try {
-                google.accounts.id.initialize({
-                    client_id: CLIENT_ID,
-                    callback: handleCredentialResponse,
-                    prompt: 'select_account',
-                    cancel_on_tap_outside: false,
-                    context: 'signin',
-                });
+      } catch (e) {
+        console.warn('GIS init error, using fallback:', e);
+        fallbackBtn.classList.add('visible');
+      }
+    }
 
-                // Render the standard button
-                const container = document.getElementById('gsiSignInButton');
-                if (container) {
-                    google.accounts.id.renderButton(container, {
-                        type: 'standard',
-                        theme: 'outline',
-                        size: 'large',
-                        text: 'signin_with',
-                        shape: 'rectangular',
-                        logo_alignment: 'left',
-                        width: 280,
-                    });
-                    // Show container after a moment; if button doesn't render, fallback will show
-                    setTimeout(() => {
-                        // Check if button rendered (has children)
-                        if (container.children.length === 0) {
-                            fallbackBtn.classList.add('visible');
-                        }
-                    }, 2000);
-                } else {
-                    fallbackBtn.classList.add('visible');
-                }
+    function startOAuthPopup() {
+      const redirectUri = window.location.origin + window.location.pathname;
+      const finalRedirect = (window.location.hostname === 'notes.flatfusion.fun') ?
+        'https://notes.flatfusion.fun/callback' :
+        window.location.origin + window.location.pathname;
 
-                // Also prompt One Tap for a smoother experience
-                setTimeout(() => {
-                    try { google.accounts.id.prompt(); } catch (_) {}
-                }, 800);
+      const authUrl =
+        `https://accounts.google.com/o/oauth2/v2/auth` +
+        `?client_id=${CLIENT_ID}` +
+        `&redirect_uri=${encodeURIComponent(finalRedirect)}` +
+        `&response_type=token` +
+        `&scope=openid%20profile%20email` +
+        `&prompt=select_account`;
 
-            } catch (e) {
-                console.warn('GIS init error, using fallback:', e);
-                fallbackBtn.classList.add('visible');
-            }
-        }
+      const width = 500,
+        height = 600;
+      const left = (window.screen.width - width) / 2;
+      const top = (window.screen.height - height) / 2;
+      const popup = window.open(
+        authUrl,
+        'google_signin',
+        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+      );
 
-        // Fallback: manual OAuth2 popup using the same client ID
-        function startOAuthPopup() {
-            const redirectUri = window.location.origin + window.location.pathname;
-            // Use the registered redirect URI if available, otherwise fallback to current origin
-            const registeredRedirect = 'https://notes.flatfusion.fun/callback';
-            const finalRedirect = (window.location.hostname === 'notes.flatfusion.fun') ? registeredRedirect : window
-            .location.origin + window.location.pathname;
+      if (!popup) {
+        showToast('Popup blocked. Please allow popups and try again.');
+        return;
+      }
 
-            const authUrl =
-                `https://accounts.google.com/o/oauth2/v2/auth` +
-                `?client_id=${CLIENT_ID}` +
-                `&redirect_uri=${encodeURIComponent(finalRedirect)}` +
-                `&response_type=token` +
-                `&scope=openid%20profile%20email` +
-                `&prompt=select_account`;
-
-            // Open popup
-            const width = 500,
-                height = 600;
-            const left = (window.screen.width - width) / 2;
-            const top = (window.screen.height - height) / 2;
-            const popup = window.open(
-                authUrl,
-                'google_signin',
-                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
-            );
-
-            if (!popup) {
-                showToast('পপ-আপ ব্লক করা হয়েছে, দয়া করে ব্রাউজার সেটিংস চেক করুন।');
-                return;
-            }
-
-            // Listen for redirect
-            const timer = setInterval(() => {
-                try {
-                    const url = popup.location.href;
-                    if (url.includes('access_token=') || url.includes('id_token=')) {
-                        clearInterval(timer);
-                        popup.close();
-                        // Parse the token from the URL fragment
-                        const hash = popup.location.hash.substring(1);
-                        const params = new URLSearchParams(hash);
-                        const idToken = params.get('id_token') || params.get('access_token');
-                        if (idToken) {
-                            // Decode JWT to get user info
-                            try {
-                                const payload = JSON.parse(atob(idToken.split('.')[1]));
-                                const user = {
-                                    id: payload.sub,
-                                    name: payload.name || 'ব্যবহারকারী',
-                                    email: payload.email || '',
-                                    picture: payload.picture || '',
-                                };
-                                handleUserSignIn(user);
-                            } catch (e) {
-                                showToast('সাইন-ইন ব্যর্থ হয়েছে, আবার চেষ্টা করুন।');
-                            }
-                        }
-                    }
-                } catch (_) {
-                    // Cross-origin or popup closed
-                }
-            }, 300);
-
-            // If popup closes without success
-            const checkClosed = setInterval(() => {
-                if (popup.closed) {
-                    clearInterval(checkClosed);
-                    clearInterval(timer);
-                }
-            }, 500);
-        }
-
-        // ================================================================
-        //  HANDLE CREDENTIAL RESPONSE (GIS)
-        // ================================================================
-        function handleCredentialResponse(response) {
-            if (!response.credential) return;
-            try {
-                const payload = JSON.parse(atob(response.credential.split('.')[1]));
+      const timer = setInterval(() => {
+        try {
+          const url = popup.location.href;
+          if (url.includes('access_token=') || url.includes('id_token=')) {
+            clearInterval(timer);
+            const hash = popup.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            const idToken = params.get('id_token') || params.get('access_token');
+            if (idToken) {
+              try {
+                const payload = JSON.parse(atob(idToken.split('.')[1]));
                 const user = {
-                    id: payload.sub,
-                    name: payload.name || 'ব্যবহারকারী',
-                    email: payload.email || '',
-                    picture: payload.picture || '',
+                  id: payload.sub,
+                  name: payload.name || 'User',
+                  email: payload.email || '',
+                  picture: payload.picture || '',
                 };
                 handleUserSignIn(user);
-            } catch (e) {
-                console.error('Credential parse error:', e);
-                showToast('সাইন-ইন ব্যর্থ হয়েছে, আবার চেষ্টা করুন।');
+              } catch (e) {
+                showToast('Sign-in failed. Please try again.');
+              }
             }
+            popup.close();
+          }
+        } catch (_) {}
+      }, 300);
+
+      const checkClosed = setInterval(() => {
+        if (popup.closed) {
+          clearInterval(checkClosed);
+          clearInterval(timer);
+        }
+      }, 500);
+    }
+
+    // ================================================================
+    //  HANDLE CREDENTIAL RESPONSE (GIS)
+    // ================================================================
+    function handleCredentialResponse(response) {
+      if (!response.credential) return;
+      try {
+        const payload = JSON.parse(atob(response.credential.split('.')[1]));
+        const user = {
+          id: payload.sub,
+          name: payload.name || 'User',
+          email: payload.email || '',
+          picture: payload.picture || '',
+        };
+        handleUserSignIn(user);
+      } catch (e) {
+        console.error('Credential parse error:', e);
+        showToast('Sign-in failed. Please try again.');
+      }
+    }
+
+    function handleUserSignIn(user) {
+      // Load notes for this specific user before switching
+      const previousUser = currentUser;
+      currentUser = user;
+      saveUserToStorage(user);
+
+      // Load this user's notes
+      loadNotesForUser(user.id);
+
+      signinOverlay.classList.remove('open');
+      renderApp();
+      showToast('Welcome, ' + user.name + '!');
+      // Re-prompt for account switching
+      setTimeout(() => {
+        try { google.accounts.id.prompt(); } catch (_) {}
+      }, 500);
+    }
+
+    // ================================================================
+    //  SIGN OUT
+    // ================================================================
+    function signOut() {
+      const userId = currentUser ? currentUser.id : null;
+      currentUser = null;
+      clearUserStorage();
+      try { google.accounts.id.disableAutoSelect(); } catch (_) {}
+      allNotes = [];
+      signinOverlay.classList.add('open');
+      renderApp();
+      showToast('Signed out');
+      fallbackBtn.classList.remove('visible');
+      setTimeout(() => {
+        try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
+      }, 500);
+    }
+
+    // ================================================================
+    //  RENDER: NOTES GRID
+    // ================================================================
+    function renderNotes() {
+      if (!currentUser) {
+        notesGrid.className = 'notes-grid empty';
+        notesGrid.innerHTML = `
+          <div class="empty-icon"><i class="fas fa-sticky-note"></i></div>
+          <div class="empty-text">Sign in to see your notes</div>
+        `;
+        return;
+      }
+
+      const q = searchQuery.trim().toLowerCase();
+      let filtered = allNotes;
+      if (q) {
+        filtered = allNotes.filter(n =>
+          (n.title && n.title.toLowerCase().includes(q)) ||
+          (n.content && n.content.toLowerCase().includes(q))
+        );
+      }
+      filtered.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+
+      if (filtered.length === 0) {
+        notesGrid.className = 'notes-grid empty';
+        notesGrid.innerHTML = `
+          <div class="empty-icon"><i class="fas fa-sticky-note"></i></div>
+          <div class="empty-text">${q ? 'No notes found' : 'Your notes will appear here'}</div>
+        `;
+        return;
+      }
+
+      notesGrid.className = 'notes-grid';
+      let html = '';
+      filtered.forEach(note => {
+        const bg = note.color || DEFAULT_COLOR;
+        const isDark = isDarkColor(bg);
+        const textColor = isDark ? '#fff' : '#202124';
+        const title = note.title || '';
+        const content = note.content || '';
+        const noteId = note.id;
+
+        html += `
+          <div class="note-card" data-id="${noteId}" style="background:${bg}; color:${textColor};">
+            <div class="note-actions">
+              <button class="more-btn" data-id="${noteId}"><i class="fas fa-ellipsis-v"></i></button>
+              <div class="dropdown-menu" data-id="${noteId}">
+                <button class="menu-item" data-action="edit"><i class="fas fa-pen"></i> Edit</button>
+                <button class="menu-item" data-action="copy"><i class="fas fa-copy"></i> Copy</button>
+                <button class="menu-item" data-action="share"><i class="fas fa-share-alt"></i> Share</button>
+                <button class="menu-item danger" data-action="delete"><i class="fas fa-trash"></i> Delete</button>
+              </div>
+            </div>
+            ${title ? `<div class="note-title">${escHtml(title)}</div>` : ''}
+            <div class="note-content">${escHtml(content)}</div>
+            <div class="note-footer">
+              <button class="footer-btn" data-action="copy" title="Copy"><i class="fas fa-copy"></i></button>
+              <button class="footer-btn" data-action="share" title="Share"><i class="fas fa-share-alt"></i></button>
+              <button class="footer-btn danger" data-action="delete" title="Delete"><i class="fas fa-trash"></i></button>
+            </div>
+          </div>
+        `;
+      });
+      notesGrid.innerHTML = html;
+
+      // Attach events
+      notesGrid.querySelectorAll('.note-card').forEach(card => {
+        const id = card.dataset.id;
+
+        // Three-dot menu toggle
+        const moreBtn = card.querySelector('.more-btn');
+        const dropdown = card.querySelector('.dropdown-menu');
+        if (moreBtn && dropdown) {
+          moreBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Close all other dropdowns
+            document.querySelectorAll('.dropdown-menu.open').forEach(d => d !== dropdown && d.classList.remove('open'));
+            dropdown.classList.toggle('open');
+          });
         }
 
-        function handleUserSignIn(user) {
-            currentUser = user;
-            saveUserToStorage(user);
-            signinOverlay.classList.remove('open');
-            renderApp();
-            showToast('স্বাগতম, ' + user.name + '!');
-            // Re-prompt for account switching
-            setTimeout(() => {
-                try { google.accounts.id.prompt(); } catch (_) {}
-            }, 500);
-        }
-
-        // ================================================================
-        //  USER STORAGE
-        // ================================================================
-        function saveUserToStorage(user) {
-            try { localStorage.setItem('keep_user', JSON.stringify(user)); } catch (_) {}
-        }
-
-        function loadUserFromStorage() {
-            try { const raw = localStorage.getItem('keep_user'); if (raw) return JSON.parse(raw); } catch (_) {}
-            return null;
-        }
-
-        function clearUserStorage() {
-            localStorage.removeItem('keep_user');
-        }
-
-        // ================================================================
-        //  NOTES STORAGE
-        // ================================================================
-        function loadNotes() {
-            try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) { allNotes = JSON.parse(raw); return; } } catch (_) {}
-            allNotes = [];
-        }
-
-        function saveNotes() {
-            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(allNotes)); } catch (_) {}
-        }
-
-        // ================================================================
-        //  RENDER: NOTES GRID
-        // ================================================================
-        function renderNotes() {
-            const q = searchQuery.trim().toLowerCase();
-            let filtered = allNotes;
-            if (q) {
-                filtered = allNotes.filter(n =>
-                    (n.title && n.title.toLowerCase().includes(q)) ||
-                    (n.content && n.content.toLowerCase().includes(q))
-                );
-            }
-            filtered.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
-
-            if (filtered.length === 0) {
-                notesGrid.className = 'notes-grid empty';
-                notesGrid.innerHTML = `
-                    <div class="empty-icon"><i class="fas fa-sticky-note"></i></div>
-                    <div class="empty-text">${q ? 'কোন নোট পাওয়া যায়নি' : 'এখানে আপনার নোটগুলো দেখা যাবে'}</div>
-                `;
-                return;
-            }
-            notesGrid.className = 'notes-grid';
-            let html = '';
-            filtered.forEach(note => {
-                const bg = note.color || DEFAULT_COLOR;
-                const isDark = isDarkColor(bg);
-                const textColor = isDark ? '#fff' : '#202124';
-                const title = note.title || '';
-                const content = note.content || '';
-                html += `
-                    <div class="note-card" data-id="${note.id}" style="background:${bg}; color:${textColor};">
-                        ${title ? `<div class="note-title">${escHtml(title)}</div>` : ''}
-                        <div class="note-content">${escHtml(content)}</div>
-                        <div class="note-footer">
-                            <button class="footer-btn" data-action="copy" title="কপি"><i class="fas fa-copy"></i></button>
-                            <button class="footer-btn" data-action="share" title="শেয়ার"><i class="fas fa-share-alt"></i></button>
-                            <button class="footer-btn danger" data-action="delete" title="মুছে ফেলুন"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-            notesGrid.innerHTML = html;
-
-            notesGrid.querySelectorAll('.note-card').forEach(card => {
-                const id = card.dataset.id;
-                card.addEventListener('click', (e) => {
-                    if (e.target.closest('.footer-btn')) return;
-                    openEditor(id);
-                });
-                card.querySelectorAll('.footer-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const action = btn.dataset.action;
-                        const note = allNotes.find(n => n.id === id);
-                        if (!note) return;
-                        if (action === 'copy') copyNote(note);
-                        else if (action === 'share') shareNote(note);
-                        else if (action === 'delete') deleteNote(id);
-                    });
-                });
-            });
-        }
-
-        function escHtml(str) {
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
-
-        function isDarkColor(hex) {
-            const c = hex.replace('#', '');
-            const r = parseInt(c.substr(0, 2), 16) || 0;
-            const g = parseInt(c.substr(2, 2), 16) || 0;
-            const b = parseInt(c.substr(4, 2), 16) || 0;
-            return (r * 0.299 + g * 0.587 + b * 0.114) < 128;
-        }
-
-        // ================================================================
-        //  RENDER: ACCOUNT DROPDOWN
-        // ================================================================
-        function renderAccountDropdown() {
-            if (!currentUser) {
-                accountDropdown.innerHTML = `
-                    <button class="dropdown-item" id="dropdownSignIn">
-                        <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
-                        <span class="label">সাইন ইন করুন</span>
-                    </button>
-                `;
-                const btn = accountDropdown.querySelector('#dropdownSignIn');
-                if (btn) btn.addEventListener('click', () => {
-                    accountDropdown.classList.remove('open');
-                    signinOverlay.classList.add('open');
-                    try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
-                });
-                return;
-            }
-
-            const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
-            const avatarHtml = currentUser.picture ?
-                `<img src="${currentUser.picture}" alt="" />` :
-                initial;
-
-            let itemsHtml = `
-                <div class="dropdown-item" style="cursor:default;background:transparent;">
-                    <div class="item-avatar">${avatarHtml}</div>
-                    <div class="item-info">
-                        <div class="name">${escHtml(currentUser.name)}</div>
-                        <div class="email">${escHtml(currentUser.email)}</div>
-                    </div>
-                    <span class="item-check"><i class="fas fa-check-circle"></i></span>
-                </div>
-                <div class="divider"></div>
-                <button class="dropdown-item" id="dropdownSwitchAccount">
-                    <span class="icon"><i class="fas fa-exchange-alt"></i></span>
-                    <span class="label">অ্যাকাউন্ট সুইচ করুন</span>
-                </button>
-                <button class="dropdown-item" id="dropdownAddAccount">
-                    <span class="icon"><i class="fas fa-user-plus"></i></span>
-                    <span class="label">অন্য অ্যাকাউন্ট যোগ করুন</span>
-                </button>
-                <div class="divider"></div>
-                <button class="dropdown-item danger" id="dropdownSignOut">
-                    <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
-                    <span class="label">সাইন আউট</span>
-                </button>
-            `;
-            accountDropdown.innerHTML = itemsHtml;
-
-            accountDropdown.querySelector('#dropdownSwitchAccount')?.addEventListener('click', () => {
-                accountDropdown.classList.remove('open');
-                try { google.accounts.id.prompt(); } catch (_) {
-                    showToast('অ্যাকাউন্ট সুইচ করতে আবার সাইন ইন করুন।');
-                    signinOverlay.classList.add('open');
-                    fallbackBtn.classList.add('visible');
-                }
-            });
-
-            accountDropdown.querySelector('#dropdownAddAccount')?.addEventListener('click', () => {
-                accountDropdown.classList.remove('open');
-                try { google.accounts.id.prompt(); } catch (_) {
-                    showToast('অ্যাকাউন্ট যোগ করতে আবার সাইন ইন করুন।');
-                    signinOverlay.classList.add('open');
-                    fallbackBtn.classList.add('visible');
-                }
-            });
-
-            accountDropdown.querySelector('#dropdownSignOut')?.addEventListener('click', () => {
-                accountDropdown.classList.remove('open');
-                signOut();
-            });
-
-            accountBadge.textContent = '1';
-            accountBadge.className = 'badge-count';
-        }
-
-        // ================================================================
-        //  RENDER: COLOR PICKER
-        // ================================================================
-        function renderColorPicker(selected) {
-            colorPicker.innerHTML = '';
-            COLORS.forEach(c => {
-                const el = document.createElement('div');
-                el.className = 'color-option' + (c.value === selected ? ' active' : '');
-                el.style.background = c.value;
-                if (c.value === '#ffffff') el.style.border = '2px solid #dadce0';
-                el.dataset.color = c.value;
-                el.title = c.name;
-                el.addEventListener('click', () => {
-                    colorPicker.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
-                    el.classList.add('active');
-                    selectedColor = c.value;
-                });
-                colorPicker.appendChild(el);
-            });
-        }
-
-        // ================================================================
-        //  NOTE CRUD
-        // ================================================================
-        function createNote(title, content, color) {
-            const note = {
-                id: Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 4),
-                title: title.trim() || '',
-                content: content.trim() || '',
-                color: color || DEFAULT_COLOR,
-                updatedAt: Date.now(),
-                createdAt: Date.now(),
-            };
-            allNotes.unshift(note);
-            saveNotes();
-            renderNotes();
-            return note;
-        }
-
-        function updateNote(id, title, content, color) {
+        // Menu items
+        card.querySelectorAll('.dropdown-menu .menu-item').forEach(item => {
+          item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const action = item.dataset.action;
             const note = allNotes.find(n => n.id === id);
             if (!note) return;
-            note.title = (title || '').trim();
-            note.content = (content || '').trim();
-            note.color = color || DEFAULT_COLOR;
-            note.updatedAt = Date.now();
-            saveNotes();
-            renderNotes();
-        }
-
-        function deleteNote(id) {
-            if (!confirm('এই নোটটি মুছে ফেলতে চান?')) return;
-            allNotes = allNotes.filter(n => n.id !== id);
-            saveNotes();
-            renderNotes();
-            showToast('নোট মুছে ফেলা হয়েছে');
-            if (editingNoteId === id) closeEditor();
-        }
-
-        function copyNote(note) {
-            const text = (note.title ? note.title + '\n' : '') + (note.content || '');
-            navigator.clipboard.writeText(text).then(() => showToast('কপি করা হয়েছে!'))
-                .catch(() => {
-                    const ta = document.createElement('textarea');
-                    ta.value = text;
-                    document.body.appendChild(ta);
-                    ta.select();
-                    document.execCommand('copy');
-                    ta.remove();
-                    showToast('কপি করা হয়েছে!');
-                });
-        }
-
-        function shareNote(note) {
-            const text = (note.title ? note.title + '\n' : '') + (note.content || '');
-            if (navigator.share) {
-                navigator.share({ title: note.title || 'নোট', text: text }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(text).then(() => showToast('শেয়ার করার জন্য কপি করা হয়েছে!'))
-                    .catch(() => showToast('শেয়ার করতে কপি করুন: ' + text.substring(0, 50) + '…'));
-            }
-        }
-
-        // ================================================================
-        //  EDITOR
-        // ================================================================
-        function openEditor(noteId) {
-            const note = noteId ? allNotes.find(n => n.id === noteId) : null;
-            editingNoteId = note ? note.id : null;
-
-            if (note) {
-                editorModalTitle.textContent = 'নোট সম্পাদনা';
-                noteTitleInput.value = note.title || '';
-                noteContentInput.value = note.content || '';
-                selectedColor = note.color || DEFAULT_COLOR;
-                editorDeleteBtn.style.display = 'inline-flex';
-            } else {
-                editorModalTitle.textContent = 'নতুন নোট';
-                noteTitleInput.value = '';
-                noteContentInput.value = '';
-                selectedColor = DEFAULT_COLOR;
-                editorDeleteBtn.style.display = 'none';
-            }
-            renderColorPicker(selectedColor);
-            editorModal.classList.add('open');
-            setTimeout(() => noteTitleInput.focus(), 100);
-        }
-
-        function closeEditor() {
-            editorModal.classList.remove('open');
-            editingNoteId = null;
-        }
-
-        function saveEditor() {
-            const title = noteTitleInput.value;
-            const content = noteContentInput.value;
-            if (!title.trim() && !content.trim()) {
-                showToast('শিরোনাম বা কন্টেন্ট লিখুন');
-                return;
-            }
-            if (editingNoteId) {
-                updateNote(editingNoteId, title, content, selectedColor);
-                showToast('নোট আপডেট করা হয়েছে');
-            } else {
-                createNote(title, content, selectedColor);
-                showToast('নতুন নোট তৈরি করা হয়েছে');
-            }
-            closeEditor();
-        }
-
-        // ================================================================
-        //  SIGN OUT
-        // ================================================================
-        function signOut() {
-            currentUser = null;
-            clearUserStorage();
-            try { google.accounts.id.disableAutoSelect(); } catch (_) {}
-            signinOverlay.classList.add('open');
-            allNotes = [];
-            renderNotes();
-            avatarLetter.textContent = 'G';
-            accountBadge.textContent = '0';
-            accountBadge.className = 'badge-count';
-            accountDropdown.innerHTML = '';
-            showToast('সাইন আউট করা হয়েছে');
-            // Re-init fallback
-            fallbackBtn.classList.remove('visible');
-            setTimeout(() => {
-                try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
-            }, 500);
-        }
-
-        // ================================================================
-        //  RENDER APP
-        // ================================================================
-        function renderApp() {
-            if (!currentUser) {
-                signinOverlay.classList.add('open');
-                notesGrid.className = 'notes-grid empty';
-                notesGrid.innerHTML = `
-                    <div class="empty-icon"><i class="fas fa-sticky-note"></i></div>
-                    <div class="empty-text">সাইন ইন করুন আপনার নোট দেখতে</div>
-                `;
-                avatarLetter.textContent = 'G';
-                accountBadge.textContent = '0';
-                accountBadge.className = 'badge-count';
-                accountDropdown.innerHTML = '';
-                // Ensure fallback is visible if GIS button didn't render
-                setTimeout(() => {
-                    if (document.getElementById('gsiSignInButton')?.children.length === 0) {
-                        fallbackBtn.classList.add('visible');
-                    }
-                }, 1000);
-                return;
-            }
-            signinOverlay.classList.remove('open');
-            const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
-            if (currentUser.picture) {
-                avatarLetter.innerHTML = `<img src="${currentUser.picture}" alt="" />`;
-            } else {
-                avatarLetter.textContent = initial;
-            }
-            loadNotes();
-            renderNotes();
-            renderAccountDropdown();
-            accountBadge.textContent = '1';
-            accountBadge.className = 'badge-count';
-        }
-
-        // ================================================================
-        //  SEARCH
-        // ================================================================
-        searchInput.addEventListener('input', () => {
-            searchQuery = searchInput.value;
-            renderNotes();
+            if (action === 'edit') openEditor(id);
+            else if (action === 'copy') copyNote(note);
+            else if (action === 'share') shareNote(note);
+            else if (action === 'delete') deleteNote(id);
+            dropdown.classList.remove('open');
+          });
         });
 
-        // ================================================================
-        //  FAB
-        // ================================================================
-        fabBtn.addEventListener('click', () => {
-            if (!currentUser) {
-                showToast('দয়া করে সাইন ইন করুন');
-                signinOverlay.classList.add('open');
-                try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
-                return;
-            }
-            openEditor(null);
-        });
-
-        // ================================================================
-        //  EDITOR EVENTS
-        // ================================================================
-        editorSaveBtn.addEventListener('click', saveEditor);
-        editorCancelBtn.addEventListener('click', closeEditor);
-        editorCloseBtn.addEventListener('click', closeEditor);
-        editorDeleteBtn.addEventListener('click', () => {
-            if (editingNoteId) { deleteNote(editingNoteId);
-                closeEditor(); }
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                if (editorModal.classList.contains('open')) closeEditor();
-                if (accountDropdown.classList.contains('open')) accountDropdown.classList.remove('open');
-            }
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                if (editorModal.classList.contains('open')) { e.preventDefault();
-                    saveEditor(); }
-            }
-        });
-
-        // ================================================================
-        //  AVATAR / DROPDOWN
-        // ================================================================
-        avatarBtn.addEventListener('click', (e) => {
+        // Footer buttons (fallback)
+        card.querySelectorAll('.footer-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (!currentUser) {
-                signinOverlay.classList.add('open');
-                try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
-                return;
-            }
-            accountDropdown.classList.toggle('open');
-            if (accountDropdown.classList.contains('open')) renderAccountDropdown();
-        });
-        document.addEventListener('click', () => accountDropdown.classList.remove('open'));
-        accountDropdown.addEventListener('click', (e) => e.stopPropagation());
-
-        // ================================================================
-        //  REFRESH
-        // ================================================================
-        refreshBtn.addEventListener('click', () => {
-            if (currentUser) { loadNotes();
-                renderNotes();
-                showToast('রিফ্রেশ করা হয়েছে'); } else { showToast('সাইন ইন করুন'); }
+            const action = btn.dataset.action;
+            const note = allNotes.find(n => n.id === id);
+            if (!note) return;
+            if (action === 'copy') copyNote(note);
+            else if (action === 'share') shareNote(note);
+            else if (action === 'delete') deleteNote(id);
+          });
         });
 
-        // ================================================================
-        //  FALLBACK BUTTON
-        // ================================================================
-        fallbackBtn.addEventListener('click', () => {
-            // Try GIS prompt first, if available
-            try {
-                if (typeof google !== 'undefined' && google.accounts) {
-                    google.accounts.id.prompt();
-                    return;
-                }
-            } catch (_) {}
-            // Otherwise use OAuth popup
-            startOAuthPopup();
+        // Click on card body -> edit
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.note-actions') || e.target.closest('.footer-btn')) return;
+          openEditor(id);
         });
+      });
 
-        // ================================================================
-        //  INIT
-        // ================================================================
-        function init() {
-            const storedUser = loadUserFromStorage();
-            if (storedUser) {
-                currentUser = storedUser;
-                initGoogleSignIn();
-                renderApp();
-                setTimeout(() => {
-                    try { google.accounts.id.prompt(); } catch (_) {}
-                }, 1000);
-            } else {
-                signinOverlay.classList.add('open');
-                initGoogleSignIn();
-                renderApp();
-            }
+      // Close dropdowns on outside click
+      document.addEventListener('click', () => {
+        document.querySelectorAll('.dropdown-menu.open').forEach(d => d.classList.remove('open'));
+      });
+    }
+
+    function escHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function isDarkColor(hex) {
+      const c = hex.replace('#', '');
+      const r = parseInt(c.substr(0, 2), 16) || 0;
+      const g = parseInt(c.substr(2, 2), 16) || 0;
+      const b = parseInt(c.substr(4, 2), 16) || 0;
+      return (r * 0.299 + g * 0.587 + b * 0.114) < 128;
+    }
+
+    // ================================================================
+    //  RENDER: ACCOUNT DROPDOWN
+    // ================================================================
+    function renderAccountDropdown() {
+      if (!currentUser) {
+        accountDropdown.innerHTML = `
+          <button class="dropdown-item" id="dropdownSignIn">
+            <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
+            <span class="label">Sign in</span>
+          </button>
+        `;
+        const btn = accountDropdown.querySelector('#dropdownSignIn');
+        if (btn) btn.addEventListener('click', () => {
+          accountDropdown.classList.remove('open');
+          signinOverlay.classList.add('open');
+          try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
+        });
+        return;
+      }
+
+      const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
+      const avatarHtml = currentUser.picture ?
+        `<img src="${currentUser.picture}" alt="" />` :
+        initial;
+
+      let itemsHtml = `
+        <div class="dropdown-item" style="cursor:default;background:transparent;">
+          <div class="item-avatar">${avatarHtml}</div>
+          <div class="item-info">
+            <div class="name">${escHtml(currentUser.name)}</div>
+            <div class="email">${escHtml(currentUser.email)}</div>
+          </div>
+          <span class="item-check"><i class="fas fa-check-circle"></i></span>
+        </div>
+        <div class="divider"></div>
+        <button class="dropdown-item" id="dropdownSwitchAccount">
+          <span class="icon"><i class="fas fa-exchange-alt"></i></span>
+          <span class="label">Switch account</span>
+        </button>
+        <button class="dropdown-item" id="dropdownAddAccount">
+          <span class="icon"><i class="fas fa-user-plus"></i></span>
+          <span class="label">Add another account</span>
+        </button>
+        <div class="divider"></div>
+        <button class="dropdown-item danger" id="dropdownSignOut">
+          <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+          <span class="label">Sign out</span>
+        </button>
+      `;
+      accountDropdown.innerHTML = itemsHtml;
+
+      // Switch account → show GIS prompt
+      accountDropdown.querySelector('#dropdownSwitchAccount')?.addEventListener('click', () => {
+        accountDropdown.classList.remove('open');
+        try {
+          google.accounts.id.prompt();
+        } catch (_) {
+          showToast('Please sign in again to switch accounts.');
+          signinOverlay.classList.add('open');
+          fallbackBtn.classList.add('visible');
         }
+      });
 
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
+      // Add account → same as switch
+      accountDropdown.querySelector('#dropdownAddAccount')?.addEventListener('click', () => {
+        accountDropdown.classList.remove('open');
+        try {
+          google.accounts.id.prompt();
+        } catch (_) {
+          showToast('Please sign in to add another account.');
+          signinOverlay.classList.add('open');
+          fallbackBtn.classList.add('visible');
         }
+      });
 
-        // Fallback: if GIS script fails to load, show the fallback button after a timeout
+      // Sign out
+      accountDropdown.querySelector('#dropdownSignOut')?.addEventListener('click', () => {
+        accountDropdown.classList.remove('open');
+        signOut();
+      });
+
+      accountBadge.textContent = '1';
+    }
+
+    // ================================================================
+    //  RENDER: COLOR PICKER
+    // ================================================================
+    function renderColorPicker(selected) {
+      colorPicker.innerHTML = '';
+      COLORS.forEach(c => {
+        const el = document.createElement('div');
+        el.className = 'color-option' + (c.value === selected ? ' active' : '');
+        el.style.background = c.value;
+        if (c.value === '#ffffff') el.style.border = '2px solid #dadce0';
+        el.dataset.color = c.value;
+        el.title = c.name;
+        el.addEventListener('click', () => {
+          colorPicker.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
+          el.classList.add('active');
+          selectedColor = c.value;
+        });
+        colorPicker.appendChild(el);
+      });
+    }
+
+    // ================================================================
+    //  NOTE CRUD
+    // ================================================================
+    function createNote(title, content, color) {
+      const note = {
+        id: Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 4),
+        title: title.trim() || '',
+        content: content.trim() || '',
+        color: color || DEFAULT_COLOR,
+        updatedAt: Date.now(),
+        createdAt: Date.now(),
+      };
+      allNotes.unshift(note);
+      saveNotesForUser(currentUser.id);
+      renderNotes();
+      return note;
+    }
+
+    function updateNote(id, title, content, color) {
+      const note = allNotes.find(n => n.id === id);
+      if (!note) return;
+      note.title = (title || '').trim();
+      note.content = (content || '').trim();
+      note.color = color || DEFAULT_COLOR;
+      note.updatedAt = Date.now();
+      saveNotesForUser(currentUser.id);
+      renderNotes();
+    }
+
+    function deleteNote(id) {
+      if (!confirm('Delete this note?')) return;
+      allNotes = allNotes.filter(n => n.id !== id);
+      saveNotesForUser(currentUser.id);
+      renderNotes();
+      showToast('Note deleted');
+      if (editingNoteId === id) closeEditor();
+    }
+
+    function copyNote(note) {
+      const text = (note.title ? note.title + '\n' : '') + (note.content || '');
+      navigator.clipboard.writeText(text).then(() => showToast('Copied!'))
+        .catch(() => {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+          showToast('Copied!');
+        });
+    }
+
+    function shareNote(note) {
+      // Generate a shareable link (using current origin + note id)
+      const url = window.location.origin + window.location.pathname + '?note=' + note.id;
+      const text = (note.title ? note.title + '\n' : '') + (note.content || '') + '\n\n' + url;
+
+      if (navigator.share) {
+        navigator.share({
+          title: note.title || 'Note',
+          text: text,
+          url: url
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('Link copied to clipboard!');
+        }).catch(() => {
+          showToast('Share: ' + url);
+        });
+      }
+    }
+
+    // ================================================================
+    //  EDITOR
+    // ================================================================
+    function openEditor(noteId) {
+      const note = noteId ? allNotes.find(n => n.id === noteId) : null;
+      editingNoteId = note ? note.id : null;
+
+      if (note) {
+        editorModalTitle.textContent = 'Edit note';
+        noteTitleInput.value = note.title || '';
+        noteContentInput.value = note.content || '';
+        selectedColor = note.color || DEFAULT_COLOR;
+        editorDeleteBtn.style.display = 'inline-flex';
+      } else {
+        editorModalTitle.textContent = 'New note';
+        noteTitleInput.value = '';
+        noteContentInput.value = '';
+        selectedColor = DEFAULT_COLOR;
+        editorDeleteBtn.style.display = 'none';
+      }
+      renderColorPicker(selectedColor);
+      editorModal.classList.add('open');
+      setTimeout(() => noteTitleInput.focus(), 100);
+    }
+
+    function closeEditor() {
+      editorModal.classList.remove('open');
+      editingNoteId = null;
+    }
+
+    function saveEditor() {
+      const title = noteTitleInput.value;
+      const content = noteContentInput.value;
+      if (!title.trim() && !content.trim()) {
+        showToast('Please enter a title or content');
+        return;
+      }
+      if (editingNoteId) {
+        updateNote(editingNoteId, title, content, selectedColor);
+        showToast('Note updated');
+      } else {
+        createNote(title, content, selectedColor);
+        showToast('Note created');
+      }
+      closeEditor();
+    }
+
+    // ================================================================
+    //  RENDER APP
+    // ================================================================
+    function renderApp() {
+      if (!currentUser) {
+        signinOverlay.classList.add('open');
+        notesGrid.className = 'notes-grid empty';
+        notesGrid.innerHTML = `
+          <div class="empty-icon"><i class="fas fa-sticky-note"></i></div>
+          <div class="empty-text">Sign in to see your notes</div>
+        `;
+        avatarLetter.textContent = 'G';
+        accountBadge.textContent = '0';
+        accountDropdown.innerHTML = '';
+        // Ensure fallback shows if GIS button missing
         setTimeout(() => {
-            const container = document.getElementById('gsiSignInButton');
-            if (container && container.children.length === 0) {
-                fallbackBtn.classList.add('visible');
-            }
-            // Also if google is undefined
-            if (typeof google === 'undefined' || !google.accounts) {
-                fallbackBtn.classList.add('visible');
-            }
-        }, 3000);
+          if (document.getElementById('gsiSignInButton')?.children.length === 0) {
+            fallbackBtn.classList.add('visible');
+          }
+        }, 1000);
+        return;
+      }
 
-        console.log('📝 Notes App — Google Keep Style');
-        console.log('🔑 Client ID:', CLIENT_ID);
-        console.log('👤 User:', currentUser ? currentUser.email : 'Not signed in');
-        console.log('ℹ️  Client secret is not used in frontend (only for backend OAuth).');
-    </script>
+      signinOverlay.classList.remove('open');
+      const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
+      if (currentUser.picture) {
+        avatarLetter.innerHTML = `<img src="${currentUser.picture}" alt="" />`;
+      } else {
+        avatarLetter.textContent = initial;
+      }
+      // Load notes if not already loaded for this user
+      if (allNotes.length === 0) {
+        loadNotesForUser(currentUser.id);
+      }
+      renderNotes();
+      renderAccountDropdown();
+      accountBadge.textContent = '1';
+    }
+
+    // ================================================================
+    //  SEARCH
+    // ================================================================
+    searchInput.addEventListener('input', () => {
+      searchQuery = searchInput.value;
+      renderNotes();
+    });
+
+    // ================================================================
+    //  FAB
+    // ================================================================
+    fabBtn.addEventListener('click', () => {
+      if (!currentUser) {
+        showToast('Please sign in first');
+        signinOverlay.classList.add('open');
+        try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
+        return;
+      }
+      openEditor(null);
+    });
+
+    // ================================================================
+    //  EDITOR EVENTS
+    // ================================================================
+    editorSaveBtn.addEventListener('click', saveEditor);
+    editorCancelBtn.addEventListener('click', closeEditor);
+    editorCloseBtn.addEventListener('click', closeEditor);
+    editorDeleteBtn.addEventListener('click', () => {
+      if (editingNoteId) { deleteNote(editingNoteId);
+        closeEditor(); }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (editorModal.classList.contains('open')) closeEditor();
+        if (accountDropdown.classList.contains('open')) accountDropdown.classList.remove('open');
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        if (editorModal.classList.contains('open')) { e.preventDefault();
+          saveEditor(); }
+      }
+    });
+
+    // ================================================================
+    //  AVATAR / DROPDOWN
+    // ================================================================
+    avatarBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!currentUser) {
+        signinOverlay.classList.add('open');
+        try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); }
+        return;
+      }
+      accountDropdown.classList.toggle('open');
+      if (accountDropdown.classList.contains('open')) renderAccountDropdown();
+    });
+    document.addEventListener('click', () => accountDropdown.classList.remove('open'));
+    accountDropdown.addEventListener('click', (e) => e.stopPropagation());
+
+    // ================================================================
+    //  REFRESH
+    // ================================================================
+    refreshBtn.addEventListener('click', () => {
+      if (currentUser) {
+        loadNotesForUser(currentUser.id);
+        renderNotes();
+        showToast('Refreshed');
+      } else {
+        showToast('Sign in first');
+      }
+    });
+
+    // ================================================================
+    //  FALLBACK BUTTON
+    // ================================================================
+    fallbackBtn.addEventListener('click', () => {
+      try {
+        if (typeof google !== 'undefined' && google.accounts) {
+          google.accounts.id.prompt();
+          return;
+        }
+      } catch (_) {}
+      startOAuthPopup();
+    });
+
+    // ================================================================
+    //  INIT
+    // ================================================================
+    function init() {
+      const storedUser = loadUserFromStorage();
+      if (storedUser) {
+        currentUser = storedUser;
+        loadNotesForUser(currentUser.id);
+        initGoogleSignIn();
+        renderApp();
+        setTimeout(() => {
+          try { google.accounts.id.prompt(); } catch (_) {}
+        }, 1000);
+      } else {
+        signinOverlay.classList.add('open');
+        initGoogleSignIn();
+        renderApp();
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    // Fallback: if GIS script fails, show fallback button
+    setTimeout(() => {
+      const container = document.getElementById('gsiSignInButton');
+      if (container && container.children.length === 0) {
+        fallbackBtn.classList.add('visible');
+      }
+      if (typeof google === 'undefined' || !google.accounts) {
+        fallbackBtn.classList.add('visible');
+      }
+    }, 3000);
+
+    console.log('📝 Notes App — Google Keep Style');
+    console.log('🔑 Client ID:', CLIENT_ID);
+    console.log('👤 User:', currentUser ? currentUser.email : 'Not signed in');
+    console.log('ℹ️  Notes are isolated per Google account using user ID in storage key.');
+  </script>
 </body>
 </html>
