@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        /* ================================================================
-           CSS — Premium Notes App (Fully Fixed)
-           ================================================================ */
+        /* ============================================================
+           CSS — Premium Notes App (Fully Fixed & Enhanced)
+           ============================================================ */
         :root {
             --bg-app: #f5f7fa;
             --bg-card: #ffffff;
@@ -21,9 +21,9 @@
             --text-secondary: #5f6368;
             --text-muted: #9aa0a6;
             --border-color: #e0e0e0;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.10);
-            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.15);
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
@@ -49,22 +49,15 @@
             --text-secondary: #b0b3b8;
             --text-muted: #7a7f85;
             --border-color: #3d3d3d;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
-            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
             --accent: #8ab4f8;
             --accent-hover: #6a9fdf;
             --accent-bg: #1e2a3a;
         }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        html {
-            scroll-behavior: smooth;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: var(--font);
             background: var(--bg-app);
@@ -76,1926 +69,603 @@
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--text-muted);
-            border-radius: 999px;
-        }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 999px; }
 
         /* Loading */
         #loadingOverlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: var(--bg-app);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 24px;
+            position: fixed; inset: 0; z-index: 9999; background: var(--bg-app);
+            display: none; align-items: center; justify-content: center; flex-direction: column; gap: 24px;
         }
-        #loadingOverlay.active {
-            display: flex;
-        }
+        #loadingOverlay.active { display: flex; }
         #loadingOverlay .spinner {
-            width: 42px;
-            height: 42px;
-            border: 4px solid var(--border-color);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
+            width: 42px; height: 42px; border: 4px solid var(--border-color);
+            border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite;
         }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         #loadingOverlay .load-text {
-            color: var(--text-secondary);
-            font-size: 15px;
-            font-weight: 500;
-            letter-spacing: 0.2px;
-            animation: pulse-text 1.4s ease-in-out infinite;
+            color: var(--text-secondary); font-size: 15px; font-weight: 500;
+            letter-spacing: 0.2px; animation: pulse-text 1.4s ease-in-out infinite;
         }
-        @keyframes pulse-text {
-            0%,
-            100% {
-                opacity: 0.6;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
+        @keyframes pulse-text { 0%,100%{opacity:0.6;} 50%{opacity:1;} }
 
         /* Toast */
         #toastContainer {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9998;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            pointer-events: none;
-            width: 100%;
-            max-width: 400px;
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+            z-index: 9998; display: flex; flex-direction: column; align-items: center; gap: 8px;
+            pointer-events: none; width: 100%; max-width: 400px;
         }
         .toast-item {
-            background: var(--bg-card);
-            color: var(--text-primary);
-            padding: 12px 24px;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
-            font-size: 14px;
-            font-weight: 500;
-            opacity: 0;
-            transform: translateY(16px) scale(0.96);
+            background: var(--bg-card); color: var(--text-primary); padding: 12px 24px;
+            border-radius: var(--radius-md); box-shadow: var(--shadow-lg); font-size: 14px;
+            font-weight: 500; opacity: 0; transform: translateY(16px) scale(0.96);
             transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-            pointer-events: auto;
-            border: 1px solid var(--border-color);
-            text-align: center;
-            max-width: 90vw;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            pointer-events: auto; border: 1px solid var(--border-color);
+            text-align: center; max-width: 90vw; display: flex; align-items: center; gap: 10px;
         }
-        .toast-item.show {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
+        .toast-item.show { opacity: 1; transform: translateY(0) scale(1); }
 
         /* Sign-in */
         #signinOverlay {
-            position: fixed;
-            inset: 0;
-            z-index: 1000;
-            background: var(--bg-app);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            position: fixed; inset: 0; z-index: 1000; background: var(--bg-app);
+            display: none; align-items: center; justify-content: center; padding: 20px;
         }
-        #signinOverlay.active {
-            display: flex;
-        }
+        #signinOverlay.active { display: flex; }
         .signin-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 48px 40px 40px;
-            max-width: 420px;
-            width: 100%;
-            text-align: center;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border-color);
-            animation: popIn 0.35s ease;
+            background: var(--bg-card); border-radius: var(--radius-lg); padding: 48px 40px 40px;
+            max-width: 420px; width: 100%; text-align: center; box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color); animation: popIn 0.35s ease;
         }
-        @keyframes popIn {
-            from {
-                opacity: 0;
-                transform: scale(0.92) translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-        .signin-card .logo-icon {
-            font-size: 52px;
-            color: var(--warning);
-            margin-bottom: 8px;
-        }
-        .signin-card h1 {
-            font-size: 28px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            letter-spacing: -0.3px;
-        }
-        .signin-card p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 28px;
-            line-height: 1.6;
-        }
-        .signin-card .gsi-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            min-height: 56px;
-        }
-        .signin-card .gsi-container #gsiBtn {
-            min-height: 44px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.92) translateY(12px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .signin-card .logo-icon { font-size: 52px; color: var(--warning); margin-bottom: 8px; }
+        .signin-card h1 { font-size: 28px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.3px; }
+        .signin-card p { color: var(--text-secondary); font-size: 14px; margin-bottom: 28px; line-height: 1.6; }
+        .signin-card .gsi-container { display: flex; flex-direction: column; align-items: center; gap: 12px; min-height: 56px; }
+        .signin-card .gsi-container #gsiBtn { min-height: 44px; width: 100%; display: flex; justify-content: center; }
         .signin-card .gsi-container .fallback-btn {
-            display: none;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 999px;
-            padding: 10px 24px;
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font);
-            width: 100%;
-            max-width: 280px;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            display: none; background: var(--bg-card); border: 1px solid var(--border-color);
+            border-radius: 999px; padding: 10px 24px; font-size: 15px; font-weight: 500;
+            color: var(--text-primary); cursor: pointer; transition: var(--transition);
+            font-family: var(--font); width: 100%; max-width: 280px; align-items: center;
+            justify-content: center; gap: 10px;
         }
-        .signin-card .gsi-container .fallback-btn:hover {
-            background: var(--bg-input);
-        }
-        .signin-card .gsi-container .fallback-btn.visible {
-            display: flex;
-        }
+        .signin-card .gsi-container .fallback-btn:hover { background: var(--bg-input); }
+        .signin-card .gsi-container .fallback-btn.visible { display: flex; }
 
         /* ===== HEADER ===== */
         .app-header {
-            background: var(--bg-header);
-            padding: 8px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            min-height: 64px;
-            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-header); padding: 8px 24px; display: flex; align-items: center;
+            justify-content: space-between; box-shadow: var(--shadow-sm); position: sticky;
+            top: 0; z-index: 100; min-height: 64px; border-bottom: 1px solid var(--border-color);
             transition: background 0.3s, box-shadow 0.3s;
         }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            position: relative;
-        }
+        .header-left { display: flex; align-items: center; gap: 10px; position: relative; }
         .header-left .menu-icon {
-            font-size: 20px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: var(--transition);
+            font-size: 20px; color: var(--text-secondary); cursor: pointer; padding: 8px;
+            border-radius: 50%; transition: var(--transition);
         }
-        .header-left .menu-icon:hover {
-            background: var(--bg-hover);
-        }
+        .header-left .menu-icon:hover { background: var(--bg-hover); }
         .header-left .brand {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-primary);
-            letter-spacing: -0.3px;
+            display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 600;
+            color: var(--text-primary); letter-spacing: -0.3px;
         }
-        .header-left .brand i {
-            font-size: 26px;
-            color: var(--warning);
-        }
+        .header-left .brand i { font-size: 26px; color: var(--warning); }
         .left-dropdown {
-            position: absolute;
-            top: calc(100% + 8px);
-            left: 0;
-            background: var(--bg-card);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
-            padding: 6px 0;
-            min-width: 220px;
-            display: none;
-            z-index: 9999;
-            border: 1px solid var(--border-color);
+            position: absolute; top: calc(100% + 8px); left: 0; background: var(--bg-card);
+            border-radius: var(--radius-md); box-shadow: var(--shadow-lg); padding: 6px 0;
+            min-width: 220px; display: none; z-index: 9999; border: 1px solid var(--border-color);
             animation: slideDown 0.2s ease;
         }
-        .left-dropdown.open {
-            display: block;
-        }
+        .left-dropdown.open { display: block; }
         .left-dropdown .drop-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 8px 18px;
-            cursor: pointer;
-            transition: var(--transition);
-            color: var(--text-primary);
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            font-size: 14px;
+            display: flex; align-items: center; gap: 14px; padding: 8px 18px;
+            cursor: pointer; transition: var(--transition); color: var(--text-primary);
+            border: none; background: none; width: 100%; text-align: left; font-size: 14px;
             font-family: var(--font);
         }
-        .left-dropdown .drop-item:hover {
-            background: var(--bg-hover);
-        }
-        .left-dropdown .drop-item i {
-            width: 20px;
-            color: var(--text-secondary);
-            font-size: 16px;
-        }
-        .left-dropdown .drop-item .label {
-            flex: 1;
-        }
-        .left-dropdown .drop-divider {
-            height: 1px;
-            background: var(--border-color);
-            margin: 4px 16px;
-        }
-        .left-dropdown .appearance-wrap {
-            padding: 0 18px 8px 18px;
-        }
+        .left-dropdown .drop-item:hover { background: var(--bg-hover); }
+        .left-dropdown .drop-item i { width: 20px; color: var(--text-secondary); font-size: 16px; }
+        .left-dropdown .drop-item .label { flex: 1; }
+        .left-dropdown .drop-divider { height: 1px; background: var(--border-color); margin: 4px 16px; }
+        .left-dropdown .appearance-wrap { padding: 0 18px 8px 18px; }
         .left-dropdown .appearance-wrap .theme-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 6px 0;
+            display: flex; align-items: center; justify-content: space-between; padding: 6px 0;
         }
         .left-dropdown .appearance-wrap .theme-row .theme-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            color: var(--text-primary);
+            display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-primary);
         }
-        .left-dropdown .appearance-wrap .theme-row .theme-label i {
-            width: 18px;
-            color: var(--text-secondary);
-        }
+        .left-dropdown .appearance-wrap .theme-row .theme-label i { width: 18px; color: var(--text-secondary); }
         .left-dropdown .toggle-track {
-            width: 40px;
-            height: 22px;
-            background: var(--border-color);
-            border-radius: 999px;
-            position: relative;
-            cursor: pointer;
-            transition: var(--transition);
-            flex-shrink: 0;
+            width: 40px; height: 22px; background: var(--border-color); border-radius: 999px;
+            position: relative; cursor: pointer; transition: var(--transition); flex-shrink: 0;
         }
         .left-dropdown .toggle-track .toggle-thumb {
-            width: 18px;
-            height: 18px;
-            background: var(--bg-card);
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: var(--transition);
+            width: 18px; height: 18px; background: var(--bg-card); border-radius: 50%;
+            position: absolute; top: 2px; left: 2px; transition: var(--transition);
             box-shadow: var(--shadow-sm);
         }
-        .left-dropdown .toggle-track.active {
-            background: var(--accent);
-        }
-        .left-dropdown .toggle-track.active .toggle-thumb {
-            left: 20px;
-        }
+        .left-dropdown .toggle-track.active { background: var(--accent); }
+        .left-dropdown .toggle-track.active .toggle-thumb { left: 20px; }
 
-        /* Header center */
         .header-center {
-            flex: 1;
-            max-width: 680px;
-            margin: 0 16px;
-            position: relative;
-            overflow: visible;
+            flex: 1; max-width: 680px; margin: 0 16px; position: relative; overflow: visible;
         }
         .header-center .search-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 16px;
-            pointer-events: none;
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); font-size: 16px; pointer-events: none;
         }
         .header-center #searchInput {
-            width: 100%;
-            padding: 10px 16px 10px 44px;
-            border: none;
-            border-radius: var(--radius-md);
-            background: var(--bg-input);
-            font-size: 15px;
-            color: var(--text-primary);
-            outline: none;
-            transition: var(--transition);
+            width: 100%; padding: 10px 16px 10px 44px; border: none;
+            border-radius: var(--radius-md); background: var(--bg-input); font-size: 15px;
+            color: var(--text-primary); outline: none; transition: var(--transition);
             font-family: var(--font);
         }
-        .header-center #searchInput:focus {
-            background: var(--bg-card);
-            box-shadow: var(--shadow-sm);
-        }
-        .header-center #searchInput::placeholder {
-            color: var(--text-muted);
-        }
+        .header-center #searchInput:focus { background: var(--bg-card); box-shadow: var(--shadow-sm); }
+        .header-center #searchInput::placeholder { color: var(--text-muted); }
 
-        /* Header right */
         .header-right {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            position: relative;
+            display: flex; align-items: center; gap: 6px; position: relative;
         }
         .header-right .icon-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
+            width: 40px; height: 40px; border-radius: 50%; border: none; background: transparent;
+            color: var(--text-secondary); font-size: 18px; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; transition: var(--transition);
         }
-        .header-right .icon-btn:hover {
-            background: var(--bg-hover);
-        }
+        .header-right .icon-btn:hover { background: var(--bg-hover); }
 
-        .avatar-wrap {
-            position: relative;
-            cursor: pointer;
-        }
+        .avatar-wrap { position: relative; cursor: pointer; }
         .avatar-wrap .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--accent);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 14px;
-            overflow: hidden;
-            transition: var(--transition);
-            border: 2px solid transparent;
-            position: relative;
+            width: 36px; height: 36px; border-radius: 50%; background: var(--accent);
+            color: #fff; display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 14px; overflow: hidden; transition: var(--transition);
+            border: 2px solid transparent; position: relative;
         }
-        .avatar-wrap .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .avatar-wrap .avatar:hover {
-            filter: brightness(0.95);
-        }
+        .avatar-wrap .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-wrap .avatar:hover { filter: brightness(0.95); }
         .avatar-wrap .avatar .badge {
-            position: absolute;
-            bottom: -4px;
-            right: -4px;
-            background: var(--accent);
-            color: #fff;
-            font-size: 9px;
-            font-weight: 600;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute; bottom: -4px; right: -4px; background: var(--accent);
+            color: #fff; font-size: 9px; font-weight: 600; width: 18px; height: 18px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
             border: 2px solid var(--bg-header);
         }
 
         .account-dropdown {
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            width: 320px;
-            background: var(--bg-card);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
-            padding: 10px 0;
-            display: none;
-            z-index: 9999;
-            border: 1px solid var(--border-color);
+            position: absolute; top: calc(100% + 10px); right: 0; width: 320px;
+            background: var(--bg-card); border-radius: var(--radius-md); box-shadow: var(--shadow-lg);
+            padding: 10px 0; display: none; z-index: 9999; border: 1px solid var(--border-color);
             animation: slideDown 0.2s ease;
         }
-        .account-dropdown.open {
-            display: block;
-        }
+        .account-dropdown.open { display: block; }
         .account-dropdown .drop-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 10px 20px;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            color: var(--text-primary);
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            font-size: 14px;
-            font-family: var(--font);
+            display: flex; align-items: center; gap: 14px; padding: 10px 20px;
+            cursor: pointer; transition: var(--transition); text-decoration: none;
+            color: var(--text-primary); border: none; background: none; width: 100%;
+            text-align: left; font-size: 14px; font-family: var(--font);
         }
-        .account-dropdown .drop-item:hover {
-            background: var(--bg-hover);
-        }
+        .account-dropdown .drop-item:hover { background: var(--bg-hover); }
         .account-dropdown .drop-item .item-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--accent);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 13px;
-            flex-shrink: 0;
-            overflow: hidden;
+            width: 32px; height: 32px; border-radius: 50%; background: var(--accent);
+            color: #fff; display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 13px; flex-shrink: 0; overflow: hidden;
         }
-        .account-dropdown .drop-item .item-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .account-dropdown .drop-item .item-info {
-            flex: 1;
-            min-width: 0;
-        }
-        .account-dropdown .drop-item .item-info .name {
-            font-weight: 500;
-            font-size: 14px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .account-dropdown .drop-item .item-info .email {
-            font-size: 12px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .account-dropdown .drop-item .item-check {
-            color: var(--accent);
-            font-size: 16px;
-        }
-        .account-dropdown .divider {
-            height: 1px;
-            background: var(--border-color);
-            margin: 6px 16px;
-        }
-        .account-dropdown .drop-item .icon {
-            width: 24px;
-            color: var(--text-secondary);
-            font-size: 16px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-        .account-dropdown .drop-item .label {
-            flex: 1;
-        }
-        .account-dropdown .drop-item.danger .label {
-            color: var(--danger);
-        }
-        .account-dropdown .drop-item.danger:hover {
-            background: var(--danger-bg);
-        }
+        .account-dropdown .drop-item .item-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .account-dropdown .drop-item .item-info { flex: 1; min-width: 0; }
+        .account-dropdown .drop-item .item-info .name { font-weight: 500; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .account-dropdown .drop-item .item-info .email { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .account-dropdown .drop-item .item-check { color: var(--accent); font-size: 16px; }
+        .account-dropdown .divider { height: 1px; background: var(--border-color); margin: 6px 16px; }
+        .account-dropdown .drop-item .icon { width: 24px; color: var(--text-secondary); font-size: 16px; text-align: center; flex-shrink: 0; }
+        .account-dropdown .drop-item .label { flex: 1; }
+        .account-dropdown .drop-item.danger .label { color: var(--danger); }
+        .account-dropdown .drop-item.danger:hover { background: var(--danger-bg); }
 
         /* ===== MAIN ===== */
         .main-content {
-            flex: 1;
-            padding: 24px 32px 90px;
-            max-width: var(--max-width);
-            margin: 0 auto;
-            width: 100%;
-            transition: padding 0.3s;
-            overflow: visible;
+            flex: 1; padding: 24px 32px 90px; max-width: var(--max-width); margin: 0 auto; width: 100%;
+            transition: padding 0.3s; overflow: visible;
         }
 
-        /* ===== VIEWS ===== */
-        .dashboard-view {
-            display: none;
-            animation: fadeIn 0.3s ease;
+        /* Views */
+        .dashboard-view, .trash-view, .archive-view, .labels-view, .calendar-view {
+            display: none; animation: fadeIn 0.3s ease;
         }
-        .dashboard-view.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        .dashboard-view.active, .trash-view.active, .archive-view.active,
+        .labels-view.active, .calendar-view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
         .dashboard-view .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px;
         }
         .dashboard-view .stat-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-md);
-            padding: 16px 18px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
-            transition: var(--transition);
+            background: var(--bg-card); border-radius: var(--radius-md); padding: 16px 18px;
+            box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
         }
-        .dashboard-view .stat-card:hover {
-            box-shadow: var(--shadow-md);
-        }
-        .dashboard-view .stat-card .stat-number {
-            font-size: 26px;
-            font-weight: 700;
-            color: var(--text-primary);
-            line-height: 1.2;
-        }
-        .dashboard-view .stat-card .stat-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-top: 2px;
-        }
-        .dashboard-view .stat-card .stat-icon {
-            font-size: 20px;
-            color: var(--accent);
-            margin-bottom: 4px;
-        }
+        .dashboard-view .stat-card:hover { box-shadow: var(--shadow-md); }
+        .dashboard-view .stat-card .stat-number { font-size: 26px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+        .dashboard-view .stat-card .stat-label { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+        .dashboard-view .stat-card .stat-icon { font-size: 20px; color: var(--accent); margin-bottom: 4px; }
         .dashboard-view .recent-notes {
-            background: var(--bg-card);
-            border-radius: var(--radius-md);
-            padding: 16px 18px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 20px;
+            background: var(--bg-card); border-radius: var(--radius-md); padding: 16px 18px;
+            border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 20px;
         }
-        .dashboard-view .recent-notes h3 {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .dashboard-view .recent-notes .recent-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .dashboard-view .recent-notes .recent-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 0;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 13px;
-        }
-        .dashboard-view .recent-notes .recent-item:last-child {
-            border-bottom: none;
-        }
-        .dashboard-view .recent-notes .recent-item .recent-title {
-            font-weight: 500;
-            color: var(--text-primary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 70%;
-        }
-        .dashboard-view .recent-notes .recent-item .recent-date {
-            color: var(--text-muted);
-            font-size: 11px;
-        }
+        .dashboard-view .recent-notes h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .dashboard-view .recent-notes .recent-list { display: flex; flex-direction: column; gap: 6px; }
+        .dashboard-view .recent-notes .recent-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border-color); font-size: 13px; }
+        .dashboard-view .recent-notes .recent-item:last-child { border-bottom: none; }
+        .dashboard-view .recent-notes .recent-item .recent-title { font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
+        .dashboard-view .recent-notes .recent-item .recent-date { color: var(--text-muted); font-size: 11px; }
         .dashboard-view .all-notes-list {
-            background: var(--bg-card);
-            border-radius: var(--radius-md);
-            padding: 16px 18px;
+            background: var(--bg-card); border-radius: var(--radius-md); padding: 16px 18px;
             border: 1px solid var(--border-color);
         }
-        .dashboard-view .all-notes-list h3 {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .dashboard-view .all-notes-list .all-note-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 0;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 13px;
-        }
-        .dashboard-view .all-notes-list .all-note-item:last-child {
-            border-bottom: none;
-        }
-        .dashboard-view .all-notes-list .all-note-item .note-title {
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-        .dashboard-view .all-notes-list .all-note-item .note-info {
-            color: var(--text-muted);
-            font-size: 11px;
-        }
+        .dashboard-view .all-notes-list h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .dashboard-view .all-notes-list .all-note-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border-color); font-size: 13px; }
+        .dashboard-view .all-notes-list .all-note-item:last-child { border-bottom: none; }
+        .dashboard-view .all-notes-list .all-note-item .note-title { font-weight: 500; color: var(--text-primary); }
+        .dashboard-view .all-notes-list .all-note-item .note-info { color: var(--text-muted); font-size: 11px; }
 
-        /* Trash */
-        .trash-view {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-        .trash-view.active {
-            display: block;
-        }
-        .trash-view .trash-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
-        }
-        .trash-view .trash-header h2 {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .trash-view .trash-header .trash-count {
-            background: var(--bg-input);
-            padding: 2px 12px;
-            border-radius: 999px;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
+        .trash-view .trash-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+        .trash-view .trash-header h2 { font-size: 20px; font-weight: 600; color: var(--text-primary); }
+        .trash-view .trash-header .trash-count { background: var(--bg-input); padding: 2px 12px; border-radius: 999px; font-size: 13px; color: var(--text-secondary); }
         .trash-view .trash-note {
-            background: var(--bg-card);
-            border-radius: var(--radius-sm);
-            padding: 12px 16px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: var(--transition);
-            flex-wrap: wrap;
-            gap: 8px;
+            background: var(--bg-card); border-radius: var(--radius-sm); padding: 12px 16px;
+            border: 1px solid var(--border-color); margin-bottom: 10px; display: flex;
+            justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
         }
-        .trash-view .trash-note:hover {
-            box-shadow: var(--shadow-sm);
-        }
-        .trash-view .trash-note .trash-info {
-            flex: 1;
-            min-width: 0;
-        }
-        .trash-view .trash-note .trash-info .trash-title {
-            font-weight: 500;
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-        .trash-view .trash-note .trash-info .trash-excerpt {
-            font-size: 12px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .trash-view .trash-note .trash-actions {
-            display: flex;
-            gap: 6px;
-            flex-shrink: 0;
-        }
-        .trash-view .trash-note .trash-actions .trash-btn {
-            background: none;
-            border: none;
-            padding: 6px 12px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-size: 12px;
-            font-family: var(--font);
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .trash-view .trash-note .trash-actions .trash-btn:hover {
-            background: var(--bg-hover);
-        }
-        .trash-view .trash-note .trash-actions .trash-btn.restore-btn {
-            color: var(--accent);
-        }
-        .trash-view .trash-note .trash-actions .trash-btn.restore-btn:hover {
-            background: var(--accent-bg);
-        }
-        .trash-view .trash-note .trash-actions .trash-btn.delete-forever-btn {
-            color: var(--danger);
-        }
-        .trash-view .trash-note .trash-actions .trash-btn.delete-forever-btn:hover {
-            background: var(--danger-bg);
-        }
-        .trash-view .trash-empty {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-        }
-        .trash-view .trash-empty i {
-            font-size: 40px;
-            opacity: 0.3;
-            margin-bottom: 12px;
-        }
-        .trash-view .trash-empty .empty-text {
-            font-size: 15px;
-            font-weight: 500;
-        }
-        .trash-view .trash-empty .empty-sub {
-            font-size: 13px;
-            margin-top: 4px;
-        }
+        .trash-view .trash-note:hover { box-shadow: var(--shadow-sm); }
+        .trash-view .trash-note .trash-info { flex: 1; min-width: 0; }
+        .trash-view .trash-note .trash-info .trash-title { font-weight: 500; color: var(--text-primary); font-size: 14px; }
+        .trash-view .trash-note .trash-info .trash-excerpt { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .trash-view .trash-note .trash-actions { display: flex; gap: 6px; flex-shrink: 0; }
+        .trash-view .trash-note .trash-actions .trash-btn { background: none; border: none; padding: 6px 12px; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px; font-family: var(--font); transition: var(--transition); display: flex; align-items: center; gap: 4px; }
+        .trash-view .trash-note .trash-actions .trash-btn:hover { background: var(--bg-hover); }
+        .trash-view .trash-note .trash-actions .trash-btn.restore-btn { color: var(--accent); }
+        .trash-view .trash-note .trash-actions .trash-btn.restore-btn:hover { background: var(--accent-bg); }
+        .trash-view .trash-note .trash-actions .trash-btn.delete-forever-btn { color: var(--danger); }
+        .trash-view .trash-note .trash-actions .trash-btn.delete-forever-btn:hover { background: var(--danger-bg); }
+        .trash-view .trash-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+        .trash-view .trash-empty i { font-size: 40px; opacity: 0.3; margin-bottom: 12px; }
+        .trash-view .trash-empty .empty-text { font-size: 15px; font-weight: 500; }
+        .trash-view .trash-empty .empty-sub { font-size: 13px; margin-top: 4px; }
 
-        /* Archive */
-        .archive-view {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-        .archive-view.active {
-            display: block;
-        }
         .archive-view .archive-note {
-            background: var(--bg-card);
-            border-radius: var(--radius-sm);
-            padding: 12px 16px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
+            background: var(--bg-card); border-radius: var(--radius-sm); padding: 12px 16px;
+            border: 1px solid var(--border-color); margin-bottom: 10px; display: flex;
+            justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
         }
-        .archive-view .archive-note .archive-info {
-            flex: 1;
-            min-width: 0;
-        }
-        .archive-view .archive-note .archive-info .archive-title {
-            font-weight: 500;
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-        .archive-view .archive-note .archive-info .archive-excerpt {
-            font-size: 12px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .archive-view .archive-empty {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-        }
-        .archive-view .archive-empty i {
-            font-size: 40px;
-            opacity: 0.3;
-            margin-bottom: 12px;
-        }
+        .archive-view .archive-note .archive-info { flex: 1; min-width: 0; }
+        .archive-view .archive-note .archive-info .archive-title { font-weight: 500; color: var(--text-primary); font-size: 14px; }
+        .archive-view .archive-note .archive-info .archive-excerpt { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .archive-view .archive-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+        .archive-view .archive-empty i { font-size: 40px; opacity: 0.3; margin-bottom: 12px; }
 
-        /* Labels */
-        .labels-view {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-        .labels-view.active {
-            display: block;
-        }
-
-        /* Calendar */
-        .calendar-view {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-        .calendar-view.active {
-            display: block;
-        }
-
-        /* ===== NOTES GRID ===== */
+        /* Notes Grid */
         .notes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 16px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px;
         }
-        .notes-grid.list-view {
-            grid-template-columns: 1fr;
-        }
-        .notes-grid.masonry {
-            column-count: 4;
-            column-gap: 16px;
-        }
-        .notes-grid.masonry .note-card {
-            break-inside: avoid;
-            margin-bottom: 16px;
-        }
+        .notes-grid.list-view { grid-template-columns: 1fr; }
+        .notes-grid.masonry { column-count: 4; column-gap: 16px; }
+        .notes-grid.masonry .note-card { break-inside: avoid; margin-bottom: 16px; }
         .notes-grid.empty {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 250px;
-            color: var(--text-secondary);
-            text-align: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 250px; color: var(--text-secondary); text-align: center;
         }
-        .notes-grid.empty .empty-icon {
-            font-size: 56px;
-            color: var(--text-muted);
-            opacity: 0.3;
-            margin-bottom: 12px;
-        }
-        .notes-grid.empty .empty-text {
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-        .notes-grid.empty .empty-sub {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
+        .notes-grid.empty .empty-icon { font-size: 56px; color: var(--text-muted); opacity: 0.3; margin-bottom: 12px; }
+        .notes-grid.empty .empty-text { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+        .notes-grid.empty .empty-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
-        /* ===== NOTE CARD ===== */
+        /* Note Card */
         .note-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-sm);
-            padding: 14px 16px 10px;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            border: 1px solid var(--border-color);
-            position: relative;
-            word-wrap: break-word;
-            overflow: visible;
-            min-height: 80px;
-            cursor: default;
+            background: var(--bg-card); border-radius: var(--radius-sm); padding: 14px 16px 10px;
+            box-shadow: var(--shadow-sm); transition: var(--transition); display: flex;
+            flex-direction: column; border: 1px solid var(--border-color); position: relative;
+            word-wrap: break-word; overflow: visible; min-height: 80px; cursor: default;
         }
-        .note-card:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-        .note-card .note-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            line-height: 1.3;
-            word-break: break-word;
-        }
-        .note-card .note-content {
-            font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.5;
-            flex: 1;
-            white-space: pre-wrap;
-            word-break: break-word;
-            overflow-y: auto;
-            max-height: 200px;
-        }
-        .note-card .note-content a {
-            color: var(--accent);
-            text-decoration: underline;
-            word-break: break-all;
-        }
-        .note-card .note-content a:hover {
-            text-decoration: none;
-        }
-        .note-card .note-content:empty {
-            display: none;
-        }
+        .note-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .note-card .note-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; line-height: 1.3; word-break: break-word; }
+        .note-card .note-content { font-size: 13px; color: var(--text-secondary); line-height: 1.5; flex: 1; white-space: pre-wrap; word-break: break-word; overflow-y: auto; max-height: 200px; }
+        .note-card .note-content a { color: var(--accent); text-decoration: underline; word-break: break-all; }
+        .note-card .note-content a:hover { text-decoration: none; }
+        .note-card .note-content:empty { display: none; }
         .note-card .note-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px;
-            padding-top: 6px;
-            border-top: 1px solid var(--border-color);
-            font-size: 10px;
-            color: var(--text-muted);
-            flex-shrink: 0;
+            display: flex; justify-content: space-between; align-items: center; margin-top: 8px;
+            padding-top: 6px; border-top: 1px solid var(--border-color); font-size: 10px;
+            color: var(--text-muted); flex-shrink: 0;
         }
-        .note-card .note-meta .note-date {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .note-card .pin-badge {
-            position: absolute;
-            top: 4px;
-            left: 8px;
-            font-size: 13px;
-            color: var(--accent);
-            opacity: 0.5;
-        }
-        .note-card .note-image {
-            margin: 4px 0 6px;
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-            max-height: 140px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-input);
-            flex-shrink: 0;
-        }
-        .note-card .note-image img {
-            width: 100%;
-            height: auto;
-            max-height: 140px;
-            object-fit: cover;
-        }
-        .note-card .note-type-badge {
-            position: absolute;
-            bottom: 28px;
-            right: 6px;
-            font-size: 10px;
-            color: var(--text-muted);
-            opacity: 0.4;
-            background: var(--bg-input);
-            padding: 1px 6px;
-            border-radius: 999px;
-        }
-        .note-card .note-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin: 4px 0;
-        }
-        .note-card .note-tags .tag {
-            background: var(--accent-bg);
-            color: var(--accent);
-            padding: 1px 8px;
-            border-radius: 999px;
-            font-size: 10px;
-            font-weight: 500;
-        }
-        .note-card .note-reminder {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 10px;
-            color: var(--accent);
-            margin-top: 4px;
-        }
-        .note-card .note-lock {
-            position: absolute;
-            top: 4px;
-            left: 34px;
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-        .note-card .note-favorite {
-            position: absolute;
-            top: 4px;
-            right: 34px;
-            font-size: 13px;
-            color: var(--warning);
-            opacity: 0.5;
-        }
+        .note-card .note-meta .note-date { display: flex; align-items: center; gap: 4px; }
+        .note-card .pin-badge { position: absolute; top: 4px; left: 8px; font-size: 13px; color: var(--accent); opacity: 0.5; }
+        .note-card .note-image { margin: 4px 0 6px; border-radius: var(--radius-sm); overflow: hidden; max-height: 140px; display: flex; align-items: center; justify-content: center; background: var(--bg-input); flex-shrink: 0; }
+        .note-card .note-image img { width: 100%; height: auto; max-height: 140px; object-fit: cover; }
+        .note-card .note-type-badge { position: absolute; bottom: 28px; right: 6px; font-size: 10px; color: var(--text-muted); opacity: 0.4; background: var(--bg-input); padding: 1px 6px; border-radius: 999px; }
+        .note-card .note-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0; }
+        .note-card .note-tags .tag { background: var(--accent-bg); color: var(--accent); padding: 1px 8px; border-radius: 999px; font-size: 10px; font-weight: 500; }
+        .note-card .note-reminder { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--accent); margin-top: 4px; }
+        .note-card .note-lock { position: absolute; top: 4px; left: 34px; font-size: 13px; color: var(--text-muted); }
+        .note-card .note-favorite { position: absolute; top: 4px; right: 34px; font-size: 13px; color: var(--warning); opacity: 0.5; }
 
-        /* ===== LINK EMBED ===== */
+        /* Link Embed */
         .link-embed {
-            margin: 6px 0 4px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            background: var(--bg-card);
-            transition: var(--transition);
-            display: flex;
-            align-items: stretch;
-            max-height: 120px;
+            margin: 6px 0 4px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);
+            overflow: hidden; background: var(--bg-card); transition: var(--transition);
+            display: flex; align-items: stretch; max-height: 120px;
         }
-        .link-embed:hover {
-            box-shadow: var(--shadow-sm);
-        }
-        .link-embed .link-image {
-            width: 100px;
-            min-height: 60px;
-            flex-shrink: 0;
-            background: var(--bg-input);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .link-embed .link-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .link-embed .link-image .no-img {
-            font-size: 28px;
-            color: var(--text-muted);
-            opacity: 0.3;
-        }
-        .link-embed .link-info {
-            padding: 8px 12px;
-            flex: 1;
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .link-embed .link-info .link-title {
-            font-weight: 500;
-            font-size: 13px;
-            color: var(--text-primary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .link-embed .link-info .link-desc {
-            font-size: 11px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-top: 2px;
-        }
-        .link-embed .link-info .link-domain {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-top: 2px;
-            font-size: 10px;
-            color: var(--text-muted);
-        }
-        .link-embed .link-info .link-domain img {
-            width: 14px;
-            height: 14px;
-            border-radius: 2px;
-        }
-        .link-embed .link-info .link-domain a {
-            color: var(--text-muted);
-            text-decoration: none;
-        }
-        .link-embed .link-info .link-domain a:hover {
-            text-decoration: underline;
-            color: var(--accent);
-        }
+        .link-embed:hover { box-shadow: var(--shadow-sm); }
+        .link-embed .link-image { width: 100px; min-height: 60px; flex-shrink: 0; background: var(--bg-input); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .link-embed .link-image img { width: 100%; height: 100%; object-fit: cover; }
+        .link-embed .link-image .no-img { font-size: 28px; color: var(--text-muted); opacity: 0.3; }
+        .link-embed .link-info { padding: 8px 12px; flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+        .link-embed .link-info .link-title { font-weight: 500; font-size: 13px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .link-embed .link-info .link-desc { font-size: 11px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+        .link-embed .link-info .link-domain { display: flex; align-items: center; gap: 4px; margin-top: 2px; font-size: 10px; color: var(--text-muted); }
+        .link-embed .link-info .link-domain img { width: 14px; height: 14px; border-radius: 2px; }
+        .link-embed .link-info .link-domain a { color: var(--text-muted); text-decoration: none; }
+        .link-embed .link-info .link-domain a:hover { text-decoration: underline; color: var(--accent); }
 
         /* ===== THREE-DOT MENU — FIXED ===== */
         .note-card .card-actions {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            opacity: 0;
-            transition: var(--transition);
-            z-index: 10;
+            position: absolute; top: 4px; right: 4px; opacity: 0; transition: var(--transition); z-index: 10;
         }
-        .note-card:hover .card-actions {
-            opacity: 1;
-        }
-        @media (max-width: 768px) {
-            .note-card .card-actions {
-                opacity: 1;
-            }
-        }
+        .note-card:hover .card-actions { opacity: 1; }
+        @media (max-width: 768px) { .note-card .card-actions { opacity: 1; } }
         .note-card .card-actions .more-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 17px;
-            padding: 4px 6px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: var(--transition);
-            min-width: 36px;
-            min-height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: none; border: none; color: var(--text-secondary); font-size: 17px;
+            padding: 4px 6px; border-radius: 50%; cursor: pointer; transition: var(--transition);
+            min-width: 36px; min-height: 36px; display: flex; align-items: center; justify-content: center;
         }
-        .note-card .card-actions .more-btn:hover {
-            background: var(--bg-hover);
-        }
+        .note-card .card-actions .more-btn:hover { background: var(--bg-hover); }
 
-        /* Dropdown - fixed position with edge detection */
         .note-card .card-menu {
-            position: fixed;
-            background: var(--bg-card);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
-            padding: 4px 0;
-            min-width: 180px;
-            max-width: 260px;
-            max-height: 70vh;
-            overflow-y: auto;
-            display: none;
-            z-index: 99999;
-            border: 1px solid var(--border-color);
-            backdrop-filter: blur(8px);
-            background: rgba(255, 255, 255, 0.92);
-            animation: menuPop 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: fixed; background: var(--bg-card); border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg); padding: 4px 0; min-width: 180px; max-width: 260px;
+            max-height: 70vh; overflow-y: auto; display: none; z-index: 99999;
+            border: 1px solid var(--border-color); backdrop-filter: blur(8px);
+            background: rgba(255,255,255,0.92); animation: menuPop 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        [data-theme="dark"] .note-card .card-menu {
-            background: rgba(45, 45, 45, 0.92);
-        }
-        @keyframes menuPop {
-            from {
-                opacity: 0;
-                transform: scale(0.92) translateY(-4px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-        .note-card .card-menu.open {
-            display: block;
-        }
+        [data-theme="dark"] .note-card .card-menu { background: rgba(45,45,45,0.92); }
+        @keyframes menuPop { from { opacity: 0; transform: scale(0.92) translateY(-4px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .note-card .card-menu.open { display: block; }
         .note-card .card-menu .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 7px 14px;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            font-size: 13px;
-            font-family: var(--font);
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: var(--transition);
-            min-height: 40px;
-            border-radius: 0;
+            display: flex; align-items: center; gap: 10px; padding: 7px 14px;
+            border: none; background: none; width: 100%; text-align: left; font-size: 13px;
+            font-family: var(--font); color: var(--text-primary); cursor: pointer;
+            transition: var(--transition); min-height: 40px; border-radius: 0;
         }
-        .note-card .card-menu .menu-item:hover {
-            background: var(--bg-hover);
-        }
-        .note-card .card-menu .menu-item i {
-            width: 18px;
-            color: var(--text-secondary);
-            font-size: 14px;
-            text-align: center;
-        }
-        .note-card .card-menu .menu-item.danger {
-            color: var(--danger);
-        }
-        .note-card .card-menu .menu-item.danger i {
-            color: var(--danger);
-        }
-        .note-card .card-menu .menu-item.danger:hover {
-            background: var(--danger-bg);
-        }
-        .note-card .card-menu .menu-divider {
-            height: 1px;
-            background: var(--border-color);
-            margin: 4px 12px;
-        }
+        .note-card .card-menu .menu-item:hover { background: var(--bg-hover); }
+        .note-card .card-menu .menu-item i { width: 18px; color: var(--text-secondary); font-size: 14px; text-align: center; }
+        .note-card .card-menu .menu-item.danger { color: var(--danger); }
+        .note-card .card-menu .menu-item.danger i { color: var(--danger); }
+        .note-card .card-menu .menu-item.danger:hover { background: var(--danger-bg); }
+        .note-card .card-menu .menu-divider { height: 1px; background: var(--border-color); margin: 4px 12px; }
         .note-card .card-menu .color-picker-sub {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            padding: 6px 12px 10px;
-            border-top: 1px solid var(--border-color);
-            margin-top: 4px;
+            display: flex; flex-wrap: wrap; gap: 6px; padding: 6px 12px 10px;
+            border-top: 1px solid var(--border-color); margin-top: 4px;
         }
         .note-card .card-menu .color-picker-sub .color-opt {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: var(--transition);
-            flex-shrink: 0;
+            width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent;
+            cursor: pointer; transition: var(--transition); flex-shrink: 0;
         }
-        .note-card .card-menu .color-picker-sub .color-opt:hover {
-            transform: scale(1.12);
-        }
-        .note-card .card-menu .color-picker-sub .color-opt.active {
-            border-color: var(--text-primary);
-            box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--text-primary);
-        }
+        .note-card .card-menu .color-picker-sub .color-opt:hover { transform: scale(1.12); }
+        .note-card .card-menu .color-picker-sub .color-opt.active { border-color: var(--text-primary); box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--text-primary); }
 
         /* ===== FAB ===== */
         .fab-wrapper {
-            position: fixed;
-            bottom: var(--fab-bottom);
-            right: 28px;
-            z-index: 60;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 10px;
-            transition: bottom 0.3s ease, transform 0.3s ease;
-            pointer-events: none;
+            position: fixed; bottom: var(--fab-bottom); right: 28px; z-index: 60;
+            display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+            transition: bottom 0.3s ease, transform 0.3s ease; pointer-events: none;
         }
-        .fab-wrapper .fab,
-        .fab-wrapper .fab-menu .fab-option {
-            pointer-events: auto;
-        }
-        .fab-wrapper.hidden {
-            transform: scale(0);
-            opacity: 0;
-            pointer-events: none;
-        }
+        .fab-wrapper .fab, .fab-wrapper .fab-menu .fab-option { pointer-events: auto; }
+        .fab-wrapper.hidden { transform: scale(0); opacity: 0; pointer-events: none; }
         .fab {
-            width: 54px;
-            height: 54px;
-            border-radius: 50%;
-            background: var(--warning);
-            color: #202124;
-            border: none;
-            font-size: 26px;
-            box-shadow: var(--shadow-md);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: auto;
+            width: 54px; height: 54px; border-radius: 50%; background: var(--warning);
+            color: #202124; border: none; font-size: 26px; box-shadow: var(--shadow-md);
+            cursor: pointer; transition: var(--transition); display: flex;
+            align-items: center; justify-content: center; pointer-events: auto;
         }
-        .fab:hover {
-            transform: scale(1.06);
-            box-shadow: 0 6px 20px rgba(251, 188, 4, 0.4);
-        }
-        .fab:active {
-            transform: scale(0.94);
-        }
+        .fab:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(251,188,4,0.4); }
+        .fab:active { transform: scale(0.94); }
 
         .fab-menu {
-            display: none;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 8px;
-            animation: slideUp 0.25s ease;
-            pointer-events: auto;
+            display: none; flex-direction: column; align-items: flex-end; gap: 8px;
+            animation: slideUp 0.25s ease; pointer-events: auto;
         }
-        .fab-menu.open {
-            display: flex;
-        }
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(12px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
+        .fab-menu.open { display: flex; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(12px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .fab-menu .fab-option {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 8px 16px;
-            box-shadow: var(--shadow-md);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            font-family: var(--font);
-            color: var(--text-primary);
-            min-width: 120px;
-            justify-content: flex-start;
-            pointer-events: auto;
+            background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md);
+            padding: 8px 16px; box-shadow: var(--shadow-md); cursor: pointer; transition: var(--transition);
+            display: flex; align-items: center; gap: 10px; font-size: 13px; font-family: var(--font);
+            color: var(--text-primary); min-width: 120px; justify-content: flex-start; pointer-events: auto;
         }
-        .fab-menu .fab-option:hover {
-            background: var(--bg-hover);
-            transform: scale(1.02);
-        }
-        .fab-menu .fab-option i {
-            font-size: 16px;
-            width: 20px;
-            color: var(--text-secondary);
-        }
+        .fab-menu .fab-option:hover { background: var(--bg-hover); transform: scale(1.02); }
+        .fab-menu .fab-option i { font-size: 16px; width: 20px; color: var(--text-secondary); }
 
         /* ===== EDITOR MODAL ===== */
         .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(4px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 500;
-            padding: 20px;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.45); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center; z-index: 500; padding: 20px;
         }
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
         .modal-editor {
-            background: var(--bg-card);
-            border-radius: var(--radius-md);
-            width: 100%;
-            max-width: 700px;
-            box-shadow: var(--shadow-lg);
-            animation: popIn 0.25s ease;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            max-height: 92vh;
-            border: 1px solid var(--border-color);
+            background: var(--bg-card); border-radius: var(--radius-md); width: 100%; max-width: 700px;
+            box-shadow: var(--shadow-lg); animation: popIn 0.25s ease; overflow: hidden;
+            display: flex; flex-direction: column; max-height: 92vh; border: 1px solid var(--border-color);
         }
-        .modal-editor .modal-header {
-            padding: 14px 18px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .modal-editor .modal-header .modal-title {
-            font-weight: 600;
-            font-size: 15px;
-            color: var(--text-primary);
-        }
-        .modal-editor .modal-header .close-btn {
-            background: none;
-            border: none;
-            font-size: 18px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 4px 6px;
-            border-radius: 50%;
-            transition: var(--transition);
-        }
-        .modal-editor .modal-header .close-btn:hover {
-            background: var(--bg-hover);
-        }
-        .modal-editor .modal-body {
-            padding: 8px 18px 14px;
-            overflow-y: auto;
-            flex: 1;
-        }
+        .modal-editor .modal-header { padding: 14px 18px 0; display: flex; justify-content: space-between; align-items: center; }
+        .modal-editor .modal-header .modal-title { font-weight: 600; font-size: 15px; color: var(--text-primary); }
+        .modal-editor .modal-header .close-btn { background: none; border: none; font-size: 18px; color: var(--text-secondary); cursor: pointer; padding: 4px 6px; border-radius: 50%; transition: var(--transition); }
+        .modal-editor .modal-header .close-btn:hover { background: var(--bg-hover); }
+        .modal-editor .modal-body { padding: 8px 18px 14px; overflow-y: auto; flex: 1; }
         .modal-editor .modal-body .editor-title {
-            width: 100%;
-            border: none;
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--text-primary);
-            padding: 6px 0 4px;
-            outline: none;
-            font-family: var(--font);
-            background: transparent;
+            width: 100%; border: none; font-size: 17px; font-weight: 600; color: var(--text-primary);
+            padding: 6px 0 4px; outline: none; font-family: var(--font); background: transparent;
         }
-        .modal-editor .modal-body .editor-title::placeholder {
-            color: var(--text-muted);
-        }
+        .modal-editor .modal-body .editor-title::placeholder { color: var(--text-muted); }
         .modal-editor .modal-body .editor-toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2px;
-            padding: 4px 0;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 6px;
+            display: flex; flex-wrap: wrap; gap: 2px; padding: 4px 0; border-bottom: 1px solid var(--border-color); margin-bottom: 6px;
         }
         .modal-editor .modal-body .editor-toolbar button {
-            background: none;
-            border: none;
-            padding: 4px 8px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-size: 13px;
-            color: var(--text-secondary);
-            transition: var(--transition);
+            background: none; border: none; padding: 4px 8px; border-radius: var(--radius-sm);
+            cursor: pointer; font-size: 13px; color: var(--text-secondary); transition: var(--transition);
             min-height: 32px;
         }
-        .modal-editor .modal-body .editor-toolbar button:hover {
-            background: var(--bg-hover);
-        }
-        .modal-editor .modal-body .editor-toolbar button.active {
-            background: var(--accent-bg);
-            color: var(--accent);
-        }
+        .modal-editor .modal-body .editor-toolbar button:hover { background: var(--bg-hover); }
+        .modal-editor .modal-body .editor-toolbar button.active { background: var(--accent-bg); color: var(--accent); }
         .modal-editor .modal-body .editor-content-editable {
-            min-height: 100px;
-            padding: 6px 0;
-            outline: none;
-            font-size: 14px;
-            line-height: 1.6;
-            color: var(--text-secondary);
-            background: transparent;
-            word-break: break-word;
+            min-height: 100px; padding: 6px 0; outline: none; font-size: 14px; line-height: 1.6;
+            color: var(--text-secondary); background: transparent; word-break: break-word;
         }
-        .modal-editor .modal-body .editor-content-editable:empty::before {
-            content: attr(data-placeholder);
-            color: var(--text-muted);
-        }
-        .modal-editor .modal-body .editor-image-preview {
-            display: none;
-            margin: 6px 0;
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-            max-height: 180px;
-            background: var(--bg-input);
-        }
-        .modal-editor .modal-body .editor-image-preview img {
-            width: 100%;
-            height: auto;
-            max-height: 180px;
-            object-fit: contain;
-        }
-        .modal-editor .modal-body .drawing-canvas-wrap {
-            display: none;
-            margin: 6px 0;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-            background: #fff;
-            touch-action: none;
-        }
-        .modal-editor .modal-body .drawing-canvas-wrap canvas {
-            width: 100%;
-            height: auto;
-            display: block;
-            touch-action: none;
-        }
-        .modal-editor .modal-body .list-items-wrap {
-            display: none;
-            margin: 6px 0;
-        }
+        .modal-editor .modal-body .editor-content-editable:empty::before { content: attr(data-placeholder); color: var(--text-muted); }
+        .modal-editor .modal-body .editor-image-preview { display: none; margin: 6px 0; border-radius: var(--radius-sm); overflow: hidden; max-height: 180px; background: var(--bg-input); }
+        .modal-editor .modal-body .editor-image-preview img { width: 100%; height: auto; max-height: 180px; object-fit: contain; }
+        .modal-editor .modal-body .drawing-canvas-wrap { display: none; margin: 6px 0; border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden; background: #fff; touch-action: none; }
+        .modal-editor .modal-body .drawing-canvas-wrap canvas { width: 100%; height: auto; display: block; touch-action: none; }
+        .modal-editor .modal-body .list-items-wrap { display: none; margin: 6px 0; }
         .modal-editor .modal-body .list-items-wrap textarea {
-            width: 100%;
-            min-height: 80px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            padding: 8px;
-            font-family: var(--font);
-            font-size: 13px;
-            color: var(--text-primary);
-            background: var(--bg-input);
-            resize: vertical;
-            outline: none;
+            width: 100%; min-height: 80px; border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm); padding: 8px; font-family: var(--font);
+            font-size: 13px; color: var(--text-primary); background: var(--bg-input);
+            resize: vertical; outline: none;
         }
-        .modal-editor .modal-body .list-items-wrap textarea:focus {
-            border-color: var(--accent);
-        }
+        .modal-editor .modal-body .list-items-wrap textarea:focus { border-color: var(--accent); }
         .modal-editor .modal-body .tags-input-wrap {
-            margin: 6px 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            align-items: center;
+            margin: 6px 0; display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
         }
         .modal-editor .modal-body .tags-input-wrap .tag-input {
-            flex: 1;
-            min-width: 100px;
-            border: none;
-            border-bottom: 1px solid var(--border-color);
-            padding: 4px 0;
-            font-size: 13px;
-            font-family: var(--font);
-            background: transparent;
-            color: var(--text-primary);
-            outline: none;
+            flex: 1; min-width: 100px; border: none; border-bottom: 1px solid var(--border-color);
+            padding: 4px 0; font-size: 13px; font-family: var(--font); background: transparent;
+            color: var(--text-primary); outline: none;
         }
-        .modal-editor .modal-body .tags-input-wrap .tag-input:focus {
-            border-bottom-color: var(--accent);
-        }
+        .modal-editor .modal-body .tags-input-wrap .tag-input:focus { border-bottom-color: var(--accent); }
         .modal-editor .modal-body .tags-input-wrap .tag-chip {
-            background: var(--accent-bg);
-            color: var(--accent);
-            padding: 2px 8px;
-            border-radius: 999px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            background: var(--accent-bg); color: var(--accent); padding: 2px 8px;
+            border-radius: 999px; font-size: 12px; display: flex; align-items: center; gap: 4px;
         }
-        .modal-editor .modal-body .tags-input-wrap .tag-chip .remove-tag {
-            cursor: pointer;
-            font-size: 11px;
-            color: var(--text-muted);
-            background: none;
-            border: none;
-        }
+        .modal-editor .modal-body .tags-input-wrap .tag-chip .remove-tag { cursor: pointer; font-size: 11px; color: var(--text-muted); background: none; border: none; }
         .modal-editor .modal-body .reminder-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 6px 0;
-            flex-wrap: wrap;
+            display: flex; align-items: center; gap: 8px; margin: 6px 0; flex-wrap: wrap;
         }
         .modal-editor .modal-body .reminder-row input[type="datetime-local"] {
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            padding: 4px 8px;
-            font-family: var(--font);
-            font-size: 13px;
-            background: var(--bg-input);
-            color: var(--text-primary);
-            outline: none;
+            border: 1px solid var(--border-color); border-radius: var(--radius-sm);
+            padding: 4px 8px; font-family: var(--font); font-size: 13px;
+            background: var(--bg-input); color: var(--text-primary); outline: none;
         }
-        .modal-editor .modal-body .reminder-row input[type="datetime-local"]:focus {
-            border-color: var(--accent);
-        }
-        .modal-editor .modal-body .reminder-row .clear-reminder {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
-            font-size: 12px;
-            font-family: var(--font);
-        }
+        .modal-editor .modal-body .reminder-row input[type="datetime-local"]:focus { border-color: var(--accent); }
+        .modal-editor .modal-body .reminder-row .clear-reminder { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 12px; font-family: var(--font); }
         .modal-editor .modal-body .reminder-row .repeat-select {
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            padding: 4px 8px;
-            font-family: var(--font);
-            font-size: 13px;
-            background: var(--bg-input);
-            color: var(--text-primary);
-            outline: none;
+            border: 1px solid var(--border-color); border-radius: var(--radius-sm);
+            padding: 4px 8px; font-family: var(--font); font-size: 13px;
+            background: var(--bg-input); color: var(--text-primary); outline: none;
         }
         .modal-editor .modal-body .color-picker-row {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            padding: 10px 0 4px;
-            border-top: 1px solid var(--border-color);
-            margin-top: 4px;
+            display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 0 4px;
+            border-top: 1px solid var(--border-color); margin-top: 4px;
         }
         .modal-editor .modal-body .color-picker-row .color-opt {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: var(--transition);
-            flex-shrink: 0;
+            width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent;
+            cursor: pointer; transition: var(--transition); flex-shrink: 0;
         }
-        .modal-editor .modal-body .color-picker-row .color-opt:hover {
-            transform: scale(1.08);
-        }
-        .modal-editor .modal-body .color-picker-row .color-opt.active {
-            border-color: var(--text-primary);
-            box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--text-primary);
-        }
-        .modal-editor .modal-body .color-picker-row .color-opt.default-opt {
-            background: conic-gradient(white 50%, #ccc 50%);
-            border-color: var(--border-color);
-        }
+        .modal-editor .modal-body .color-picker-row .color-opt:hover { transform: scale(1.08); }
+        .modal-editor .modal-body .color-picker-row .color-opt.active { border-color: var(--text-primary); box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--text-primary); }
+        .modal-editor .modal-body .color-picker-row .color-opt.default-opt { background: conic-gradient(white 50%, #ccc 50%); border-color: var(--border-color); }
         .modal-editor .modal-footer {
-            padding: 8px 18px 14px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            border-top: 1px solid var(--border-color);
-            flex-wrap: wrap;
+            padding: 8px 18px 14px; display: flex; justify-content: flex-end; gap: 8px;
+            border-top: 1px solid var(--border-color); flex-wrap: wrap;
         }
         .modal-editor .modal-footer .btn {
-            padding: 6px 18px;
-            border-radius: var(--radius-sm);
-            border: none;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font);
+            padding: 6px 18px; border-radius: var(--radius-sm); border: none; font-size: 13px;
+            font-weight: 500; cursor: pointer; transition: var(--transition); font-family: var(--font);
             min-height: 36px;
         }
-        .modal-editor .modal-footer .btn-primary {
-            background: var(--accent);
-            color: #fff;
-        }
-        .modal-editor .modal-footer .btn-primary:hover {
-            background: var(--accent-hover);
-        }
-        .modal-editor .modal-footer .btn-secondary {
-            background: transparent;
-            color: var(--text-secondary);
-        }
-        .modal-editor .modal-footer .btn-secondary:hover {
-            background: var(--bg-hover);
-        }
-        .modal-editor .modal-footer .btn-danger {
-            background: transparent;
-            color: var(--danger);
-        }
-        .modal-editor .modal-footer .btn-danger:hover {
-            background: var(--danger-bg);
-        }
-        .modal-editor .modal-footer .undo-redo-group {
-            display: flex;
-            gap: 4px;
-            margin-right: auto;
-        }
-        .modal-editor .modal-footer .undo-redo-group .btn {
-            padding: 4px 10px;
-            font-size: 14px;
-            min-height: 32px;
-        }
+        .modal-editor .modal-footer .btn-primary { background: var(--accent); color: #fff; }
+        .modal-editor .modal-footer .btn-primary:hover { background: var(--accent-hover); }
+        .modal-editor .modal-footer .btn-secondary { background: transparent; color: var(--text-secondary); }
+        .modal-editor .modal-footer .btn-secondary:hover { background: var(--bg-hover); }
+        .modal-editor .modal-footer .btn-danger { background: transparent; color: var(--danger); }
+        .modal-editor .modal-footer .btn-danger:hover { background: var(--danger-bg); }
+        .modal-editor .modal-footer .undo-redo-group { display: flex; gap: 4px; margin-right: auto; }
+        .modal-editor .modal-footer .undo-redo-group .btn { padding: 4px 10px; font-size: 14px; min-height: 32px; }
 
-        /* ===== VIEW TOOLBAR ===== */
+        /* View Toolbar */
         .view-toolbar {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
+            display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap;
         }
         .view-toolbar .view-group {
-            display: flex;
-            gap: 4px;
-            background: var(--bg-input);
-            border-radius: var(--radius-md);
-            padding: 4px;
+            display: flex; gap: 4px; background: var(--bg-input); border-radius: var(--radius-md); padding: 4px;
         }
         .view-toolbar .view-group button {
-            background: none;
-            border: none;
-            padding: 4px 10px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-size: 13px;
-            color: var(--text-secondary);
-            transition: var(--transition);
-            font-family: var(--font);
-            min-height: 32px;
+            background: none; border: none; padding: 4px 10px; border-radius: var(--radius-sm);
+            cursor: pointer; font-size: 13px; color: var(--text-secondary); transition: var(--transition);
+            font-family: var(--font); min-height: 32px;
         }
-        .view-toolbar .view-group button.active {
-            background: var(--bg-card);
-            box-shadow: var(--shadow-sm);
-            color: var(--text-primary);
-        }
-        .view-toolbar .view-group button:hover {
-            background: var(--bg-card);
-        }
-        .view-toolbar .sort-group select,
-        .view-toolbar .filter-group select {
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            padding: 4px 8px;
-            font-family: var(--font);
-            font-size: 13px;
-            background: var(--bg-input);
-            color: var(--text-primary);
-            outline: none;
-            min-height: 32px;
+        .view-toolbar .view-group button.active { background: var(--bg-card); box-shadow: var(--shadow-sm); color: var(--text-primary); }
+        .view-toolbar .view-group button:hover { background: var(--bg-card); }
+        .view-toolbar .sort-group select, .view-toolbar .filter-group select {
+            border: 1px solid var(--border-color); border-radius: var(--radius-sm);
+            padding: 4px 8px; font-family: var(--font); font-size: 13px;
+            background: var(--bg-input); color: var(--text-primary); outline: none; min-height: 32px;
         }
 
-        /* ===== FOOTER ===== */
         .app-footer {
-            text-align: center;
-            padding: 10px 16px;
-            font-size: 11px;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border-color);
-            margin-top: auto;
-            background: var(--bg-header);
-            transition: var(--transition);
+            text-align: center; padding: 10px 16px; font-size: 11px; color: var(--text-muted);
+            border-top: 1px solid var(--border-color); margin-top: auto; background: var(--bg-header);
         }
 
-        /* ===== REMINDER POPUP ===== */
+        /* Reminder Popup */
         #reminderPopup {
-            display: none;
-            position: fixed;
-            bottom: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9997;
-            background: var(--bg-card);
-            padding: 18px 24px;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border-color);
-            max-width: 400px;
-            width: 90%;
+            display: none; position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%);
+            z-index: 9997; background: var(--bg-card); padding: 18px 24px; border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); max-width: 400px; width: 90%;
         }
-        #reminderPopup h3 {
-            font-size: 16px;
-            margin-bottom: 6px;
-        }
-        #reminderPopup p {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        #reminderPopup .popup-actions {
-            margin-top: 10px;
-            display: flex;
-            gap: 8px;
-            justify-content: flex-end;
-        }
+        #reminderPopup h3 { font-size: 16px; margin-bottom: 6px; }
+        #reminderPopup p { font-size: 14px; color: var(--text-secondary); }
+        #reminderPopup .popup-actions { margin-top: 10px; display: flex; gap: 8px; justify-content: flex-end; }
 
-        /* ===== RESPONSIVE ===== */
+        /* Responsive */
         @media (max-width: 768px) {
-            .app-header {
-                padding: 4px 12px;
-                min-height: 52px;
-            }
-            .header-left .brand {
-                font-size: 16px;
-            }
-            .header-left .brand i {
-                font-size: 20px;
-            }
-            .header-center {
-                margin: 0 6px;
-            }
-            .header-center #searchInput {
-                padding: 6px 10px 6px 32px;
-                font-size: 13px;
-                border-radius: var(--radius-sm);
-            }
-            .header-center .search-icon {
-                left: 8px;
-                font-size: 13px;
-            }
-            .header-right .icon-btn {
-                width: 32px;
-                height: 32px;
-                font-size: 15px;
-            }
-            .avatar-wrap .avatar {
-                width: 30px;
-                height: 30px;
-                font-size: 12px;
-            }
-            .main-content {
-                padding: 12px 10px 80px;
-            }
-            .notes-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                gap: 10px;
-            }
-            .notes-grid.masonry {
-                column-count: 2;
-            }
-            .account-dropdown {
-                width: 260px;
-                right: -4px;
-            }
-            .modal-editor {
-                max-width: 100%;
-                margin: 6px;
-                border-radius: var(--radius-sm);
-            }
-            .signin-card {
-                padding: 28px 18px 24px;
-            }
-            .fab-wrapper {
-                right: 16px;
-                bottom: 16px;
-            }
-            .fab {
-                width: 48px;
-                height: 48px;
-                font-size: 22px;
-            }
-            .note-card .card-actions {
-                opacity: 1;
-            }
-            .left-dropdown {
-                left: -8px;
-                min-width: 180px;
-            }
-            .dashboard-view .stats-grid {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-                gap: 10px;
-            }
-            .link-embed {
-                flex-direction: column;
-                max-height: none;
-            }
-            .link-embed .link-image {
-                width: 100%;
-                height: 80px;
-            }
-            .view-toolbar {
-                gap: 6px;
-            }
-            .view-toolbar .view-group button {
-                font-size: 12px;
-                padding: 2px 8px;
-                min-height: 28px;
-            }
-            .view-toolbar .sort-group select,
-            .view-toolbar .filter-group select {
-                font-size: 12px;
-                padding: 2px 6px;
-                min-height: 28px;
-            }
-            .note-card .card-menu {
-                min-width: 160px;
-                max-width: 220px;
-                max-height: 60vh;
-            }
-            .note-card .card-menu .menu-item {
-                font-size: 12px;
-                padding: 6px 12px;
-                min-height: 36px;
-            }
-            .modal-editor .modal-body .editor-toolbar button {
-                font-size: 12px;
-                padding: 2px 6px;
-                min-height: 28px;
-            }
-            .modal-editor .modal-footer .btn {
-                font-size: 12px;
-                padding: 4px 14px;
-                min-height: 32px;
-            }
-            .modal-editor .modal-footer .undo-redo-group .btn {
-                font-size: 12px;
-                padding: 2px 8px;
-                min-height: 28px;
-            }
+            .app-header { padding: 4px 12px; min-height: 52px; }
+            .header-left .brand { font-size: 16px; }
+            .header-left .brand i { font-size: 20px; }
+            .header-center { margin: 0 6px; }
+            .header-center #searchInput { padding: 6px 10px 6px 32px; font-size: 13px; border-radius: var(--radius-sm); }
+            .header-center .search-icon { left: 8px; font-size: 13px; }
+            .header-right .icon-btn { width: 32px; height: 32px; font-size: 15px; }
+            .avatar-wrap .avatar { width: 30px; height: 30px; font-size: 12px; }
+            .main-content { padding: 12px 10px 80px; }
+            .notes-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+            .notes-grid.masonry { column-count: 2; }
+            .account-dropdown { width: 260px; right: -4px; }
+            .modal-editor { max-width: 100%; margin: 6px; border-radius: var(--radius-sm); }
+            .signin-card { padding: 28px 18px 24px; }
+            .fab-wrapper { right: 16px; bottom: 16px; }
+            .fab { width: 48px; height: 48px; font-size: 22px; }
+            .note-card .card-actions { opacity: 1; }
+            .left-dropdown { left: -8px; min-width: 180px; }
+            .dashboard-view .stats-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+            .link-embed { flex-direction: column; max-height: none; }
+            .link-embed .link-image { width: 100%; height: 80px; }
+            .view-toolbar { gap: 6px; }
+            .view-toolbar .view-group button { font-size: 12px; padding: 2px 8px; min-height: 28px; }
+            .view-toolbar .sort-group select, .view-toolbar .filter-group select { font-size: 12px; padding: 2px 6px; min-height: 28px; }
+            .note-card .card-menu { min-width: 160px; max-width: 220px; max-height: 60vh; }
+            .note-card .card-menu .menu-item { font-size: 12px; padding: 6px 12px; min-height: 36px; }
+            .modal-editor .modal-body .editor-toolbar button { font-size: 12px; padding: 2px 6px; min-height: 28px; }
+            .modal-editor .modal-footer .btn { font-size: 12px; padding: 4px 14px; min-height: 32px; }
+            .modal-editor .modal-footer .undo-redo-group .btn { font-size: 12px; padding: 2px 8px; min-height: 28px; }
         }
         @media (max-width: 480px) {
-            .notes-grid {
-                grid-template-columns: 1fr;
-            }
-            .notes-grid.masonry {
-                column-count: 1;
-            }
-            .header-center #searchInput {
-                font-size: 12px;
-            }
-            .account-dropdown {
-                width: 240px;
-                right: -2px;
-            }
-            .header-left .brand span {
-                display: none;
-            }
-            .dashboard-view .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .fab-menu .fab-option {
-                min-width: 100px;
-                padding: 6px 12px;
-                font-size: 12px;
-            }
-            .note-card .card-menu {
-                min-width: 150px;
-                max-width: 200px;
-            }
-            .trash-view .trash-note {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .trash-view .trash-note .trash-actions {
-                justify-content: flex-end;
-            }
-            .archive-view .archive-note {
-                flex-direction: column;
-                align-items: stretch;
-            }
+            .notes-grid { grid-template-columns: 1fr; }
+            .notes-grid.masonry { column-count: 1; }
+            .header-center #searchInput { font-size: 12px; }
+            .account-dropdown { width: 240px; right: -2px; }
+            .header-left .brand span { display: none; }
+            .dashboard-view .stats-grid { grid-template-columns: 1fr 1fr; }
+            .fab-menu .fab-option { min-width: 100px; padding: 6px 12px; font-size: 12px; }
+            .note-card .card-menu { min-width: 150px; max-width: 200px; }
+            .trash-view .trash-note, .archive-view .archive-note { flex-direction: column; align-items: stretch; }
+            .trash-view .trash-note .trash-actions { justify-content: flex-end; }
         }
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -2067,7 +737,6 @@
 
     <!-- ===== MAIN ===== -->
     <main class="main-content">
-        <!-- View toolbar -->
         <div class="view-toolbar" id="viewToolbar">
             <div class="view-group" id="viewGroup">
                 <button data-view="grid" class="active" title="Grid View"><i class="fas fa-th"></i></button>
@@ -2098,35 +767,32 @@
             </div>
         </div>
 
-        <!-- Dashboard View -->
+        <!-- Dashboard -->
         <div class="dashboard-view" id="dashboardView">
             <div class="stats-grid" id="statsGrid"></div>
             <div class="recent-notes"><h3><i class="fas fa-clock"></i> Recent Notes</h3><div class="recent-list" id="recentList"></div></div>
-            <div class="all-notes-list">
-                <h3><i class="fas fa-list-ul"></i> All Notes</h3>
-                <div id="allNotesList"></div>
-            </div>
+            <div class="all-notes-list"><h3><i class="fas fa-list-ul"></i> All Notes</h3><div id="allNotesList"></div></div>
         </div>
 
-        <!-- Trash View -->
+        <!-- Trash -->
         <div class="trash-view" id="trashView">
             <div class="trash-header"><h2><i class="fas fa-trash" style="color:var(--danger);"></i> Trash</h2><span class="trash-count" id="trashCountLabel">0 items</span><span style="margin-left:auto;font-size:11px;color:var(--text-muted);">Auto-delete after 7 days</span></div>
             <div id="trashList"></div>
         </div>
 
-        <!-- Archive View -->
+        <!-- Archive -->
         <div class="archive-view" id="archiveView">
             <h2 style="margin-bottom:16px;font-size:20px;"><i class="fas fa-archive"></i> Archived Notes</h2>
             <div id="archiveList"></div>
         </div>
 
-        <!-- Labels View -->
+        <!-- Labels -->
         <div class="labels-view" id="labelsView">
             <h2 style="margin-bottom:16px;font-size:20px;"><i class="fas fa-tags"></i> Labels</h2>
             <div id="labelsList" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
         </div>
 
-        <!-- Calendar View -->
+        <!-- Calendar -->
         <div class="calendar-view" id="calendarView">
             <h2 style="margin-bottom:16px;font-size:20px;"><i class="fas fa-calendar-alt"></i> Calendar</h2>
             <div id="calendarContainer"></div>
@@ -2229,7 +895,7 @@
 
     <script>
         // ================================================================
-        //  JAVASCRIPT — Fully Fixed Notes App
+        //  JAVASCRIPT — Fully Fixed & Enhanced Notes App
         // ================================================================
 
         // ================================================================
@@ -2274,8 +940,7 @@
         let imageDataForEditor = null;
         let drawingInitialized = false;
         let isDrawing = false;
-        let lastX = 0,
-            lastY = 0;
+        let lastX = 0, lastY = 0;
         let linkEmbedCache = {};
         let tags = [];
         let reminderValue = null;
@@ -2284,7 +949,7 @@
         let editorFavorite = false;
         let currentPage = 'notes';
 
-        // Undo/Redo stacks
+        // Undo/Redo
         let undoStack = [];
         let redoStack = [];
         const MAX_UNDO = 30;
@@ -2382,8 +1047,7 @@
         function showToast(msg, icon = 'info-circle', duration = 2600) {
             if (toastEl) {
                 toastEl.classList.remove('show');
-                setTimeout(() => { if (toastEl && toastEl.parentNode) toastEl.parentNode.removeChild(toastEl);
-                    toastEl = null; }, 100);
+                setTimeout(() => { if (toastEl && toastEl.parentNode) toastEl.parentNode.removeChild(toastEl); toastEl = null; }, 100);
                 clearTimeout(toastTimer);
             }
             toastEl = document.createElement('div');
@@ -2394,8 +1058,7 @@
             toastTimer = setTimeout(() => {
                 if (toastEl) {
                     toastEl.classList.remove('show');
-                    setTimeout(() => { if (toastEl && toastEl.parentNode) toastEl.parentNode.removeChild(toastEl);
-                        toastEl = null; }, 400);
+                    setTimeout(() => { if (toastEl && toastEl.parentNode) toastEl.parentNode.removeChild(toastEl); toastEl = null; }, 400);
                 }
             }, duration);
         }
@@ -2403,9 +1066,7 @@
         // ================================================================
         //  LOADING
         // ================================================================
-        function setLoading(active) {
-            loadingOverlay.classList.toggle('active', active);
-        }
+        function setLoading(active) { loadingOverlay.classList.toggle('active', active); }
 
         // ================================================================
         //  THEME
@@ -2463,11 +1124,7 @@
         }
 
         function saveUserToStorage(user) { try { localStorage.setItem(USER_KEY, JSON.stringify(user)); } catch (_) {} }
-
-        function loadUserFromStorage() {
-            try { const raw = localStorage.getItem(USER_KEY); return raw ? JSON.parse(raw) : null; } catch (_) { return null; }
-        }
-
+        function loadUserFromStorage() { try { const raw = localStorage.getItem(USER_KEY); return raw ? JSON.parse(raw) : null; } catch (_) { return null; } }
         function clearUserStorage() { try { localStorage.removeItem(USER_KEY); } catch (_) {} }
 
         // ================================================================
@@ -2486,18 +1143,13 @@
                     context: 'signin',
                 });
                 google.accounts.id.renderButton(gsiBtn, {
-                    type: 'standard',
-                    theme: 'outline',
-                    size: 'large',
-                    text: 'signin_with',
-                    shape: 'rectangular',
-                    logo_alignment: 'left',
-                    width: 280,
+                    type: 'standard', theme: 'outline', size: 'large',
+                    text: 'signin_with', shape: 'rectangular',
+                    logo_alignment: 'left', width: 280,
                 });
                 setTimeout(() => { if (gsiBtn.children.length === 0) fallbackBtn.classList.add('visible'); }, 2000);
                 setTimeout(() => { try { google.accounts.id.prompt(); } catch (_) {} }, 600);
-            } catch (err) { console.error('GIS init error:', err);
-                fallbackBtn.classList.add('visible'); }
+            } catch (err) { console.error('GIS init error:', err); fallbackBtn.classList.add('visible'); }
         }
 
         function handleCredentialResponse(response) {
@@ -2510,8 +1162,7 @@
                     email: payload.email || '',
                     picture: payload.picture || '',
                 });
-            } catch (err) { console.error('Credential parse error:', err);
-                showToast('Sign-in failed', 'exclamation-circle'); }
+            } catch (err) { console.error('Credential parse error:', err); showToast('Sign-in failed', 'exclamation-circle'); }
         }
 
         async function handleUserSignIn(user) {
@@ -2525,8 +1176,7 @@
                 renderApp();
                 showToast(`Welcome, ${user.name}!`, 'check-circle');
                 setTimeout(() => { try { google.accounts.id.prompt(); } catch (_) {} }, 500);
-            } catch (err) { console.error('Sign-in error:', err);
-                showToast('Error signing in', 'exclamation-circle'); } finally { setLoading(false); }
+            } catch (err) { console.error('Sign-in error:', err); showToast('Error signing in', 'exclamation-circle'); } finally { setLoading(false); }
         }
 
         // ================================================================
@@ -2574,10 +1224,8 @@
                 renderApp();
                 showToast('Signed out', 'sign-out-alt');
                 fallbackBtn.classList.remove('visible');
-                setTimeout(() => { try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); } },
-                500);
-            } catch (err) { console.error('Sign out error:', err);
-                showToast('Error signing out', 'exclamation-circle'); } finally { setLoading(false); }
+                setTimeout(() => { try { google.accounts.id.prompt(); } catch (_) { fallbackBtn.classList.add('visible'); } }, 500);
+            } catch (err) { console.error('Sign out error:', err); showToast('Error signing out', 'exclamation-circle'); } finally { setLoading(false); }
         }
 
         // ================================================================
@@ -2600,8 +1248,7 @@
         async function fetchLinkPreview(url) {
             if (linkEmbedCache[url]) return linkEmbedCache[url];
             try {
-                const apiUrl =
-                    `https://api.microlink.io/?url=${encodeURIComponent(url)}&meta=true&screenshot=false&embed=false`;
+                const apiUrl = `https://api.microlink.io/?url=${encodeURIComponent(url)}&meta=true&screenshot=false&embed=false`;
                 const resp = await fetch(apiUrl);
                 if (!resp.ok) throw new Error('API error');
                 const data = await resp.json();
@@ -2686,9 +1333,7 @@
             reminderPopup.dataset.noteId = note.id;
         }
 
-        reminderPopupDismiss.addEventListener('click', () => {
-            reminderPopup.style.display = 'none';
-        });
+        reminderPopupDismiss.addEventListener('click', () => { reminderPopup.style.display = 'none'; });
 
         reminderPopupSnooze.addEventListener('click', () => {
             const noteId = reminderPopup.dataset.noteId;
@@ -2733,7 +1378,6 @@
             if (undoStack.length === 0) return;
             const note = allNotes.find(n => n.id === editingNoteId);
             if (!note) return;
-            // Save current state to redo stack
             const currentState = {
                 title: note.title || '',
                 content: noteContentEditable.innerHTML || '',
@@ -2763,7 +1407,6 @@
             note.imageData = prev.imageData;
             note.updatedAt = Date.now();
 
-            // Update UI
             noteTitleInput.value = note.title;
             noteContentEditable.innerHTML = note.content || '';
             selectedColor = note.color;
@@ -2841,33 +1484,28 @@
             if (redoBtn) redoBtn.style.opacity = redoStack.length > 0 ? '1' : '0.3';
         }
 
-        // Track editor changes for undo
         let editorChangeTimer = null;
 
         function trackEditorChange() {
             if (!editingNoteId) return;
             clearTimeout(editorChangeTimer);
-            editorChangeTimer = setTimeout(() => {
-                pushUndoState();
-            }, 500);
+            editorChangeTimer = setTimeout(() => { pushUndoState(); }, 500);
         }
 
         // ================================================================
-        //  RENDER: DASHBOARD
+        //  RENDER FUNCTIONS
         // ================================================================
         function renderDashboard() {
             if (!currentUser) return;
             const active = allNotes.filter(n => !n.deletedAt);
-            const total = active.length,
-                pinned = active.filter(n => n.pinned).length,
+            const total = active.length, pinned = active.filter(n => n.pinned).length,
                 archived = active.filter(n => n.archived).length,
                 trash = allNotes.filter(n => n.deletedAt).length,
                 favorite = active.filter(n => n.favorite).length,
                 locked = active.filter(n => n.locked).length;
             const colors = {};
-            active.forEach(n => { const c = n.color || 'default';
-                colors[c] = (colors[c] || 0) + 1; });
-            const colorEntries = Object.entries(colors).sort((a, b) => b[1] - a[1]);
+            active.forEach(n => { const c = n.color || 'default'; colors[c] = (colors[c] || 0) + 1; });
+            const colorEntries = Object.entries(colors).sort((a,b) => b[1] - a[1]);
             statsGrid.innerHTML = `
                 <div class="stat-card"><div class="stat-icon"><i class="fas fa-file-alt"></i></div><div class="stat-number">${total}</div><div class="stat-label">Total</div></div>
                 <div class="stat-card"><div class="stat-icon"><i class="fas fa-thumbtack"></i></div><div class="stat-number">${pinned}</div><div class="stat-label">Pinned</div></div>
@@ -2877,19 +1515,16 @@
                 <div class="stat-card"><div class="stat-icon"><i class="fas fa-lock"></i></div><div class="stat-number">${locked}</div><div class="stat-label">Locked</div></div>
                 <div class="stat-card"><div class="stat-icon"><i class="fas fa-palette"></i></div><div class="stat-number">${colorEntries.length}</div><div class="stat-label">Colors</div></div>
             `;
-            const recent = [...active].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)).slice(0, 5);
-            if (recent.length === 0) { recentList.innerHTML =
-                `<div style="color:var(--text-muted);padding:6px 0;">No notes yet.</div>`; } else {
+            const recent = [...active].sort((a,b) => (b.updatedAt||0) - (a.updatedAt||0)).slice(0,5);
+            if (recent.length === 0) { recentList.innerHTML = `<div style="color:var(--text-muted);padding:6px 0;">No notes yet.</div>`; }
+            else {
                 let html = '';
-                recent.forEach(n => { const title = n.title || 'Untitled';
-                    const date = formatDate(n.updatedAt || n.createdAt);
-                    html +=
-                        `<div class="recent-item"><span class="recent-title">${escHtml(title)}</span><span class="recent-date">${date}</span></div>`;
+                recent.forEach(n => { const title = n.title || 'Untitled'; const date = formatDate(n.updatedAt || n.createdAt);
+                    html += `<div class="recent-item"><span class="recent-title">${escHtml(title)}</span><span class="recent-date">${date}</span></div>`;
                 });
                 recentList.innerHTML = html;
             }
-
-            const allNotesSorted = [...active].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+            const allNotesSorted = [...active].sort((a,b) => (b.updatedAt||0) - (a.updatedAt||0));
             if (allNotesSorted.length === 0) {
                 allNotesList.innerHTML = `<div style="color:var(--text-muted);padding:6px 0;">No notes yet.</div>`;
             } else {
@@ -2897,20 +1532,11 @@
                 allNotesSorted.forEach(n => {
                     const title = n.title || 'Untitled';
                     const date = formatDate(n.updatedAt || n.createdAt);
-                    const preview = (n.content || '').substring(0, 40) + ((n.content || '').length > 40 ? '…' : '');
-                    html += `
-                        <div class="all-note-item">
-                            <div>
-                                <span class="note-title">${escHtml(title)}</span>
-                                <span style="color:var(--text-muted);font-size:11px;margin-left:6px;">${escHtml(preview)}</span>
-                            </div>
-                            <span class="note-info">${date}</span>
-                        </div>
-                    `;
+                    const preview = (n.content||'').substring(0,40) + ((n.content||'').length>40?'…':'');
+                    html += `<div class="all-note-item"><div><span class="note-title">${escHtml(title)}</span><span style="color:var(--text-muted);font-size:11px;margin-left:6px;">${escHtml(preview)}</span></div><span class="note-info">${date}</span></div>`;
                 });
                 allNotesList.innerHTML = html;
             }
-
             dashboardView.classList.add('active');
             notesGrid.style.display = 'none';
             trashView.classList.remove('active');
@@ -2921,44 +1547,28 @@
             fabWrapper.classList.remove('hidden');
         }
 
-        // ================================================================
-        //  RENDER: TRASH
-        // ================================================================
         function renderTrash() {
             if (!currentUser) { trashView.classList.remove('active'); return; }
-            const trashNotes = allNotes.filter(n => n.deletedAt).sort((a, b) => (b.deletedAt || 0) - (a.deletedAt || 0));
+            const trashNotes = allNotes.filter(n => n.deletedAt).sort((a,b) => (b.deletedAt||0) - (a.deletedAt||0));
             trashCount.textContent = trashNotes.length;
             trashCountLabel.textContent = trashNotes.length + ' items';
             if (trashNotes.length === 0) {
-                trashList.innerHTML =
-                    `<div class="trash-empty"><div><i class="fas fa-trash"></i></div><div class="empty-text">Trash is empty</div><div class="empty-sub">Deleted notes appear here</div></div>`;
+                trashList.innerHTML = `<div class="trash-empty"><div><i class="fas fa-trash"></i></div><div class="empty-text">Trash is empty</div><div class="empty-sub">Deleted notes appear here</div></div>`;
             } else {
                 let html = '';
                 trashNotes.forEach(n => {
                     const title = n.title || 'Untitled';
                     const content = n.content || '';
-                    const excerpt = content.substring(0, 50) + (content.length > 50 ? '…' : '');
-                    const daysLeft = TRASH_DAYS - Math.floor((Date.now() - n.deletedAt) / (24 * 60 * 60 * 1000));
-                    html += `
-                        <div class="trash-note" data-id="${n.id}">
-                            <div class="trash-info">
-                                <div class="trash-title">${escHtml(title)}</div>
-                                <div class="trash-excerpt">${escHtml(excerpt)}</div>
-                                <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">${daysLeft > 0 ? daysLeft + ' days left' : 'Expiring soon'}</div>
-                            </div>
-                            <div class="trash-actions">
-                                <button class="trash-btn restore-btn" data-id="${n.id}"><i class="fas fa-undo"></i> Restore</button>
-                                <button class="trash-btn delete-forever-btn" data-id="${n.id}"><i class="fas fa-trash-alt"></i> Delete</button>
-                            </div>
-                        </div>
-                    `;
+                    const excerpt = content.substring(0,50) + (content.length>50?'…':'');
+                    const daysLeft = TRASH_DAYS - Math.floor((Date.now() - n.deletedAt) / (24*60*60*1000));
+                    html += `<div class="trash-note" data-id="${n.id}">
+                        <div class="trash-info"><div class="trash-title">${escHtml(title)}</div><div class="trash-excerpt">${escHtml(excerpt)}</div><div style="font-size:10px;color:var(--text-muted);margin-top:2px;">${daysLeft > 0 ? daysLeft + ' days left' : 'Expiring soon'}</div></div>
+                        <div class="trash-actions"><button class="trash-btn restore-btn" data-id="${n.id}"><i class="fas fa-undo"></i> Restore</button><button class="trash-btn delete-forever-btn" data-id="${n.id}"><i class="fas fa-trash-alt"></i> Delete</button></div>
+                    </div>`;
                 });
                 trashList.innerHTML = html;
-                trashList.querySelectorAll('.restore-btn').forEach(btn => btn.addEventListener('click', () => { const id = btn
-                        .dataset.id;
-                    restoreNote(id); }));
-                trashList.querySelectorAll('.delete-forever-btn').forEach(btn => btn.addEventListener('click', () => { const id =
-                        btn.dataset.id; if (confirm('Permanently delete?')) deleteForever(id); }));
+                trashList.querySelectorAll('.restore-btn').forEach(btn => btn.addEventListener('click', () => { const id = btn.dataset.id; restoreNote(id); }));
+                trashList.querySelectorAll('.delete-forever-btn').forEach(btn => btn.addEventListener('click', () => { const id = btn.dataset.id; if (confirm('Permanently delete?')) deleteForever(id); }));
             }
             trashView.classList.add('active');
             dashboardView.classList.remove('active');
@@ -2970,36 +1580,21 @@
             fabWrapper.classList.add('hidden');
         }
 
-        // ================================================================
-        //  RENDER: ARCHIVE
-        // ================================================================
         function renderArchive() {
             if (!currentUser) { archiveView.classList.remove('active'); return; }
             const archived = allNotes.filter(n => n.archived && !n.deletedAt);
             if (archived.length === 0) {
-                archiveList.innerHTML =
-                    `<div class="archive-empty"><div><i class="fas fa-archive" style="font-size:40px;opacity:0.3;display:block;margin-bottom:12px;"></i>No archived notes</div></div>`;
+                archiveList.innerHTML = `<div class="archive-empty"><div><i class="fas fa-archive" style="font-size:40px;opacity:0.3;display:block;margin-bottom:12px;"></i>No archived notes</div></div>`;
             } else {
                 let html = '';
                 archived.forEach(n => {
-                    html += `
-                        <div class="archive-note" data-id="${n.id}">
-                            <div class="archive-info">
-                                <div class="archive-title">${escHtml(n.title || 'Untitled')}</div>
-                                <div class="archive-excerpt">${escHtml((n.content||'').substring(0,60))}</div>
-                                <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">Archived ${formatDate(n.updatedAt)}</div>
-                            </div>
-                            <div>
-                                <button class="trash-btn restore-btn" data-action="unarchive" data-id="${n.id}"><i class="fas fa-undo"></i> Unarchive</button>
-                            </div>
-                        </div>
-                    `;
+                    html += `<div class="archive-note" data-id="${n.id}">
+                        <div class="archive-info"><div class="archive-title">${escHtml(n.title || 'Untitled')}</div><div class="archive-excerpt">${escHtml((n.content||'').substring(0,60))}</div><div style="font-size:10px;color:var(--text-muted);margin-top:2px;">Archived ${formatDate(n.updatedAt)}</div></div>
+                        <div><button class="trash-btn restore-btn" data-action="unarchive" data-id="${n.id}"><i class="fas fa-undo"></i> Unarchive</button></div>
+                    </div>`;
                 });
                 archiveList.innerHTML = html;
-                archiveList.querySelectorAll('[data-action="unarchive"]').forEach(btn => {
-                    btn.addEventListener('click', () => { const id = btn.dataset.id;
-                        toggleArchive(id, false); });
-                });
+                archiveList.querySelectorAll('[data-action="unarchive"]').forEach(btn => btn.addEventListener('click', () => { const id = btn.dataset.id; toggleArchive(id, false); }));
             }
             archiveView.classList.add('active');
             dashboardView.classList.remove('active');
@@ -3011,29 +1606,23 @@
             fabWrapper.classList.add('hidden');
         }
 
-        // ================================================================
-        //  RENDER: LABELS
-        // ================================================================
         function renderLabels() {
             if (!currentUser) { labelsView.classList.remove('active'); return; }
             const labelSet = new Set();
             allNotes.forEach(n => { if (n.tags) n.tags.forEach(t => labelSet.add(t)); });
             const labels = Array.from(labelSet);
             if (labels.length === 0) {
-                labelsList.innerHTML =
-                    `<div style="color:var(--text-muted);padding:16px 0;">No labels yet. Add tags to your notes.</div>`;
+                labelsList.innerHTML = `<div style="color:var(--text-muted);padding:16px 0;">No labels yet. Add tags to your notes.</div>`;
             } else {
                 let html = '';
                 labels.forEach(label => {
                     const count = allNotes.filter(n => n.tags && n.tags.includes(label) && !n.deletedAt).length;
-                    html += `
-                        <div class="stat-card" style="cursor:pointer;padding:10px 14px;" data-label="${escHtml(label)}">
-                            <div style="display:flex;justify-content:space-between;align-items:center;">
-                                <span><i class="fas fa-tag" style="color:var(--accent);margin-right:6px;"></i> ${escHtml(label)}</span>
-                                <span style="background:var(--bg-input);padding:2px 8px;border-radius:999px;font-size:11px;">${count}</span>
-                            </div>
+                    html += `<div class="stat-card" style="cursor:pointer;padding:10px 14px;" data-label="${escHtml(label)}">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span><i class="fas fa-tag" style="color:var(--accent);margin-right:6px;"></i> ${escHtml(label)}</span>
+                            <span style="background:var(--bg-input);padding:2px 8px;border-radius:999px;font-size:11px;">${count}</span>
                         </div>
-                    `;
+                    </div>`;
                 });
                 labelsList.innerHTML = html;
                 labelsList.querySelectorAll('.stat-card').forEach(el => {
@@ -3056,9 +1645,6 @@
             fabWrapper.classList.add('hidden');
         }
 
-        // ================================================================
-        //  RENDER: CALENDAR
-        // ================================================================
         let calendarDate = new Date();
 
         function renderCalendar() {
@@ -3067,7 +1653,7 @@
             const year = now.getFullYear();
             const month = now.getMonth();
             const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInMonth = new Date(year, month+1, 0).getDate();
             const today = new Date();
 
             let html = `
@@ -3083,22 +1669,20 @@
                 </div>
                 <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">
             `;
-            for (let i = 0; i < firstDay; i++) { html += `<div></div>`; }
-            for (let d = 1; d <= daysInMonth; d++) {
+            for (let i=0; i<firstDay; i++) { html += `<div></div>`; }
+            for (let d=1; d<=daysInMonth; d++) {
                 const dateObj = new Date(year, month, d);
                 const hasReminder = allNotes.some(n => {
                     if (n.deletedAt || n.archived) return false;
                     if (!n.reminder) return false;
                     const remDate = new Date(n.reminder);
-                    return remDate.getFullYear() === year && remDate.getMonth() === month && remDate.getDate() === d;
+                    return remDate.getFullYear()===year && remDate.getMonth()===month && remDate.getDate()===d;
                 });
-                const isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-                html += `
-                    <div style="padding:6px 2px;border-radius:var(--radius-sm);background:${isToday ? 'var(--accent-bg)' : 'transparent'};${hasReminder ? 'border:1px solid var(--accent);' : ''};font-size:13px;text-align:center;">
-                        ${d}
-                        ${hasReminder ? '<span style="display:block;font-size:9px;color:var(--accent);">🔔</span>' : ''}
-                    </div>
-                `;
+                const isToday = d===today.getDate() && month===today.getMonth() && year===today.getFullYear();
+                html += `<div style="padding:6px 2px;border-radius:var(--radius-sm);background:${isToday?'var(--accent-bg)':'transparent'};${hasReminder?'border:1px solid var(--accent);':''};font-size:13px;text-align:center;">
+                    ${d}
+                    ${hasReminder ? '<span style="display:block;font-size:9px;color:var(--accent);">🔔</span>' : ''}
+                </div>`;
             }
             html += `</div>`;
             calendarContainer.innerHTML = html;
@@ -3128,8 +1712,7 @@
         async function renderNotes() {
             if (!currentUser) {
                 notesGrid.className = 'notes-grid empty';
-                notesGrid.innerHTML =
-                    `<div class="empty-icon"><i class="fas fa-pen-fancy"></i></div><div class="empty-text">Sign in to see your notes</div><div class="empty-sub">Your notes are securely stored</div>`;
+                notesGrid.innerHTML = `<div class="empty-icon"><i class="fas fa-pen-fancy"></i></div><div class="empty-text">Sign in to see your notes</div><div class="empty-sub">Your notes are securely stored</div>`;
                 dashboardView.classList.remove('active');
                 trashView.classList.remove('active');
                 archiveView.classList.remove('active');
@@ -3163,8 +1746,7 @@
                     const matchPinned = q.includes('pinned') && n.pinned;
                     const matchArchived = q.includes('archived') && n.archived;
                     const matchChecklist = q.includes('checklist') && n.checklistItems && n.checklistItems.length > 0;
-                    return matchTitle || matchContent || matchTags || matchReminder || matchColor || matchPinned ||
-                        matchArchived || matchChecklist;
+                    return matchTitle || matchContent || matchTags || matchReminder || matchColor || matchPinned || matchArchived || matchChecklist;
                 });
             }
 
@@ -3172,17 +1754,16 @@
             else if (currentFilter === 'archived') filtered = filtered.filter(n => n.archived);
             else if (currentFilter === 'locked') filtered = filtered.filter(n => n.locked);
             else if (currentFilter === 'favorite') filtered = filtered.filter(n => n.favorite);
-            else if (currentFilter === 'checklist') filtered = filtered.filter(n => n.checklistItems && n.checklistItems
-                .length > 0);
+            else if (currentFilter === 'checklist') filtered = filtered.filter(n => n.checklistItems && n.checklistItems.length > 0);
             else if (currentFilter === 'reminder') filtered = filtered.filter(n => n.reminder);
 
-            if (currentSort === 'newest') filtered.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-            else if (currentSort === 'oldest') filtered.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-            else if (currentSort === 'modified') filtered.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
-            else if (currentSort === 'pinned') filtered.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
-            else if (currentSort === 'reminder') filtered.sort((a, b) => (a.reminder || 0) - (b.reminder || 0));
-            else if (currentSort === 'color') filtered.sort((a, b) => (a.color || '').localeCompare(b.color || ''));
-            else if (currentSort === 'title') filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+            if (currentSort === 'newest') filtered.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+            else if (currentSort === 'oldest') filtered.sort((a,b) => (a.createdAt||0) - (b.createdAt||0));
+            else if (currentSort === 'modified') filtered.sort((a,b) => (b.updatedAt||0) - (a.updatedAt||0));
+            else if (currentSort === 'pinned') filtered.sort((a,b) => (b.pinned?1:0) - (a.pinned?1:0));
+            else if (currentSort === 'reminder') filtered.sort((a,b) => (a.reminder||0) - (b.reminder||0));
+            else if (currentSort === 'color') filtered.sort((a,b) => (a.color||'').localeCompare(b.color||''));
+            else if (currentSort === 'title') filtered.sort((a,b) => (a.title||'').localeCompare(b.title||''));
 
             const archiveCountVal = allNotes.filter(n => n.archived && !n.deletedAt).length;
             archiveCount.textContent = archiveCountVal;
@@ -3191,12 +1772,9 @@
 
             if (filtered.length === 0) {
                 notesGrid.className = 'notes-grid empty';
-                const msg = currentPage === 'archive' ? 'No archived notes' : (q ? 'No notes found' :
-                    'Your notes will appear here');
-                const sub = currentPage === 'archive' ? 'Unarchive to restore' : (q ? 'Try a different search' :
-                    'Tap + to create');
-                notesGrid.innerHTML =
-                    `<div class="empty-icon"><i class="fas fa-${q?'search':'sticky-note'}"></i></div><div class="empty-text">${msg}</div><div class="empty-sub">${sub}</div>`;
+                const msg = currentPage === 'archive' ? 'No archived notes' : (q ? 'No notes found' : 'Your notes will appear here');
+                const sub = currentPage === 'archive' ? 'Unarchive to restore' : (q ? 'Try a different search' : 'Tap + to create');
+                notesGrid.innerHTML = `<div class="empty-icon"><i class="fas fa-${q?'search':'sticky-note'}"></i></div><div class="empty-text">${msg}</div><div class="empty-sub">${sub}</div>`;
                 dashboardView.classList.remove('active');
                 trashView.classList.remove('active');
                 archiveView.classList.remove('active');
@@ -3286,8 +1864,7 @@
                 if (note.reminder) {
                     const remindDate = new Date(note.reminder);
                     if (!isNaN(remindDate)) {
-                        reminderHtml =
-                            `<div class="note-reminder"><i class="fas fa-bell"></i> ${remindDate.toLocaleString()}</div>`;
+                        reminderHtml = `<div class="note-reminder"><i class="fas fa-bell"></i> ${remindDate.toLocaleString()}</div>`;
                     }
                 }
 
@@ -3344,8 +1921,7 @@
                     moreBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
                         // Close all other menus
-                        document.querySelectorAll('.card-menu.open').forEach(m => { if (m !== menu) m.classList
-                                .remove('open'); });
+                        document.querySelectorAll('.card-menu.open').forEach(m => { if (m !== menu) m.classList.remove('open'); });
                         const isOpen = menu.classList.toggle('open');
                         if (isOpen) {
                             // Position menu with edge detection
@@ -3373,7 +1949,7 @@
                         if (colorSub) colorSub.style.display = 'none';
                     });
                 }
-                // Checklist checkbox events
+                // Checklist
                 card.querySelectorAll('input[type="checkbox"]').forEach(cb => {
                     cb.addEventListener('change', function() {
                         const noteId = this.dataset.noteid;
@@ -3394,16 +1970,15 @@
                         const action = item.dataset.action;
                         const note = allNotes.find(n => n.id === id);
                         if (!note) return;
-                        if (action === 'pin') { togglePin(note);
-                            menu.classList.remove('open'); } else if (action === 'color') {
+                        if (action === 'pin') { togglePin(note); menu.classList.remove('open'); }
+                        else if (action === 'color') {
                             const colorSub = menu.querySelector('.color-picker-sub');
                             if (colorSub) {
                                 const isVisible = colorSub.style.display !== 'none';
                                 colorSub.style.display = isVisible ? 'none' : 'flex';
                                 if (!isVisible && colorSub.children.length === 0) {
                                     const defaultOpt = document.createElement('div');
-                                    defaultOpt.className = 'color-opt default-opt' + (note.color === null ||
-                                        note.color === '#ffffff' ? ' active' : '');
+                                    defaultOpt.className = 'color-opt default-opt' + (note.color === null || note.color === '#ffffff' ? ' active' : '');
                                     defaultOpt.title = 'Default';
                                     defaultOpt.dataset.color = 'null';
                                     defaultOpt.addEventListener('click', (ev) => {
@@ -3415,11 +1990,9 @@
                                     colorSub.appendChild(defaultOpt);
                                     COLORS.filter(c => c.value !== null).forEach(c => {
                                         const opt = document.createElement('div');
-                                        opt.className = 'color-opt' + (c.value === note.color ?
-                                            ' active' : '');
+                                        opt.className = 'color-opt' + (c.value === note.color ? ' active' : '');
                                         opt.style.background = c.value;
-                                        if (c.value === '#ffffff') opt.style.border =
-                                            '2px solid #dadce0';
+                                        if (c.value === '#ffffff') opt.style.border = '2px solid #dadce0';
                                         opt.dataset.color = c.value;
                                         opt.title = c.name;
                                         opt.addEventListener('click', (ev) => {
@@ -3432,34 +2005,23 @@
                                     });
                                 }
                             }
-                        } else if (action === 'image') { uploadImageForNote(note);
-                            menu.classList.remove('open'); } else if (action === 'link') { copyNoteLink(
-                            note);
-                            menu.classList.remove('open'); } else if (action === 'share') { shareNote(
-                            note);
-                            menu.classList.remove('open'); } else if (action === 'download') { downloadNote(
-                                note);
-                            menu.classList.remove('open'); } else if (action === 'duplicate') { duplicateNote(
-                                note);
-                            menu.classList.remove('open'); } else if (action === 'lock') { toggleLock(note);
-                            menu.classList.remove('open'); } else if (action === 'favorite') { toggleFavorite(
-                                note);
-                            menu.classList.remove('open'); } else if (action === 'archive') { toggleArchive(
-                                note.id, true);
-                            menu.classList.remove('open'); } else if (action === 'unarchive') { toggleArchive(
-                                note.id, false);
-                            menu.classList.remove('open'); } else if (action === 'delete') { moveToTrash(note);
-                            menu.classList.remove('open'); }
+                        } else if (action === 'image') { uploadImageForNote(note); menu.classList.remove('open'); }
+                        else if (action === 'link') { copyNoteLink(note); menu.classList.remove('open'); }
+                        else if (action === 'share') { shareNote(note); menu.classList.remove('open'); }
+                        else if (action === 'download') { downloadNote(note); menu.classList.remove('open'); }
+                        else if (action === 'duplicate') { duplicateNote(note); menu.classList.remove('open'); }
+                        else if (action === 'lock') { toggleLock(note); menu.classList.remove('open'); }
+                        else if (action === 'favorite') { toggleFavorite(note); menu.classList.remove('open'); }
+                        else if (action === 'archive') { toggleArchive(note.id, true); menu.classList.remove('open'); }
+                        else if (action === 'unarchive') { toggleArchive(note.id, false); menu.classList.remove('open'); }
+                        else if (action === 'delete') { moveToTrash(note); menu.classList.remove('open'); }
                     });
                 });
                 card.addEventListener('click', (e) => {
-                    if (e.target.closest('.card-actions') || e.target.closest('.note-image') || e.target
-                        .closest('.link-embed') || e.target.closest('.note-meta') || e.target.closest(
-                            'input[type="checkbox"]')) return;
+                    if (e.target.closest('.card-actions') || e.target.closest('.note-image') || e.target.closest('.link-embed') || e.target.closest('.note-meta') || e.target.closest('input[type="checkbox"]')) return;
                     if (note && note.locked) {
                         const pwd = prompt('Enter password:');
-                        if (pwd !== 'password') { showToast('Incorrect password', 'exclamation-circle');
-                            return; }
+                        if (pwd !== 'password') { showToast('Incorrect password', 'exclamation-circle'); return; }
                     }
                     openEditor(id);
                 });
@@ -3479,12 +2041,35 @@
         }
 
         // ================================================================
-        //  LINKIFY
+        //  HELPERS
         // ================================================================
         function linkify(text) {
             if (!text) return '';
             const urlRegex = /(https?:\/\/[^\s<]+)/g;
             return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
+        }
+
+        function escHtml(str) { const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
+
+        function isDarkColor(hex) {
+            if (!hex || hex === '#ffffff') return false;
+            const c = hex.replace('#', '');
+            const r = parseInt(c.substr(0,2),16) || 0;
+            const g = parseInt(c.substr(2,2),16) || 0;
+            const b = parseInt(c.substr(4,2),16) || 0;
+            return (r*0.299 + g*0.587 + b*0.114) < 128;
+        }
+
+        function formatDate(ts) {
+            if (!ts) return '';
+            const d = new Date(ts);
+            const now = new Date();
+            const diff = now - d;
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return Math.floor(diff/60000) + 'm ago';
+            if (diff < 86400000) return Math.floor(diff/3600000) + 'h ago';
+            if (diff < 604800000) return Math.floor(diff/86400000) + 'd ago';
+            return d.toLocaleDateString();
         }
 
         // ================================================================
@@ -3501,33 +2086,6 @@
             archiveCount.textContent = archiveCountVal;
             const trashCountVal = allNotes.filter(n => n.deletedAt).length;
             trashCount.textContent = trashCountVal;
-        }
-
-        // ================================================================
-        //  HELPERS
-        // ================================================================
-        function escHtml(str) { const div = document.createElement('div');
-            div.textContent = str; return div.innerHTML; }
-
-        function isDarkColor(hex) {
-            if (!hex || hex === '#ffffff') return false;
-            const c = hex.replace('#', '');
-            const r = parseInt(c.substr(0, 2), 16) || 0;
-            const g = parseInt(c.substr(2, 2), 16) || 0;
-            const b = parseInt(c.substr(4, 2), 16) || 0;
-            return (r * 0.299 + g * 0.587 + b * 0.114) < 128;
-        }
-
-        function formatDate(ts) {
-            if (!ts) return '';
-            const d = new Date(ts);
-            const now = new Date();
-            const diff = now - d;
-            if (diff < 60000) return 'Just now';
-            if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
-            if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
-            if (diff < 604800000) return Math.floor(diff / 86400000) + 'd ago';
-            return d.toLocaleDateString();
         }
 
         // ================================================================
@@ -3590,7 +2148,7 @@
         async function duplicateNote(note) {
             const newNote = {
                 ...note,
-                id: Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 6),
+                id: Date.now().toString(36) + '_' + Math.random().toString(36).substr(2,6),
                 title: note.title + ' (copy)',
                 content: note.content || '',
                 pinned: false,
@@ -3598,7 +2156,7 @@
                 deletedAt: null,
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
-                checklistItems: note.checklistItems ? note.checklistItems.map(i => ({ ...i })) : [],
+                checklistItems: note.checklistItems ? note.checklistItems.map(i => ({...i})) : [],
                 imageData: note.imageData || null,
             };
             allNotes.unshift(newNote);
@@ -3695,10 +2253,9 @@
         // ================================================================
         //  NOTE CRUD
         // ================================================================
-        async function createNote(title, content, color, type = 'text', imageData = null, tags = [], reminder = null,
-            repeat = 'none', locked = false, favorite = false, checklistItems = []) {
+        async function createNote(title, content, color, type='text', imageData=null, tags=[], reminder=null, repeat='none', locked=false, favorite=false, checklistItems=[]) {
             const note = {
-                id: Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 6),
+                id: Date.now().toString(36) + '_' + Math.random().toString(36).substr(2,6),
                 title: title.trim() || '',
                 content: content || '',
                 color: color,
@@ -3723,8 +2280,7 @@
             return note;
         }
 
-        async function updateNote(id, title, content, color, imageData = null, type = null, tags = null, reminder = null,
-            repeat = null, locked = null, favorite = null, checklistItems = null) {
+        async function updateNote(id, title, content, color, imageData=null, type=null, tags=null, reminder=null, repeat=null, locked=null, favorite=null, checklistItems=null) {
             const note = allNotes.find(n => n.id === id);
             if (!note) return;
             note.title = (title || '').trim();
@@ -3780,13 +2336,12 @@
                 noteTitleInput.value = note.title || '';
                 selectedColor = note.color !== undefined ? note.color : DEFAULT_COLOR;
                 editorDeleteBtn.style.display = 'inline-flex';
-                if (note.tags) { tags = [...note.tags];
-                    renderTagChips(); }
+                if (note.tags) { tags = [...note.tags]; renderTagChips(); }
                 if (note.reminder) {
                     const d = new Date(note.reminder);
                     if (!isNaN(d)) {
                         reminderValue = note.reminder;
-                        reminderInput.value = d.toISOString().slice(0, 16);
+                        reminderInput.value = d.toISOString().slice(0,16);
                     }
                 }
                 repeatValue = note.repeat || 'none';
@@ -3844,7 +2399,7 @@
                     drawingCanvas.width = drawingCanvas.clientWidth || 400;
                     drawingCanvas.height = 300;
                     ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+                    ctx.fillRect(0,0,drawingCanvas.width,drawingCanvas.height);
                     ctx.strokeStyle = '#202124';
                     ctx.lineWidth = 2;
                     ctx.lineCap = 'round';
@@ -3883,7 +2438,7 @@
             currentType = type;
             renderEditorColorPicker(selectedColor);
             editorModal.classList.add('active');
-            // Push initial state for undo
+            // Push initial state
             setTimeout(() => {
                 if (editingNoteId) {
                     const note = allNotes.find(n => n.id === editingNoteId);
@@ -3898,7 +2453,7 @@
                             locked: note.locked,
                             favorite: note.favorite,
                             type: note.type,
-                            checklistItems: note.checklistItems ? note.checklistItems.map(i => ({ ...i })) : [],
+                            checklistItems: note.checklistItems ? note.checklistItems.map(i => ({...i})) : [],
                             imageData: note.imageData,
                         };
                         undoStack = [JSON.stringify(initState)];
@@ -3907,7 +2462,6 @@
                     }
                 }
             }, 200);
-            // Hide FAB when editor opens
             fabWrapper.classList.add('hidden');
             setTimeout(() => noteTitleInput.focus(), 100);
         }
@@ -3929,8 +2483,7 @@
         function renderEditorColorPicker(selected) {
             editorColorPicker.innerHTML = '';
             const defaultOpt = document.createElement('div');
-            defaultOpt.className = 'color-opt default-opt' + (selected === null || selected === '#ffffff' ? ' active' :
-            '');
+            defaultOpt.className = 'color-opt default-opt' + (selected === null || selected === '#ffffff' ? ' active' : '');
             defaultOpt.title = 'Default (theme)';
             defaultOpt.dataset.color = 'null';
             defaultOpt.addEventListener('click', () => {
@@ -3963,8 +2516,7 @@
             tags.forEach((tag, index) => {
                 const chip = document.createElement('span');
                 chip.className = 'tag-chip';
-                chip.innerHTML =
-                    `${escHtml(tag)} <button class="remove-tag" data-index="${index}">&times;</button>`;
+                chip.innerHTML = `${escHtml(tag)} <button class="remove-tag" data-index="${index}">&times;</button>`;
                 chip.querySelector('.remove-tag').addEventListener('click', () => {
                     tags.splice(index, 1);
                     renderTagChips();
@@ -3993,18 +2545,14 @@
         reminderInput.addEventListener('change', () => {
             if (reminderInput.value) {
                 reminderValue = new Date(reminderInput.value).getTime();
-            } else {
-                reminderValue = null;
-            }
+            } else { reminderValue = null; }
             trackEditorChange();
         });
-
         clearReminderBtn.addEventListener('click', () => {
             reminderInput.value = '';
             reminderValue = null;
             trackEditorChange();
         });
-
         repeatSelect.addEventListener('change', () => {
             repeatValue = repeatSelect.value;
             trackEditorChange();
@@ -4064,7 +2612,7 @@
                 canvas.width = canvas.clientWidth || 400;
                 canvas.height = 300;
                 ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillRect(0,0,canvas.width,canvas.height);
                 ctx.strokeStyle = '#202124';
                 ctx.lineWidth = 2;
                 ctx.lineCap = 'round';
@@ -4175,7 +2723,7 @@
                 if (url) document.execCommand('createLink', false, url);
             }
             if (cmd.startsWith('heading')) {
-                const level = parseInt(cmd.replace('heading', ''));
+                const level = parseInt(cmd.replace('heading',''));
                 document.execCommand('formatBlock', false, `h${level}`);
             }
             btn.classList.toggle('active');
@@ -4212,8 +2760,7 @@
         // ================================================================
         function renderAccountDropdown() {
             if (!currentUser) {
-                accountDropdown.innerHTML =
-                    `<button class="drop-item" id="dropSignIn"><span class="icon"><i class="fas fa-sign-in-alt"></i></span><span class="label">Sign in</span></button>`;
+                accountDropdown.innerHTML = `<button class="drop-item" id="dropSignIn"><span class="icon"><i class="fas fa-sign-in-alt"></i></span><span class="label">Sign in</span></button>`;
                 const btn = accountDropdown.querySelector('#dropSignIn');
                 if (btn) btn.addEventListener('click', () => {
                     accountDropdown.classList.remove('open');
@@ -4265,43 +2812,19 @@
             sub.style.display = sub.style.display === 'block' ? 'none' : 'block';
         });
 
-        themeToggleTrack.addEventListener('click', (e) => { e.stopPropagation();
-            toggleTheme(); });
+        themeToggleTrack.addEventListener('click', (e) => { e.stopPropagation(); toggleTheme(); });
 
         function navigateTo(page) {
             currentPage = page;
             renderAll();
         }
 
-        leftDashboard.addEventListener('click', () => {
-            leftDropdown.classList.remove('open');
-            navigateTo('dashboard');
-        });
-
-        leftNotes.addEventListener('click', () => {
-            leftDropdown.classList.remove('open');
-            navigateTo('notes');
-        });
-
-        leftArchive.addEventListener('click', () => {
-            leftDropdown.classList.remove('open');
-            navigateTo('archive');
-        });
-
-        leftTrash.addEventListener('click', () => {
-            leftDropdown.classList.remove('open');
-            navigateTo('trash');
-        });
-
-        leftLabels.addEventListener('click', () => {
-            leftDropdown.classList.remove('open');
-            navigateTo('labels');
-        });
-
-        leftCalendar.addEventListener('click', () => {
-            leftDropdown.classList.remove('open');
-            navigateTo('calendar');
-        });
+        leftDashboard.addEventListener('click', () => { leftDropdown.classList.remove('open'); navigateTo('dashboard'); });
+        leftNotes.addEventListener('click', () => { leftDropdown.classList.remove('open'); navigateTo('notes'); });
+        leftArchive.addEventListener('click', () => { leftDropdown.classList.remove('open'); navigateTo('archive'); });
+        leftTrash.addEventListener('click', () => { leftDropdown.classList.remove('open'); navigateTo('trash'); });
+        leftLabels.addEventListener('click', () => { leftDropdown.classList.remove('open'); navigateTo('labels'); });
+        leftCalendar.addEventListener('click', () => { leftDropdown.classList.remove('open'); navigateTo('calendar'); });
 
         leftExport.addEventListener('click', () => {
             leftDropdown.classList.remove('open');
@@ -4339,7 +2862,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'notes_backup_' + new Date().toISOString().slice(0, 10) + '.json';
+            a.download = 'notes_backup_' + new Date().toISOString().slice(0,10) + '.json';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -4368,8 +2891,7 @@
                                 showToast(`Imported ${newNotes.length} notes`, 'file-import');
                             } else { showToast('No new notes', 'info-circle'); }
                         } else { showToast('Invalid file', 'exclamation-circle'); }
-                    } catch (err) { console.error('Import error:', err);
-                        showToast('Error importing', 'exclamation-circle'); }
+                    } catch (err) { console.error('Import error:', err); showToast('Error importing', 'exclamation-circle'); }
                 };
                 reader.readAsText(file);
             };
@@ -4383,7 +2905,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'notes_backup_manual_' + new Date().toISOString().slice(0, 10) + '.json';
+            a.download = 'notes_backup_manual_' + new Date().toISOString().slice(0,10) + '.json';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -4424,8 +2946,7 @@
             if (!currentUser) {
                 signinOverlay.classList.add('active');
                 notesGrid.className = 'notes-grid empty';
-                notesGrid.innerHTML =
-                    `<div class="empty-icon"><i class="fas fa-pen-fancy"></i></div><div class="empty-text">Sign in to see your notes</div><div class="empty-sub">Your notes are securely stored</div>`;
+                notesGrid.innerHTML = `<div class="empty-icon"><i class="fas fa-pen-fancy"></i></div><div class="empty-text">Sign in to see your notes</div><div class="empty-sub">Your notes are securely stored</div>`;
                 avatarLetter.textContent = 'G';
                 accountBadge.textContent = '0';
                 accountDropdown.innerHTML = '';
@@ -4442,8 +2963,7 @@
             }
             signinOverlay.classList.remove('active');
             const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
-            if (currentUser.picture) { avatarLetter.innerHTML = `<img src="${currentUser.picture}" alt="" />`; } else { avatarLetter
-                    .textContent = initial; }
+            if (currentUser.picture) { avatarLetter.innerHTML = `<img src="${currentUser.picture}" alt="" />`; } else { avatarLetter.textContent = initial; }
             if (!currentPage) currentPage = 'notes';
             renderAll();
             renderAccountDropdown();
@@ -4474,21 +2994,17 @@
             }
         });
 
-        // Undo/Redo buttons
         undoBtn.addEventListener('click', undoEditor);
         redoBtn.addEventListener('click', redoEditor);
 
-        // Track editor changes
         noteTitleInput.addEventListener('input', trackEditorChange);
         noteContentEditable.addEventListener('input', trackEditorChange);
         noteContentEditable.addEventListener('keydown', (e) => {
-            // Track after paste
-            if (e.key === 'v' && (e.ctrlKey || e.metaKey)) {
+            if ((e.key === 'v' && (e.ctrlKey || e.metaKey))) {
                 setTimeout(trackEditorChange, 100);
             }
         });
 
-        // Editor lock/favorite checkboxes
         editorLockCheck.addEventListener('change', () => {
             editorLock = editorLockCheck.checked;
             trackEditorChange();
@@ -4564,22 +3080,17 @@
                 linkEmbedCache = {};
                 renderAll();
                 showToast('Refreshed', 'sync-alt');
-            } catch (err) { console.error('Refresh error:', err);
-                showToast('Error refreshing', 'exclamation-circle'); } finally { setLoading(false); }
+            } catch (err) { console.error('Refresh error:', err); showToast('Error refreshing', 'exclamation-circle'); } finally { setLoading(false); }
         });
 
         // ================================================================
         //  FALLBACK
         // ================================================================
         fallbackBtn.addEventListener('click', () => {
-            try { if (typeof google !== 'undefined' && google.accounts) { google.accounts.id.prompt(); return; } } catch (
-            _) {}
+            try { if (typeof google !== 'undefined' && google.accounts) { google.accounts.id.prompt(); return; } } catch(_) {}
             const redirectUri = window.location.origin + window.location.pathname;
-            const finalRedirect = (window.location.hostname === 'notes.flatfusion.fun') ?
-                'https://notes.flatfusion.fun/callback' :
-                window.location.origin + window.location.pathname;
-            const authUrl =
-                `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(finalRedirect)}&response_type=token&scope=openid%20profile%20email&prompt=select_account`;
+            const finalRedirect = (window.location.hostname === 'notes.flatfusion.fun') ? 'https://notes.flatfusion.fun/callback' : window.location.origin + window.location.pathname;
+            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(finalRedirect)}&response_type=token&scope=openid%20profile%20email&prompt=select_account`;
             const popup = window.open(authUrl, 'google_signin', 'width=500,height=600,resizable=yes,scrollbars=yes');
             if (!popup) { showToast('Popup blocked', 'exclamation-circle'); return; }
             const timer = setInterval(() => {
@@ -4601,10 +3112,9 @@
                         }
                         popup.close();
                     }
-                } catch (_) {}
+                } catch(_) {}
             }, 300);
-            const checkClosed = setInterval(() => { if (popup.closed) { clearInterval(checkClosed);
-                    clearInterval(timer); } }, 500);
+            const checkClosed = setInterval(() => { if (popup.closed) { clearInterval(checkClosed); clearInterval(timer); } }, 500);
         });
 
         // ================================================================
@@ -4630,8 +3140,7 @@
                     initGoogleSignIn();
                     renderApp();
                 }
-            } catch (err) { console.error('Init error:', err);
-                showToast('Error loading app', 'exclamation-circle'); } finally {
+            } catch (err) { console.error('Init error:', err); showToast('Error loading app', 'exclamation-circle'); } finally {
                 setTimeout(() => setLoading(false), 1500);
                 setLoading(false);
             }
@@ -4643,8 +3152,7 @@
             if (noteId && currentUser) {
                 const note = allNotes.find(n => n.id === noteId);
                 if (note) {
-                    setTimeout(() => { openEditor(noteId);
-                        showToast('Opening shared note...', 'link'); }, 500);
+                    setTimeout(() => { openEditor(noteId); showToast('Opening shared note...', 'link'); }, 500);
                 }
             }
         }
@@ -4652,22 +3160,21 @@
         window.addEventListener('popstate', handleUrlNote);
 
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => { init();
-                setTimeout(handleUrlNote, 800); });
-        } else { init();
-            setTimeout(handleUrlNote, 800); }
+            document.addEventListener('DOMContentLoaded', () => { init(); setTimeout(handleUrlNote, 800); });
+        } else { init(); setTimeout(handleUrlNote, 800); }
 
         setTimeout(() => {
             if (gsiBtn.children.length === 0) fallbackBtn.classList.add('visible');
             if (typeof google === 'undefined' || !google.accounts) fallbackBtn.classList.add('visible');
         }, 4000);
 
-        console.log('✅ Notes App — All bugs fixed.');
-        console.log('✅ Three-dot menu: positioned with edge detection, high z-index.');
-        console.log('✅ Undo/Redo: fully functional with Ctrl+Z / Ctrl+Shift+Z.');
-        console.log('✅ FAB: hidden when menus open, no overlap.');
-        console.log('✅ Mobile: fully responsive, no overflow.');
-        console.log('✅ Editor: auto-save, draft recovery, history tracking.');
+        console.log('✅ Notes App — Fully fixed and enhanced.');
+        console.log('✅ Three-dot menu: edge detection, high z-index.');
+        console.log('✅ Undo/Redo: working with keyboard shortcuts.');
+        console.log('✅ FAB: hides when menus open.');
+        console.log('✅ Reminder: reliable with notifications.');
+        console.log('✅ List notes: fully functional with checklist.');
+        console.log('✅ Mobile: fully responsive.');
     </script>
 </body>
 </html>
