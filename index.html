@@ -8,9 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-    /* ============================================================
-       ROOT VARIABLES — Google Keep Style
-       ============================================================ */
+    /* ===== ROOT ===== */
     :root {
       --bg-app: #f5f7fa;
       --bg-card: #ffffff;
@@ -38,7 +36,6 @@
       --font: 'Google Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --max-width: 1320px;
     }
-
     [data-theme="dark"] {
       --bg-app: #1e1e1e;
       --bg-card: #2d2d2d;
@@ -56,8 +53,6 @@
       --accent-hover: #6a9fdf;
       --accent-bg: #1e2a3a;
     }
-
-    /* ===== RESET & BASE ===== */
     * {
       margin: 0;
       padding: 0;
@@ -172,7 +167,7 @@
       transform: translateY(0) scale(1);
     }
 
-    /* ===== SIGN-IN OVERLAY ===== */
+    /* ===== SIGN-IN ===== */
     #signinOverlay {
       position: fixed;
       inset: 0;
@@ -466,7 +461,6 @@
     .header-right .icon-btn:hover {
       background: var(--bg-hover);
     }
-
     .avatar-wrap {
       position: relative;
       cursor: pointer;
@@ -622,7 +616,7 @@
       transition: padding 0.3s ease;
     }
 
-    /* ===== DASHBOARD VIEW ===== */
+    /* ===== DASHBOARD ===== */
     .dashboard-view {
       display: none;
       animation: fadeIn 0.3s ease;
@@ -739,7 +733,7 @@
       border: 1px solid var(--border-color);
     }
 
-    /* ===== TRASH VIEW ===== */
+    /* ===== TRASH ===== */
     .trash-view {
       display: none;
       animation: fadeIn 0.3s ease;
@@ -892,7 +886,7 @@
       word-wrap: break-word;
       overflow: visible;
       min-height: 100px;
-      max-height: 500px;
+      max-height: 600px;
       cursor: default;
     }
     .note-card:hover {
@@ -981,14 +975,95 @@
       border-radius: 999px;
     }
 
-    /* ===== THREE-DOT MENU — positioned ABOVE the card ===== */
+    /* ===== LINK EMBED ===== */
+    .link-embed {
+      margin: 8px 0 4px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      background: var(--bg-card);
+      transition: var(--transition);
+      display: flex;
+      align-items: stretch;
+      max-height: 140px;
+    }
+    .link-embed:hover {
+      box-shadow: var(--shadow-sm);
+    }
+    .link-embed .link-image {
+      width: 120px;
+      min-height: 80px;
+      flex-shrink: 0;
+      background: var(--bg-input);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .link-embed .link-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .link-embed .link-image .no-img {
+      font-size: 32px;
+      color: var(--text-muted);
+      opacity: 0.3;
+    }
+    .link-embed .link-info {
+      padding: 10px 14px;
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .link-embed .link-info .link-title {
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .link-embed .link-info .link-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+    .link-embed .link-info .link-domain {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .link-embed .link-info .link-domain img {
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+    }
+    .link-embed .link-info .link-domain a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .link-embed .link-info .link-domain a:hover {
+      text-decoration: underline;
+      color: var(--accent);
+    }
+
+    /* ===== THREE-DOT MENU — fixed position ===== */
     .note-card .card-actions {
       position: absolute;
       top: 6px;
       right: 6px;
       opacity: 0;
       transition: var(--transition);
-      z-index: 5;
+      z-index: 10;
     }
     .note-card:hover .card-actions {
       opacity: 1;
@@ -1007,21 +1082,22 @@
       background: var(--bg-hover);
     }
 
-    /* Menu appears ABOVE the card (bottom: 100% so it goes up) */
+    /* Menu appears BELOW the card (fixed position) */
     .note-card .card-menu {
-      position: absolute;
-      bottom: 100%;
-      right: 0;
-      margin-bottom: 6px;
+      position: fixed;
+      top: auto;
+      bottom: auto;
+      left: auto;
+      right: auto;
       background: var(--bg-card);
       border-radius: var(--radius-md);
       box-shadow: var(--shadow-lg);
       padding: 6px 0;
       min-width: 210px;
-      max-height: 350px;
+      max-height: 380px;
       overflow-y: auto;
       display: none;
-      z-index: 50;
+      z-index: 999;
       border: 1px solid var(--border-color);
     }
     .note-card .card-menu.open {
@@ -1089,7 +1165,7 @@
       box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--text-primary);
     }
 
-    /* ===== FAB + FAB MENU ===== */
+    /* ===== FAB ===== */
     .fab-wrapper {
       position: fixed;
       bottom: 28px;
@@ -1170,7 +1246,7 @@
       color: var(--text-secondary);
     }
 
-    /* ===== EDITOR MODAL ===== */
+    /* ===== EDITOR ===== */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -1258,34 +1334,6 @@
     .modal-editor .modal-body .editor-content::placeholder {
       color: var(--text-muted);
     }
-    .modal-editor .modal-body .color-picker-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      padding: 12px 0 4px;
-      border-top: 1px solid var(--border-color);
-      margin-top: 4px;
-    }
-    .modal-editor .modal-body .color-picker-row .color-opt {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: var(--transition);
-      flex-shrink: 0;
-    }
-    .modal-editor .modal-body .color-picker-row .color-opt:hover {
-      transform: scale(1.08);
-    }
-    .modal-editor .modal-body .color-picker-row .color-opt.active {
-      border-color: var(--text-primary);
-      box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--text-primary);
-    }
-    .modal-editor .modal-body .color-picker-row .color-opt.default-opt {
-      background: conic-gradient(white 50%, #ccc 50%);
-      border-color: var(--border-color);
-    }
     .modal-editor .modal-body .editor-image-preview {
       display: none;
       margin: 8px 0;
@@ -1334,6 +1382,34 @@
     }
     .modal-editor .modal-body .list-items-wrap textarea:focus {
       border-color: var(--accent);
+    }
+    .modal-editor .modal-body .color-picker-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 12px 0 4px;
+      border-top: 1px solid var(--border-color);
+      margin-top: 4px;
+    }
+    .modal-editor .modal-body .color-picker-row .color-opt {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+    .modal-editor .modal-body .color-picker-row .color-opt:hover {
+      transform: scale(1.08);
+    }
+    .modal-editor .modal-body .color-picker-row .color-opt.active {
+      border-color: var(--text-primary);
+      box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--text-primary);
+    }
+    .modal-editor .modal-body .color-picker-row .color-opt.default-opt {
+      background: conic-gradient(white 50%, #ccc 50%);
+      border-color: var(--border-color);
     }
     .modal-editor .modal-footer {
       padding: 8px 20px 16px;
@@ -1463,12 +1539,13 @@
       .dashboard-view .stats-grid {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
       }
-      .note-card .card-menu {
-        bottom: 100%;
-        right: -10px;
-        min-width: 180px;
-        max-height: 300px;
-        margin-bottom: 4px;
+      .link-embed {
+        flex-direction: column;
+        max-height: none;
+      }
+      .link-embed .link-image {
+        width: 100%;
+        height: 100px;
       }
     }
     @media (max-width: 480px) {
@@ -1487,10 +1564,6 @@
       }
       .dashboard-view .stats-grid {
         grid-template-columns: 1fr 1fr;
-      }
-      .note-card .card-menu {
-        right: -6px;
-        min-width: 160px;
       }
       .fab-menu .fab-option {
         min-width: 120px;
@@ -1532,11 +1605,8 @@
   <!-- ===== HEADER ===== -->
   <header class="app-header">
     <div class="header-left">
-      <span class="menu-icon" id="leftMenuBtn" aria-label="Menu"><i class="fas fa-bars"></i></span>
-      <div class="brand">
-        <i class="fas fa-pen-fancy"></i>
-        <span>Notes</span>
-      </div>
+      <span class="menu-icon" id="leftMenuBtn"><i class="fas fa-bars"></i></span>
+      <div class="brand"><i class="fas fa-pen-fancy"></i><span>Notes</span></div>
       <div class="left-dropdown" id="leftDropdown" role="menu">
         <div class="drop-item" id="leftDashboard"><i class="fas fa-chart-pie"></i><span class="label">Dashboard</span></div>
         <div class="drop-divider"></div>
@@ -1559,7 +1629,7 @@
       <input type="text" id="searchInput" placeholder="Search notes..." />
     </div>
     <div class="header-right">
-      <button class="icon-btn" id="refreshBtn" aria-label="Refresh"><i class="fas fa-sync-alt"></i></button>
+      <button class="icon-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i></button>
       <div class="avatar-wrap" id="avatarWrap">
         <div class="avatar" id="avatarBtn" role="button" tabindex="0">
           <span id="avatarLetter">G</span>
@@ -1590,12 +1660,11 @@
       <button class="fab-option" data-type="image"><i class="fas fa-image"></i> Image</button>
       <button class="fab-option" data-type="drawing"><i class="fas fa-paint-brush"></i> Drawing</button>
       <button class="fab-option" data-type="list"><i class="fas fa-list-ul"></i> List</button>
-      <button class="fab-option" data-type="public"><i class="fas fa-globe"></i> Public</button>
     </div>
-    <button class="fab" id="fabBtn" aria-label="Create new note"><i class="fas fa-plus"></i></button>
+    <button class="fab" id="fabBtn"><i class="fas fa-plus"></i></button>
   </div>
 
-  <!-- ===== EDITOR MODAL ===== -->
+  <!-- ===== EDITOR ===== -->
   <div class="modal-overlay" id="editorModal" role="dialog" aria-modal="true">
     <div class="modal-editor">
       <div class="modal-header">
@@ -1604,13 +1673,9 @@
       </div>
       <div class="modal-body">
         <input type="text" class="editor-title" id="noteTitleInput" placeholder="Title" />
-        <!-- Text area (for text, image caption, etc.) -->
         <textarea class="editor-content" id="noteContentInput" placeholder="Write your note..." rows="4"></textarea>
-        <!-- Image preview -->
         <div class="editor-image-preview" id="editorImagePreview"><img id="editorImagePreviewImg" src="" alt="Image preview" /></div>
-        <!-- Drawing canvas -->
         <div class="drawing-canvas-wrap" id="drawingCanvasWrap"><canvas id="drawingCanvas" width="400" height="300"></canvas></div>
-        <!-- List items -->
         <div class="list-items-wrap" id="listItemsWrap"><textarea id="listItemsInput" placeholder="Enter list items (one per line)"></textarea></div>
         <div class="color-picker-row" id="editorColorPicker" role="group"></div>
       </div>
@@ -1674,6 +1739,7 @@
     let isDrawing = false;
     let lastX = 0,
       lastY = 0;
+    let linkEmbedCache = {};
 
     // ================================================================
     //  DOM REFS
@@ -1935,6 +2001,54 @@
     }
 
     // ================================================================
+    //  LINK EMBED — fetch OG data via CORS proxy
+    // ================================================================
+    async function fetchLinkPreview(url) {
+      if (linkEmbedCache[url]) return linkEmbedCache[url];
+
+      try {
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+        const response = await fetch(proxyUrl);
+        if (!response.ok) throw new Error('Fetch failed');
+        const html = await response.text();
+
+        // Parse OG tags
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const head = doc.head;
+
+        const getMeta = (prop) => {
+          const el = head.querySelector(`meta[property="${prop}"]`) || head.querySelector(`meta[name="${prop}"]`);
+          return el ? el.getAttribute('content') : null;
+        };
+
+        const title = getMeta('og:title') || head.querySelector('title')?.textContent || new URL(url).hostname;
+        const description = getMeta('og:description') || getMeta('description') || '';
+        const image = getMeta('og:image') || '';
+        const siteName = getMeta('og:site_name') || new URL(url).hostname;
+        const favicon = `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=64`;
+
+        const result = { title, description, image, siteName, favicon, url };
+        linkEmbedCache[url] = result;
+        return result;
+      } catch (err) {
+        console.warn('Link preview fetch failed:', err);
+        // Fallback: show domain with favicon
+        const domain = new URL(url).hostname;
+        const fallback = {
+          title: domain,
+          description: url,
+          image: '',
+          siteName: domain,
+          favicon: `https://www.google.com/s2/favicons?domain=${domain}&sz=64`,
+          url: url
+        };
+        linkEmbedCache[url] = fallback;
+        return fallback;
+      }
+    }
+
+    // ================================================================
     //  RENDER: DASHBOARD
     // ================================================================
     function renderDashboard() {
@@ -2023,9 +2137,9 @@
     }
 
     // ================================================================
-    //  RENDER: NOTES GRID (with search filter)
+    //  RENDER: NOTES GRID with link embeds
     // ================================================================
-    function renderNotes() {
+    async function renderNotes() {
       if (!currentUser) {
         notesGrid.className = 'notes-grid empty';
         notesGrid.innerHTML =
@@ -2039,13 +2153,9 @@
 
       cleanTrash();
 
-      // Filter: active notes (not in trash)
       let active = allNotes.filter(n => !n.deletedAt);
-
-      // Apply archived filter
       let filtered = active.filter(n => n.archived === showArchived);
 
-      // Apply search query (filter by title or content)
       const q = searchQuery.trim().toLowerCase();
       if (q) {
         filtered = filtered.filter(n =>
@@ -2054,7 +2164,6 @@
         );
       }
 
-      // Sort: pinned first, then by updatedAt
       filtered.sort((a, b) => {
         if (a.pinned && !b.pinned) return -1;
         if (!a.pinned && b.pinned) return 1;
@@ -2084,35 +2193,80 @@
       const isDark = currentTheme === 'dark';
       const defaultBg = isDark ? '#2d2d2d' : '#ffffff';
 
-      filtered.forEach(note => {
+      // Build note cards with link embeds
+      for (const note of filtered) {
         let bg = note.color;
         if (bg === null || bg === undefined || bg === '#ffffff' || bg === '') bg = defaultBg;
         const isDarkBg = isDarkColor(bg);
         const textColor = isDarkBg ? '#fff' : '#202124';
         const title = note.title || '';
         let content = note.content || '';
-        content = linkify(content);
         const noteId = note.id;
         const hasImage = note.imageData && note.imageData.length > 0;
         const isList = note.type === 'list';
         const isDrawing = note.type === 'drawing';
-        const isPublic = note.type === 'public';
         const isImage = note.type === 'image';
 
-        // Determine type label
+        // Detect URLs and fetch embeds
+        const urls = content.match(/https?:\/\/[^\s<]+/g) || [];
+        let embedHtml = '';
+        if (urls.length > 0) {
+          // Show embed for the first URL in the note content
+          const firstUrl = urls[0];
+          try {
+            const preview = await fetchLinkPreview(firstUrl);
+            const domain = new URL(firstUrl).hostname;
+            embedHtml = `
+              <div class="link-embed">
+                <div class="link-image">
+                  ${preview.image ? `<img src="${preview.image}" alt="" loading="lazy" />` : `<span class="no-img"><i class="fas fa-link"></i></span>`}
+                </div>
+                <div class="link-info">
+                  <div class="link-title">${escHtml(preview.title || domain)}</div>
+                  ${preview.description ? `<div class="link-desc">${escHtml(preview.description.substring(0, 120))}</div>` : ''}
+                  <div class="link-domain">
+                    <img src="${preview.favicon}" alt="" />
+                    <a href="${firstUrl}" target="_blank" rel="noopener noreferrer">${domain}</a>
+                  </div>
+                </div>
+              </div>
+            `;
+          } catch (_) {}
+        }
+
+        // Process content - remove URLs from displayed content (they're shown in embed)
+        let displayContent = content;
+        if (urls.length > 0) {
+          // Remove the first URL from content to avoid duplication
+          const firstUrl = urls[0];
+          displayContent = displayContent.replace(firstUrl, '').trim();
+        }
+
+        // Type label
         let typeLabel = '';
         if (isList) typeLabel = '📋 List';
         else if (isDrawing) typeLabel = '🎨 Drawing';
         else if (isImage) typeLabel = '🖼️ Image';
-        else if (isPublic) typeLabel = '🌐 Public';
         else typeLabel = '📝 Text';
+
+        // List items rendering
+        let listHtml = '';
+        if (isList && content) {
+          const items = content.split('\n').filter(s => s.trim());
+          listHtml = `<div style="margin:4px 0;"><ul style="list-style:none;padding:0;">`;
+          items.forEach(s => {
+            listHtml +=
+              `<li style="padding:2px 0;display:flex;align-items:center;gap:8px;font-size:14px;"><span style="display:inline-block;width:16px;height:16px;border:2px solid var(--text-muted);border-radius:50%;flex-shrink:0;"></span>${escHtml(s)}</li>`;
+          });
+          listHtml += `</ul></div>`;
+          displayContent = '';
+        }
 
         html += `
           <div class="note-card" data-id="${noteId}" style="background:${bg}; color:${textColor};">
             ${note.pinned ? `<div class="pin-badge"><i class="fas fa-thumbtack"></i></div>` : ''}
-            ${isPublic ? `<div style="position:absolute;top:6px;left:10px;font-size:12px;color:var(--accent);"><i class="fas fa-globe"></i> Public</div>` : ''}
             <div class="card-actions">
-              <button class="more-btn" data-id="${noteId}" aria-label="More options"><i class="fas fa-ellipsis-v"></i></button>
+              <button class="more-btn" data-id="${noteId}"><i class="fas fa-ellipsis-v"></i></button>
               <div class="card-menu" data-id="${noteId}" role="menu">
                 <button class="menu-item" data-action="pin"><i class="fas fa-thumbtack"></i> ${note.pinned ? 'Unpin' : 'Pin'}</button>
                 <button class="menu-item" data-action="color"><i class="fas fa-palette"></i> Change Color</button>
@@ -2129,8 +2283,9 @@
             ${title ? `<div class="note-title">${escHtml(title)}</div>` : ''}
             ${hasImage && !isDrawing ? `<div class="note-image"><img src="${note.imageData}" alt="Note image" loading="lazy" /></div>` : ''}
             ${isDrawing && note.imageData ? `<div style="margin:6px 0 8px;border-radius:var(--radius-sm);overflow:hidden;background:#fff;border:1px solid var(--border-color);"><img src="${note.imageData}" alt="Drawing" style="width:100%;height:auto;max-height:140px;object-fit:contain;" /></div>` : ''}
-            ${isList ? `<div style="margin:4px 0;"><ul style="list-style:none;padding:0;">${content.split('\n').filter(s=>s.trim()).map(s=>`<li style="padding:2px 0;display:flex;align-items:center;gap:8px;font-size:14px;"><span style="display:inline-block;width:16px;height:16px;border:2px solid var(--text-muted);border-radius:50%;flex-shrink:0;"></span>${escHtml(s)}</li>`).join('')}</ul></div>` : ''}
-            ${!isList && !isDrawing ? `<div class="note-content">${content}</div>` : ''}
+            ${listHtml}
+            ${!isList && !isDrawing && displayContent ? `<div class="note-content">${linkify(displayContent)}</div>` : ''}
+            ${embedHtml}
             <div class="note-meta">
               <span class="note-date"><i class="far fa-clock"></i> ${formatDate(note.updatedAt || note.createdAt)}</span>
               ${note.archived ? '<span>📦</span>' : ''}
@@ -2138,7 +2293,7 @@
             </div>
           </div>
         `;
-      });
+      }
       notesGrid.innerHTML = html;
 
       // Attach events
@@ -2150,7 +2305,19 @@
           moreBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             document.querySelectorAll('.card-menu.open').forEach(m => { if (m !== menu) m.classList.remove('open'); });
-            menu.classList.toggle('open');
+            const isOpen = menu.classList.toggle('open');
+            if (isOpen) {
+              // Position menu near the button
+              const rect = moreBtn.getBoundingClientRect();
+              const menuHeight = Math.min(menu.scrollHeight, 380);
+              const spaceBelow = window.innerHeight - rect.bottom;
+              let top = rect.top + rect.height + 6;
+              if (spaceBelow < menuHeight + 20) {
+                top = rect.top - menuHeight - 6;
+              }
+              menu.style.top = Math.max(10, top) + 'px';
+              menu.style.left = Math.min(rect.right - 210, window.innerWidth - 220) + 'px';
+            }
             const colorSub = menu.querySelector('.color-picker-sub');
             if (colorSub) colorSub.style.display = 'none';
           });
@@ -2209,7 +2376,7 @@
         });
         card.addEventListener('click', (e) => {
           if (e.target.closest('.card-actions') || e.target.closest('.note-image') || e.target.closest(
-            '.note-meta')) return;
+            '.link-embed') || e.target.closest('.note-meta')) return;
           openEditor(id);
         });
       });
@@ -2235,10 +2402,10 @@
     // ================================================================
     //  RENDER ALL
     // ================================================================
-    function renderAll() {
+    async function renderAll() {
       if (showTrash) renderTrash();
       else if (showDashboard) renderDashboard();
-      else renderNotes();
+      else await renderNotes();
       const active = allNotes.filter(n => !n.deletedAt);
       archiveCount.textContent = active.filter(n => n.archived).length;
       trashCount.textContent = allNotes.filter(n => n.deletedAt).length;
@@ -2422,13 +2589,12 @@
     }
 
     // ================================================================
-    //  EDITOR — with full type support
+    //  EDITOR
     // ================================================================
     function openEditor(noteId) {
       const note = noteId ? allNotes.find(n => n.id === noteId) : null;
       editingNoteId = note ? note.id : null;
 
-      // Reset UI elements
       editorImagePreview.style.display = 'none';
       drawingCanvasWrap.style.display = 'none';
       listItemsWrap.style.display = 'none';
@@ -2446,7 +2612,6 @@
         editorDeleteBtn.style.display = 'inline-flex';
 
         if (type === 'drawing' && note.imageData) {
-          // Show drawing with image
           drawingCanvasWrap.style.display = 'block';
           const ctx = drawingCanvas.getContext('2d');
           const img = new Image();
@@ -2469,10 +2634,6 @@
           noteContentInput.value = note.content || '';
           noteContentInput.style.display = 'block';
           noteContentInput.placeholder = 'Caption (optional)';
-        } else if (type === 'public') {
-          noteContentInput.value = note.content || '';
-          noteContentInput.style.display = 'block';
-          noteContentInput.placeholder = 'Public note content...';
         } else {
           noteContentInput.value = note.content || '';
           noteContentInput.style.display = 'block';
@@ -2484,7 +2645,6 @@
         selectedColor = DEFAULT_COLOR;
         editorDeleteBtn.style.display = 'none';
 
-        // Handle different types for new note
         if (type === 'drawing') {
           drawingCanvasWrap.style.display = 'block';
           const ctx = drawingCanvas.getContext('2d');
@@ -2497,12 +2657,12 @@
           ctx.lineCap = 'round';
           ctx.lineJoin = 'round';
           drawingInitialized = true;
+          initDrawing();
         } else if (type === 'list') {
           listItemsWrap.style.display = 'block';
           listItemsInput.value = '';
           noteContentInput.style.display = 'none';
         } else if (type === 'image') {
-          // Prompt for image immediately
           const input = document.createElement('input');
           input.type = 'file';
           input.accept = 'image/*';
@@ -2521,25 +2681,16 @@
           input.click();
           noteContentInput.style.display = 'block';
           noteContentInput.placeholder = 'Caption (optional)';
-        } else if (type === 'public') {
-          noteContentInput.style.display = 'block';
-          noteContentInput.placeholder = 'Public note content...';
         } else {
           noteContentInput.style.display = 'block';
           noteContentInput.placeholder = 'Write your note...';
         }
       }
 
-      // Set current type for save
       currentNoteType = type;
       renderEditorColorPicker(selectedColor);
       editorModal.classList.add('active');
       setTimeout(() => noteTitleInput.focus(), 100);
-
-      // Setup drawing if needed
-      if (type === 'drawing' && !drawingInitialized) {
-        initDrawing();
-      }
     }
 
     function closeEditor() {
@@ -2581,7 +2732,7 @@
     }
 
     // ================================================================
-    //  DRAWING FUNCTIONS
+    //  DRAWING
     // ================================================================
     function initDrawing() {
       const canvas = drawingCanvas;
@@ -2630,7 +2781,6 @@
       canvas.addEventListener('touchmove', draw);
       canvas.addEventListener('touchend', endDraw);
 
-      // Set up initial context if not set
       if (!drawingInitialized) {
         canvas.width = canvas.clientWidth || 400;
         canvas.height = 300;
@@ -2645,7 +2795,7 @@
     }
 
     // ================================================================
-    //  SAVE EDITOR — handles all types
+    //  SAVE EDITOR
     // ================================================================
     async function saveEditor() {
       const title = noteTitleInput.value;
@@ -2653,7 +2803,6 @@
       let imageData = null;
       let type = currentNoteType;
 
-      // Collect content based on type
       if (type === 'drawing') {
         const canvas = drawingCanvas;
         if (canvas && drawingCanvasWrap.style.display !== 'none') {
@@ -2672,8 +2821,6 @@
           showToast('Please select an image', 'exclamation-circle');
           return;
         }
-      } else if (type === 'public') {
-        content = noteContentInput.value;
       } else {
         content = noteContentInput.value;
       }
@@ -2755,7 +2902,7 @@
     }
 
     // ================================================================
-    //  LEFT DROPDOWN EVENTS
+    //  LEFT DROPDOWN
     // ================================================================
     leftMenuBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -2806,7 +2953,7 @@
         dashboardView.classList.remove('active');
         searchInput.style.display = 'block';
         notesGrid.style.display = 'grid';
-        renderNotes();
+        renderAll();
       }
     });
 
@@ -2878,7 +3025,7 @@
     }
 
     // ================================================================
-    //  FAB + FAB MENU
+    //  FAB
     // ================================================================
     fabBtn.addEventListener('click', () => {
       if (!currentUser) {
@@ -2936,12 +3083,12 @@
     }
 
     // ================================================================
-    //  SEARCH — real-time filtering
+    //  SEARCH
     // ================================================================
     searchInput.addEventListener('input', () => {
       searchQuery = searchInput.value;
       if (!showDashboard && !showTrash) {
-        renderNotes();
+        renderAll();
       }
     });
 
@@ -2973,7 +3120,7 @@
     });
 
     // ================================================================
-    //  AVATAR DROPDOWN
+    //  AVATAR
     // ================================================================
     avatarBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -2997,6 +3144,7 @@
       setLoading(true);
       try {
         allNotes = await loadNotesFromStorage(currentUser.id);
+        linkEmbedCache = {};
         renderAll();
         showToast('Refreshed', 'sync-alt');
       } catch (err) { console.error('Refresh error:', err);
@@ -3004,7 +3152,7 @@
     });
 
     // ================================================================
-    //  FALLBACK BUTTON
+    //  FALLBACK
     // ================================================================
     fallbackBtn.addEventListener('click', () => {
       try { if (typeof google !== 'undefined' && google.accounts) { google.accounts.id.prompt(); return; } } catch (_) {}
@@ -3092,11 +3240,12 @@
       if (typeof google === 'undefined' || !google.accounts) fallbackBtn.classList.add('visible');
     }, 4000);
 
-    console.log('📝 Keep Notes — Fully loaded with all fixes');
-    console.log('✅ Three-dot menu appears ABOVE the card');
-    console.log('✅ FAB options: Text, Image, Drawing, List, Public — each works differently');
-    console.log('✅ Search filters notes in real-time by title/content');
-    console.log('✅ Trash with auto-delete after 7 days');
+    console.log('📝 Notes App — Fully fixed with all features');
+    console.log('✅ Three-dot menu positions dynamically');
+    console.log('✅ Drawing works with touch/mouse');
+    console.log('✅ List notes with checkboxes');
+    console.log('✅ Link embeds with OG data and favicon');
+    console.log('✅ Public option removed');
   </script>
 </body>
 </html>
